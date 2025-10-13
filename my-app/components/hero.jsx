@@ -2,8 +2,10 @@
 
 import { Button } from "@/components/ui/button"
 import { ArrowRight, Code2, Cpu, Terminal, Sparkles, Layers } from "lucide-react"
-
+import useFetch from "@/hooks/useFetch"
 export default function Hero() {
+  const { data, loading, error } = useFetch("/api");
+  console.log(data, loading, error);
   return (
     <section id="home" className="relative min-h-screen flex items-center justify-center overflow-hidden pt-16">
       {/* Animated Background Elements */}
@@ -16,7 +18,7 @@ export default function Hero() {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-primary/5 rounded-full blur-3xl" />
       </div>
 
-      <div className="container mx-auto px-4 lg:px-8 py-20">
+      <div className="container mx-auto px-4 lg:px-8 b);py-20">
         <div className="max-w-5xl mx-auto text-center">
           <div className="relative mb-8 hidden md:block">
 

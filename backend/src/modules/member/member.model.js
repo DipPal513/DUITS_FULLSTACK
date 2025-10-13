@@ -5,10 +5,11 @@ const memberSchema = new mongoose.Schema({
   email: { type: String, required: true, unique: true },
   role: { type: String, enum: ['ADMIN', 'MEMBER'], default: 'MEMBER' },
   year: { type: String, required: true },               // e.g., 1st year, 2nd year
-  subject: { type: String, required: true },           // e.g., CSE, EEE
-  motivation: { type: String },                        // Why join the club
-  experience: { type: String },                      
-  status: { type: String, enum: ['PENDING', 'APPROVED', 'REJECTED'], default: 'PENDING' },
+  studentId: { type: String, required: true, unique: true }, // New field for Student ID
+  department: { type: String, required: true },         // e.g., Engineering, Business
+  interests: { type: String },                          // New field for Interests
+ 
+  status: { type: String },  status: { type: String, enum: ['PENDING', 'APPROVED', 'REJECTED'], default: 'PENDING' },
   joinedAt: { type: Date, default: Date.now },
 });
 

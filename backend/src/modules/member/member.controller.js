@@ -3,18 +3,13 @@ import Member from './member.model.js';
 // Register new member
 export const registerMember = async (req, res, next) => {
   try {
-    const { name, email, year, subject, motivation, experience } = req.body;
+    const { name, email, year,studentId, department, interests } = req.body;
 
     const existing = await Member.findOne({ email });
     if (existing) return res.status(400).json({ success: false, message: 'Email already registered' });
 
     const member = await Member.create({
-      name,
-      email,
-      year,
-      subject,
-      motivation,
-      experience,
+      name, email, year,studentId, department, interests 
     });
 
     res.status(201).json({ success: true, member });

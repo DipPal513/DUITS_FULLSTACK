@@ -1,12 +1,11 @@
 "use client"
 
-import { useState } from "react"
 import { Card } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { Label } from "@/components/ui/label"
+import axios from "axios"
 import { Check } from "lucide-react"
-
+import { useState } from "react"
+import toast from "react-hot-toast"
+import MembershipForm from "./membership_form"
 export default function Membership() {
   const [formData, setFormData] = useState({
     name: "",
@@ -14,15 +13,86 @@ export default function Membership() {
     phone: "",
     studentId: "",
     department: "",
-    major: "",
     year: "",
     interests: "",
   })
+  const [errors, setErrors] = useState({})
+  const [isSubmitting, setIsSubmitting] = useState(false)
+  const [successMessage, setSuccessMessage] = useState("")
 
-  const handleSubmit = (e) => {
+  const validate = (data) => {
+    const errs = {}
+    if (!data.name || !data.name.trim()) errs.name = "Full name is required."
+    if (!data.email || !data.email.trim()) errs.email = "Email is required."
+    else if (!/^\S+@\S+\.\S+$/.test(data.email)) errs.email = "Enter a valid email address."
+    if (!data.phone || !data.phone.trim()) errs.phone = "Phone number is required."
+    else if (!/^[+\d()\-.\s]{7,}$/.test(data.phone)) errs.phone = "Enter a valid phone number."
+    if (!data.studentId || !data.studentId.trim()) errs.studentId = "Student ID is required."
+    if (!data.department || !data.department.trim()) errs.department = "Department is required."
+    if (!data.year || !data.year.trim()) errs.year = "Year of study is required."
+    return errs
+  }
+
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log("Form submitted:", formData)
-    // Handle form submission
+    setSuccessMessage("")
+    const validationErrors = validate(formData)
+    if (Object.keys(validationErrors).length > 0) {
+      setErrors(validationErrors)
+      return
+    }
+    setErrors({})
+    setIsSubmitting(true)
+
+    try {
+      const response = await axios.post(
+        "http://localhost:5000/api/v1/member/register",
+        formData,
+        {
+          headers: {
+            "Content-Type": "application/json",
+          },
+          timeout: 10000,
+        }
+      )
+
+      // handle successful response
+      setSuccessMessage(response.data?.message || "Registration successful.")
+      toast.success("Registration successful!")
+      // optionally reset form
+      setFormData({
+        name: "",
+        email: "",
+        phone: "",
+        studentId: "",
+        department: "",
+        year: "",
+        interests: "",
+      })
+      console.log("Server response:", response.data)
+    } catch (error) {
+      console.error(error)
+      toast.error("Registration failed. Please try again.")
+      if (axios.isAxiosError(error)) {
+        if (error.response) {
+          // server responded with a status outside 2xx
+          const serverMsg =
+            (error.response.data && (error.response.data.message || error.response.data.error)) ||
+            `Server error: ${error.response.status}`
+          setErrors({ submit: serverMsg })
+        } else if (error.request) {
+          // request made but no response
+          setErrors({ submit: "No response from server. Please check your network." })
+        } else {
+          // something happened setting up request
+          setErrors({ submit: "Request error. Please try again." })
+        }
+      } else {
+        setErrors({ submit: "An unexpected error occurred." })
+      }
+    } finally {
+      setIsSubmitting(false)
+    }
   }
 
   const benefits = [
@@ -70,105 +140,9 @@ export default function Membership() {
             </Card>
           </div>
 
-          <div>
-            <h3 className="text-2xl font-bold mb-6">Register Now</h3>
-            <Card className="p-8 border-border/50">
-              <form onSubmit={handleSubmit} className="space-y-6">
-                <div className="space-y-2">
-                  <Label htmlFor="name">Full Name *</Label>
-                  <Input
-                    id="name"
-                    placeholder="John Doe"
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    required
-                  />
-                </div>
+          <MembershipForm handleSubmit={handleSubmit} formData={formData} setFormData={setFormData} />
 
-                <div className="space-y-2">
-                  <Label htmlFor="email">Email Address *</Label>
-                  <Input
-                    id="email"
-                    type="email"
-                    placeholder="john@example.com"
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    required
-                  />
-                </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="phone">Phone Number *</Label>
-                  <Input
-                    id="phone"
-                    type="tel"
-                    placeholder="+1 (555) 000-0000"
-                    value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    required
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="studentId">Student ID *</Label>
-                  <Input
-                    id="studentId"
-                    placeholder="STU123456"
-                    value={formData.studentId}
-                    onChange={(e) => setFormData({ ...formData, studentId: e.target.value })}
-                    required
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="department">Department *</Label>
-                  <Input
-                    id="department"
-                    placeholder="Engineering, Business, Arts, etc."
-                    value={formData.department}
-                    onChange={(e) => setFormData({ ...formData, department: e.target.value })}
-                    required
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="major">Major / Field of Study *</Label>
-                  <Input
-                    id="major"
-                    placeholder="Computer Science"
-                    value={formData.major}
-                    onChange={(e) => setFormData({ ...formData, major: e.target.value })}
-                    required
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="year">Year of Study *</Label>
-                  <Input
-                    id="year"
-                    placeholder="Freshman, Sophomore, Junior, Senior"
-                    value={formData.year}
-                    onChange={(e) => setFormData({ ...formData, year: e.target.value })}
-                    required
-                  />
-                </div>
-
-                <div className="space-y-2">
-                  <Label htmlFor="interests">Areas of Interest</Label>
-                  <Input
-                    id="interests"
-                    placeholder="Web Dev, AI/ML, Mobile Apps, etc."
-                    value={formData.interests}
-                    onChange={(e) => setFormData({ ...formData, interests: e.target.value })}
-                  />
-                </div>
-
-                <Button type="submit" className="w-full" size="lg">
-                  Submit Application
-                </Button>
-              </form>
-            </Card>
-          </div>
         </div>
       </div>
     </section>

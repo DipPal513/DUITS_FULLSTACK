@@ -107,7 +107,7 @@ export default function Blog() {
                   </div>
                   <div className="flex items-center justify-between">
                     <span className="text-xs font-mono text-muted-foreground">{post.readTime}</span>
-                    <Button size="sm" variant="ghost" className="group/btn">
+                    <Button size="sm" variant="ghost" className="cursor-pointer group/btn">
                       Read More
                       <ArrowRight className="ml-2 w-3 h-3 group-hover/btn:translate-x-1 transition-transform" />
                     </Button>
