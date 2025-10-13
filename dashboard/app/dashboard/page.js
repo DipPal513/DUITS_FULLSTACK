@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react"
 import DashboardLayout from "@/components/DashboardLayout"
-import { storage, STORAGE_KEYS } from "@/lib/storage"
+
 import { useAuth } from "@/contexts/AuthContext"
 
 export default function DashboardPage() {
@@ -16,10 +16,37 @@ export default function DashboardPage() {
 
   useEffect(() => {
     // Load stats from storage
-    const members = storage.get(STORAGE_KEYS.MEMBERS) || []
-    const executives = storage.get(STORAGE_KEYS.EXECUTIVES) || []
-    const events = storage.get(STORAGE_KEYS.EVENTS) || []
-    const gallery = storage.get(STORAGE_KEYS.GALLERY) || []
+    const members =  [{
+      id: '1',
+      name: 'Alice Johnson',
+      email: 'alice@example.com',
+      role: 'Admin',
+      department: 'Engineering',
+      year: '2023',
+      status: 'Active',
+      joinDate: '2023-01-15',
+    }, {
+      id: '2',
+      name: 'Bob Smith',
+      email: 'bob@example.com',
+      role: 'Editor',
+      department: 'Marketing',
+      year: '2022',
+      status: 'Pending',
+      joinDate: '2022-05-10',
+    }]
+    const executives = [ 
+      {id: '1', name: 'Alice Johnson', email: 'alice@example.com', role: 'Admin', department: 'Engineering', year: '2023', status: 'Active', joinDate: '2023-01-15'},
+      {id: '2', name: 'Bob Smith', email: 'bob@example.com', role: 'Editor', department: 'Marketing', year: '2022', status: 'Pending', joinDate: '2022-05-10'},
+    ]
+    const events = [
+      {id: '1', title: 'Web Development Workshop', date: '2024-02-15', time: '10:00 AM', location: 'Room 101', description: 'Learn the basics of web development.', attendees: 50},
+      {id: '2', title: 'AI Seminar', date: '2024-03-10', time: '2:00 PM', location: 'Auditorium', description: 'An introduction to artificial intelligence.', attendees: 100},
+    ]
+    const gallery = [
+      {id: '1', title: 'Hackathon 2023', url: '/images/hackathon2023.jpg', description: 'Highlights from our annual hackathon.'},
+      {id: '2', title: 'Tech Talk', url: '/images/techtalk.jpg', description: 'Snapshots from our recent tech talk event.'},
+    ]
 
     setStats({
       members: members.length,

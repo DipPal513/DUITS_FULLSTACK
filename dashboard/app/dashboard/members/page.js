@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import DashboardLayout from "@/components/DashboardLayout"
-import { storage, STORAGE_KEYS } from "@/lib/storage"
+
 import { useAuth } from "@/contexts/AuthContext"
 
 export default function MembersPage() {
@@ -27,7 +27,25 @@ export default function MembersPage() {
   }, [])
 
   const loadMembers = () => {
-    const data = storage.get(STORAGE_KEYS.MEMBERS) || []
+    const data =  [{
+      id: '1',
+      name: 'Alice Johnson',
+      email: 'alice@example.com',
+      role: 'Admin',
+      department: 'Engineering',
+      year: '2023',
+      status: 'Active',
+      joinDate: '2023-01-15',
+    }, {
+      id: '2',
+      name: 'Bob Smith',
+      email: 'bob@example.com',
+      role: 'Editor',
+      department: 'Marketing',
+      year: '2022',
+      status: 'Pending',
+      joinDate: '2022-05-10',
+    }, ]
     setMembers(data)
   }
 

@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import DashboardLayout from "@/components/DashboardLayout"
-import { storage, STORAGE_KEYS } from "@/lib/storage"
+// import { storage, STORAGE_KEYS } from "@/lib/storage"
 import { useAuth } from "@/contexts/AuthContext"
 
 export default function ExecutivesPage() {
@@ -20,18 +20,47 @@ export default function ExecutivesPage() {
     year: "",
     bio: "",
   })
+const data = [
+  {
+    id: "1",
+    name: "John Doe",
+    email: "john.doe@example.com",
+    position: "President",
+    department: "Computer Science",
+    year: "4th Year",
+    bio: "Leading the club and coordinating initiatives.",
+  },
+  {
+    id: "2",
+    name: "Jane Smith",
+    email: "jane.smith@example.com",
+    position: "Vice President",
+    department: "Information Technology",
+    year: "3rd Year",
+    bio: "Assisting the president and managing projects.",
+  },
+  {
+    id: "3",
+    name: "Alice Johnson",
+    email: "alice.johnson@example.com",
+    position: "Secretary",
+    department: "Electronics",
+    year: "2nd Year",
+    bio: "Handling administrative tasks and documentation.",
+  },
+]
 
   useEffect(() => {
     loadExecutives()
   }, [])
 
   const loadExecutives = () => {
-    const data = storage.get(STORAGE_KEYS.EXECUTIVES) || []
+    // const data = storage.get(STORAGE_KEYS.EXECUTIVES) || []
     setExecutives(data)
   }
 
   const saveExecutives = (list) => {
-    storage.set(STORAGE_KEYS.EXECUTIVES, list)
+    // storage.set(STORAGE_KEYS.EXECUTIVES, list)
     setExecutives(list)
   }
 

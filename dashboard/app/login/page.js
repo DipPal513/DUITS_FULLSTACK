@@ -1,9 +1,9 @@
 "use client"
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
-import Link from "next/link"
 import { useAuth } from "@/contexts/AuthContext"
+import Link from "next/link"
+import { useRouter } from "next/navigation"
+import { useState } from "react"
 
 export default function LoginPage() {
   const router = useRouter()
@@ -17,40 +17,18 @@ export default function LoginPage() {
     router.push("/dashboard")
     return null
   }
-
+console.log(isAuthenticated)
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError("")
     setLoading(true)
 
-    try {
-      const response = await fetch('/api/login', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password
-        })
-      })
+    const result = await login(formData.email, formData.password)
 
-      const data = await response.json()
-
-      if (data.success) {
-        const result = await login(formData.email, formData.password)
-        if (result.success) {
-          router.push("/dashboard")
-          
-        } else {
-          setError("Login failed")
-        }
-      } else {
-        setError(data.error || "Invalid credentials")
-      }
-    } catch (err) {
-      setError("An error occurred during login")
-    } finally {
+    if (result.success) {
+      router.push("/dashboard")
+    } else {
+      setError(result.error || "Login failed")
       setLoading(false)
     }
   }

@@ -1,70 +1,71 @@
 import Cookies from 'js-cookie'
+import axios from 'axios';
+
 
 const TOKEN_KEY = 'authToken'
 
+
+const baseURL = process.env.BASE_URL || 'http://localhost:5000/api/v1';
+
 export const auth = {
   login: async (email, password) => {
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 500))
-
-    // Mock authentication - accept any email/password for demo
-    if (email && password) {
-      const user = {
-        id: "1",
-        email: email,
-        name: email.split("@")[0],
-        role: email.includes("admin") ? "admin" : "member",
-        createdAt: new Date().toISOString(),
+    try {
+      const response = await axios.post(baseURL + '/auth/login', { email, password });
+      const { user, token } = response.data;
+      
+      if (token) {
+        Cookies.set(TOKEN_KEY, token);
+        return { success: true, user, token };
       }
-
-      const token = btoa(JSON.stringify(user)) // Simple token creation
-      return { success: true, user, token }
+      
+      return { success: false, error: "Invalid credentials" };
+    } catch (error) {
+      return { 
+        success: false, 
+        error: error.response?.data?.message || "Login failed" 
+      };
     }
-
-    return { success: false, error: "Invalid credentials" }
   },
 
   register: async (name, email, password) => {
-    // Simulate API delay
-    await new Promise((resolve) => setTimeout(resolve, 500))
-
-    // Mock registration
-    if (name && email && password) {
-      const user = {
-        id: Date.now().toString(),
-        email: email,
-        name: name,
-        role: "member",
-        createdAt: new Date().toISOString(),
+    try {
+      const response = await api.post('/auth/register', { name, email, password });
+      const { user, token } = response.data;
+      
+      if (token) {
+        Cookies.set(TOKEN_KEY, token);
+        return { success: true, user, token };
       }
-
-      const token = btoa(JSON.stringify(user))
-      return { success: true, user, token }
+      
+      return { success: false, error: "Registration failed" };
+    } catch (error) {
+      return {
+        success: false,
+        error: error.response?.data?.message || "Registration failed"
+      };
     }
-
-    return { success: false, error: "Registration failed" }
   },
 
   logout: () => {
-    Cookies.remove(TOKEN_KEY)
+    Cookies.remove(TOKEN_KEY);
   },
 
   getCurrentUser: () => {
-    const token = Cookies.get(TOKEN_KEY)
-    if (!token) return null
+    const token = Cookies.get(TOKEN_KEY);
+    if (!token) return null;
     try {
-      return JSON.parse(atob(token))
+      return JSON.parse(atob(token));
     } catch {
-      return null
+      return null;
     }
   },
 
   isAuthenticated: () => {
-    return !!Cookies.get(TOKEN_KEY)
+    return !!Cookies.get(TOKEN_KEY);
   },
 
   isAdmin: () => {
-    const user = auth.getCurrentUser()
-    return user?.role === "admin"
+    const user = auth.getCurrentUser();
+    return user?.role === "admin";
   },
-}
+};
