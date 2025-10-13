@@ -75,7 +75,8 @@ export const roleChange = async (req, res, next) => {
   try {
     const { userId } = req.params;
     const { newRole } = req.body;
-
+    console.log("requested userid", userId);
+  console.log("requested user",req.user);
     // Validate new role
     const validRoles = ['ADMIN', 'EDITOR', 'PENDING'];
     if (!validRoles.includes(newRole)) {

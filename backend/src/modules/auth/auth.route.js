@@ -9,6 +9,6 @@ router.post('/login', login);
 router.get('/current', getCurrentUser);
 router.post('/logout', logout);
 router.get('/users', getAllUsers);
-router.patch('/users/:userId/role',isAdmin, roleChange);
+router.patch('/users/:userId/role', isAdmin, roleChange);
 
 export default router;

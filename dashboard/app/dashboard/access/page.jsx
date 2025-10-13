@@ -5,7 +5,7 @@ import DashboardLayout from "@/components/DashboardLayout"
 import { useAuth } from "@/contexts/AuthContext"
 import axios from "axios"
 export default function MembersPage() {
-    // const { isAdmin } = useAuth()
+    const { token } = useAuth()
     const isAdmin = true;
     const [users, setUsers] = useState([])
 
@@ -35,10 +35,14 @@ export default function MembersPage() {
         try {
             await axios.patch(`http://localhost:5000/api/v1/auth/users/${userId}/role`, {
                 role: newStatus
+            }, {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
             });
-            
+
             const updated = users.map((user) =>
-                user.id === userId ? { ...user, role: newStatus } : user
+                user._id === userId ? { ...user, role: newStatus } : user
             );
             setUsers(updated);
         } catch (err) {
@@ -49,12 +53,12 @@ export default function MembersPage() {
 
     const handleRemove = (userId) => {
         if (confirm("Are you sure you want to remove this user?")) {
-            const updated = users.filter((user) => user.id !== userId)
+            const updated = users.filter((user) => user._id !== userId)
             storage.set(STORAGE_KEYS.MEMBERS, updated)
             setUsers(updated)
         }
     }
-
+console.log(users)
     return (
         <DashboardLayout>
             <div className="space-y-6">
@@ -72,7 +76,7 @@ export default function MembersPage() {
                         </thead>
                         <tbody>
                             {users ? users?.map((user) => (
-                                <tr key={user.id} className="border-b border-border">
+                                <tr key={user._id} className="border-b border-border">
                                     <td className="py-4 px-6">
                                         <div className="flex items-center gap-3">
                                             <div className="w-10 h-10 rounded-full bg-primary/10 flex items-center justify-center">
@@ -84,9 +88,9 @@ export default function MembersPage() {
                                     <td className="py-4 px-6">{user.email}</td>
                                     <td className="py-4 px-6">
                                         <span className={`px-3 py-1 rounded-full text-sm ${
-                                            user.role === 'Admin' ? 'bg-blue-100 text-blue-700' :
-                                            user.role === 'Editor' ? 'bg-green-100 text-green-700' :
-                                            user.role === 'Suspended' ? 'bg-red-100 text-red-700' :
+                                            user.role === 'ADMIN' ? 'bg-blue-100 text-blue-700' :
+                                            user.role === 'EDITOR' ? 'bg-green-100 text-green-700' :
+                                            user.role === 'PENDING' ? 'bg-red-100 text-red-700' :
                                             'bg-gray-100 text-gray-700'
                                         }`}>
                                             {user.role}
@@ -97,7 +101,7 @@ export default function MembersPage() {
                                             <div className="flex gap-2 justify-end">
                                                 <select
                                                     value={user.role}
-                                                    onChange={(e) => handleStatusChange(user.id, e.target.value)}
+                                                    onChange={(e) => handleStatusChange(user._id, e.target.value)}
                                                     className="px-3 py-1 rounded-lg border bg-background"
                                                 >
                                                    
@@ -106,7 +110,7 @@ export default function MembersPage() {
                                                     <option value="PENDING">Pending</option>
                                                 </select>
                                                 <button
-                                                    onClick={() => handleRemove(user.id)}
+                                                    onClick={() => handleRemove(user._id)}
                                                     className="p-2 text-red-500 hover:bg-red-50 rounded-lg"
                                                 >
                                                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
