@@ -8,6 +8,7 @@ import connectDB from './config/db.js';
 import authRoutes from './modules/auth/auth.route.js';
 import errorHandler from './middleware/errorHandler.js';
 import memberRoutes from './modules/member/member.route.js';
+import executiveRoutes from './modules/executive/executive.route.js';
 
 // Add routes
 
@@ -28,6 +29,7 @@ app.use(morgan('dev'));
 // Routes
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/member', memberRoutes);
+app.use('/api/v1/executive', executiveRoutes);
 
 // Test route
 app.get('/api', (req, res) => {

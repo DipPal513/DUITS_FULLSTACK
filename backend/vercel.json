@@ -1,0 +1,18 @@
+
+
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "server.js",
+      "use": "@vercel/next",
+        "config": { "includeFiles": ["dist/**"] }
+    }
+  ],
+  "routes": [
+    {
+      "src": "/src/(.*)",
+      "dest": "server.js"
+    }
+  ]
+}

@@ -1,64 +1,24 @@
+"use client"
 import { Card } from "@/components/ui/card"
-import { Linkedin, Github, Mail } from "lucide-react"
-
+import axios from "axios"
+import { Github, Linkedin, Mail } from "lucide-react"
+import React, { useEffect } from "react"
 export default function Team() {
-  const executives = [
-    {
-      name: "Alex Chen",
-      role: "President",
-      image: "/professional-portrait-tech-leader.jpg",
-      bio: "Full-stack developer passionate about building scalable applications",
-      linkedin: "#",
-      github: "#",
-      email: "alex@itclub.com",
-    },
-    {
-      name: "Sarah Johnson",
-      role: "Vice President",
-      image: "/professional-portrait-woman-tech.jpg",
-      bio: "AI/ML enthusiast with experience in data science and analytics",
-      linkedin: "#",
-      github: "#",
-      email: "sarah@itclub.com",
-    },
-    {
-      name: "Michael Park",
-      role: "Technical Lead",
-      image: "/professional-portrait-developer.png",
-      bio: "DevOps engineer focused on cloud infrastructure and automation",
-      linkedin: "#",
-      github: "#",
-      email: "michael@itclub.com",
-    },
-    {
-      name: "Emily Rodriguez",
-      role: "Events Coordinator",
-      image: "/professional-portrait-woman-organizer.jpg",
-      bio: "UX designer and event organizer creating memorable experiences",
-      linkedin: "#",
-      github: "#",
-      email: "emily@itclub.com",
-    },
-    {
-      name: "David Kim",
-      role: "Marketing Director",
-      image: "/professional-portrait-marketing.jpg",
-      bio: "Digital marketer with a passion for tech community building",
-      linkedin: "#",
-      github: "#",
-      email: "david@itclub.com",
-    },
-    {
-      name: "Lisa Wang",
-      role: "Treasurer",
-      image: "/professional-portrait-woman-finance.jpg",
-      bio: "Computer science student with strong financial management skills",
-      linkedin: "#",
-      github: "#",
-      email: "lisa@itclub.com",
-    },
-  ]
-
+  const baseurl = process.env.BASE_URL || "http://localhost:5000/api/v1"
+  // load executive from api using axios and so proper error validation and store in state
+  const [executives, setExecutives] = React.useState([])
+  useEffect(() => {
+    async function fetchExecutives() {
+      try {
+        const response = await axios.get(`${baseurl}/executive`)
+        console.log(response.data, 'executives data')
+        setExecutives(response.data.data)
+      } catch (error) {
+        console.error("Error fetching executives:", error)
+      }
+    }
+    fetchExecutives()
+  }, [])
   return (
     <section id="team" className="py-20 lg:py-32 bg-muted/30">
       <div className="container mx-auto px-4 lg:px-8">
@@ -73,7 +33,7 @@ export default function Team() {
           {executives.map((member, index) => (
             <Card
               key={index}
-              className="overflow-hidden border-border/50 hover:border-primary/50 transition-all duration-300 hover:-translate-y-1 group"
+              className="overflow-hidden border-border hover:border-primary/50 transition-all duration-300 hover:-translate-y-1 group"
             >
               <div className="relative h-64 overflow-hidden bg-muted">
                 <img
