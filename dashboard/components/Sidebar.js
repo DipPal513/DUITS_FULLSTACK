@@ -1,13 +1,21 @@
 "use client"
 
 import Link from "next/link"
-import { usePathname } from "next/navigation"
+import { usePathname, useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
-
+import { auth } from "@/lib/auth"
 export default function Sidebar() {
   const pathname = usePathname()
   const { user, logout, isAdmin } = useAuth()
-  console.log(logout)
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    const result = await auth.logout();
+    console.log("logout result:", result);
+    if (result.success) {
+      router.push("/login");
+    }
+  };
   const navigation = [
     {
       name: "Dashboard",
@@ -155,7 +163,7 @@ export default function Sidebar() {
           </div>
         )}
         <button
-          onClick={logout}
+          onClick={handleLogout}
           className="cursor-pointer w-full px-4 py-2 text-sm font-medium text-destructive hover:bg-destructive/10 rounded-lg transition-colors flex items-center justify-center gap-2"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">

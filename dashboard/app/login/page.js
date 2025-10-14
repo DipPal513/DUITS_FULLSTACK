@@ -2,9 +2,10 @@
 
 import { useAuth } from "@/contexts/AuthContext"
 import Link from "next/link"
-import { useRouter } from "next/navigation"
-import { useState } from "react"
+import { redirect,useRouter } from "next/navigation"
+import { useState, useEffect } from "react"
 import { toast } from "react-hot-toast"
+
 export default function LoginPage() {
   const router = useRouter()
   const { login, isAuthenticated } = useAuth()
@@ -12,23 +13,24 @@ export default function LoginPage() {
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
 
-  // Redirect if already authenticated
-  if (isAuthenticated) {
-    router.push("/dashboard")
-    return null
-  }
-
+ 
+ 
+  console.log("isauthenticated: from login page", isAuthenticated);
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError("")
     setLoading(true)
 
     const result = await login(formData.email, formData.password)
-    console.log("my final result that i wana show",result)
+    console.log("my final result that i wana show", result)
+
     if (result.success) {
+      
+      setLoading(false)
       toast.success("Login successful!")
-      console.log("result from inside: ",result) ;
-          router.push("/dashboard")
+      console.log("result from inside: ", result);
+      console.log("redirecting to dashboard...");
+      router.push("/dashboard")
     } else {
       setError(result.error || "Login failed")
       setLoading(false)

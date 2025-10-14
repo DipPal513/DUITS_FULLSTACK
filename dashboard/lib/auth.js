@@ -1,8 +1,9 @@
 import Cookies from 'js-cookie'
 import axios from 'axios';
+import toast from 'react-hot-toast';
 
+const TOKEN_KEY = 'authToken';
 
-const TOKEN_KEY = 'authToken'
 
 
 const baseURL = process.env.BASE_URL || 'http://localhost:5000/api/v1';
@@ -49,21 +50,40 @@ export const auth = {
   },
 
   logout: async () => {
-    Cookies.remove(TOKEN_KEY);
-    try {
-      const response = await axios.post(baseURL + '/auth/logout', {}, {
+  try {
+    const token = Cookies.get(TOKEN_KEY);
+
+    const response = await axios.post(
+      baseURL + '/auth/logout',
+      {},
+      {
         headers: {
-          Authorization: `Bearer ${Cookies.get(TOKEN_KEY)}`
-        }
-      });
-      return { success: true, message: response.data.message };
-    } catch (error) {
-      return { 
-        success: false, 
-        error: error.response?.data?.message || "Logout failed" 
-      };
+          Authorization: `Bearer ${token}`,
+        },
+      }
+    );
+
+    if (response.status === 200) {
+      // Only remove token after successful logout
+      Cookies.remove(TOKEN_KEY);
+      toast.success("Logged out successfully");
+      
+      return { success: true };
+    } else {
+      toast.error("Logout failed");
+      return { success: false, error: "Logout failed" };
     }
-  },
+  } catch (error) {
+    // Still remove token locally even if API fails
+    Cookies.remove(TOKEN_KEY);
+    
+    return {
+      success: false,
+      error: error.response?.data?.message || "Logout failed",
+    };
+  }
+},
+
 
   getCurrentUser: () => {
     const token = Cookies.get(TOKEN_KEY);

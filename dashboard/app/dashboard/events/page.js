@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import DashboardLayout from "@/components/DashboardLayout"
-import { storage, STORAGE_KEYS } from "@/lib/storage"
+// import { storage, STORAGE_KEYS } from "@/lib/storage"
 import { useAuth } from "@/contexts/AuthContext"
 
 export default function EventsPage() {
@@ -24,18 +24,53 @@ export default function EventsPage() {
     status: "Upcoming",
     registrations: 0,
   })
+  const data = [
+    {
+      id: "1",
+      title: "Web Development Workshop",
+      description: "Learn modern web development with React and Next.js",
+      date: "2024-03-15",
+      time: "10:00",
+      location: "Tech Lab, Room 301",
+      category: "Workshop",
+      status: "Upcoming",
+      registrations: 45,
+    },
+    {
+      id: "2",
+      title: "AI & Machine Learning Hackathon",
+      description: "Build innovative AI solutions in 24 hours",
+      date: "2024-03-22",
+      time: "09:00",
+      location: "Innovation Center",
+      category: "Hackathon",
+      status: "Upcoming",
+      registrations: 120,
+    },
+    {
+      id: "3",
+      title: "Cybersecurity Seminar",
+      description: "Understanding modern cybersecurity threats and solutions",
+      date: "2024-03-30",
+      time: "14:00",
+      location: "Auditorium A",
+      category: "Seminar",
+      status: "Upcoming",
+      registrations: 80,
+    },
+  ]
 
   useEffect(() => {
     loadEvents()
   }, [])
 
   const loadEvents = () => {
-    const data = storage.get(STORAGE_KEYS.EVENTS) || []
+    // const data = storage.get(STORAGE_KEYS.EVENTS) || []
     setEvents(data)
   }
 
   const saveEvents = (list) => {
-    storage.set(STORAGE_KEYS.EVENTS, list)
+    // storage.set(STORAGE_KEYS.EVENTS, list)
     setEvents(list)
   }
 

@@ -6,10 +6,14 @@ import { auth } from "@/lib/auth"
 import cookies from 'js-cookie';
 const AuthContext = createContext(null)
 const token  = cookies.get('authToken');
+
+
 export function AuthProvider({ children }) {
+  let isAuthenticated = false;
+  isAuthenticated = !!token;
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
-
+  
   useEffect(() => {
     // Initialize data on mount
     // initializeData()
@@ -24,6 +28,7 @@ export function AuthProvider({ children }) {
     const result = await auth.login(email, password)
     if (result.success) {
       setUser(result.user)
+      isAuthenticated= true;
     }
     return result
   }
@@ -38,7 +43,8 @@ export function AuthProvider({ children }) {
 
   const logout = () => {
     auth.logout()
-    setUser(null)
+    setUser(null);
+    isAuthenticated= false;
   }
 
   const value = {
@@ -48,7 +54,7 @@ export function AuthProvider({ children }) {
     register,
     token,
     logout,
-    isAuthenticated: !!token,
+    isAuthenticated,
     isAdmin: user?.role === "admin",
   }
 

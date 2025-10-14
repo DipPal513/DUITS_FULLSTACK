@@ -123,4 +123,17 @@ export const getAllUsers = async (req, res, next) => {
     next(err);
   }
 };
-  
+//
+
+export const deleteUser = async (req, res, next) => {
+  try {
+    const { userId } = req.params;
+
+    const user = await User.findByIdAndDelete(userId);
+    if (!user) return res.status(404).json({ success: false, message: 'User not found' });
+
+    res.json({ success: true, message: 'User deleted successfully' });
+  } catch (err) {
+    next(err);
+  }
+};
