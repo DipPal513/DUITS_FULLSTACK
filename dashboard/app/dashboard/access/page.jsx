@@ -4,6 +4,7 @@ import { useState, useEffect } from "react"
 import DashboardLayout from "@/components/DashboardLayout"
 import { useAuth } from "@/contexts/AuthContext"
 import axios from "axios"
+// import { headers } from "next/headers"
 export default function MembersPage() {
     const { token } = useAuth()
     const isAdmin = true;
@@ -20,7 +21,11 @@ export default function MembersPage() {
         setIsLoading(true)
         setError(null)
         try {
-            const response = await axios.get('http://localhost:5000/api/v1/auth/users')
+            const response = await axios.get('http://localhost:5000/api/v1/auth/users', {
+                headers: {
+                    Authorization: `Bearer ${token}`
+                }
+            });
             setUsers(response.data.users)
             console.log(response.data)
         } catch (err) {

@@ -74,21 +74,22 @@ export const login = async (req, res, next) => {
 export const roleChange = async (req, res, next) => {
   try {
     const { userId } = req.params;
-    const { newRole } = req.body;
+    const { role } = req.body;
     console.log("requested userid", userId);
-  console.log("requested user",req.user);
+ 
     // Validate new role
-    const validRoles = ['ADMIN', 'EDITOR', 'PENDING'];
-    if (!validRoles.includes(newRole)) {
-      return res.status(400).json({ success: false, message: 'Invalid role specified' });
-    }
+    // const validRoles = ['ADMIN', 'EDITOR', 'PENDING'];
+    // if (!validRoles.includes(newRole)) {
+    //   return res.status(400).json({ success: false, message: 'Invalid role specified' });
+    // }
 
     // Update user role
-    const user = await User.findByIdAndUpdate(userId, { role: newRole }, { new: true });
+    const user = await User.findByIdAndUpdate(userId, { role }, { new: true });
     if (!user) return res.status(404).json({ success: false, message: 'User not found' });
 
     res.json({ success: true, user: { id: user._id, name: user.name, email: user.email, role: user.role } });
   } catch (err) {
+    console.log(err)
     next(err);
   }
 };

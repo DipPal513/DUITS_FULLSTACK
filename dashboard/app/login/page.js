@@ -4,7 +4,7 @@ import { useAuth } from "@/contexts/AuthContext"
 import Link from "next/link"
 import { useRouter } from "next/navigation"
 import { useState } from "react"
-
+import { toast } from "react-hot-toast"
 export default function LoginPage() {
   const router = useRouter()
   const { login, isAuthenticated } = useAuth()
@@ -17,16 +17,18 @@ export default function LoginPage() {
     router.push("/dashboard")
     return null
   }
-console.log(isAuthenticated)
+
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError("")
     setLoading(true)
 
     const result = await login(formData.email, formData.password)
-
+    console.log("my final result that i wana show",result)
     if (result.success) {
-      router.push("/dashboard")
+      toast.success("Login successful!")
+      console.log("result from inside: ",result) ;
+          router.push("/dashboard")
     } else {
       setError(result.error || "Login failed")
       setLoading(false)
@@ -100,7 +102,7 @@ console.log(isAuthenticated)
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 px-4 bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="w-full cursor-pointer py-3 px-4 bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {loading ? (
                 <>

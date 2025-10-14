@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react"
 import DashboardLayout from "@/components/DashboardLayout"
-import { storage, STORAGE_KEYS } from "@/lib/storage"
+// import { storage, STORAGE_KEYS } from "@/lib/storage"
 import { useAuth } from "@/contexts/AuthContext"
 
 export default function GalleryPage() {
@@ -26,7 +26,7 @@ export default function GalleryPage() {
   }, [])
 
   const loadGallery = () => {
-    const data = storage.get(STORAGE_KEYS.GALLERY) || []
+    const data =  [ {title: "", description:"something good", category:"Event", date:"2023-10-10", imageUrl:"/hackathon-team-coding.jpg", id: "1"}, {title: "Web Dev Workshop", description:"learn web dev", category:"Workshop", date:"2023-09-15", imageUrl:"/workshop-presentation-tech.jpg", id: "2"}]
     setGallery(data)
   }
 

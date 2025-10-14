@@ -17,7 +17,9 @@ export const auth = {
         Cookies.set(TOKEN_KEY, token);
         return { success: true, user, token };
       }
-      
+      // now redirect to dashboard
+     
+
       return { success: false, error: "Invalid credentials" };
     } catch (error) {
       return { 
@@ -46,8 +48,21 @@ export const auth = {
     }
   },
 
-  logout: () => {
+  logout: async () => {
     Cookies.remove(TOKEN_KEY);
+    try {
+      const response = await axios.post(baseURL + '/auth/logout', {}, {
+        headers: {
+          Authorization: `Bearer ${Cookies.get(TOKEN_KEY)}`
+        }
+      });
+      return { success: true, message: response.data.message };
+    } catch (error) {
+      return { 
+        success: false, 
+        error: error.response?.data?.message || "Logout failed" 
+      };
+    }
   },
 
   getCurrentUser: () => {

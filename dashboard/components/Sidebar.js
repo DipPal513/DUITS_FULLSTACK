@@ -7,7 +7,7 @@ import { useAuth } from "@/contexts/AuthContext"
 export default function Sidebar() {
   const pathname = usePathname()
   const { user, logout, isAdmin } = useAuth()
-
+  console.log(logout)
   const navigation = [
     {
       name: "Dashboard",
@@ -156,7 +156,7 @@ export default function Sidebar() {
         )}
         <button
           onClick={logout}
-          className="w-full px-4 py-2 text-sm font-medium text-destructive hover:bg-destructive/10 rounded-lg transition-colors flex items-center justify-center gap-2"
+          className="cursor-pointer w-full px-4 py-2 text-sm font-medium text-destructive hover:bg-destructive/10 rounded-lg transition-colors flex items-center justify-center gap-2"
         >
           <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path
