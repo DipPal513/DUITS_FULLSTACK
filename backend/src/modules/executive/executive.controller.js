@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import errorHandler from "../../middleware/errorHandler.js";
 import Executive from "./executive.model.js";
+import cloudinary from "../../config/cloudinary.js";
 
 // Get all executives
 const getExecutives = async (req, res, next) => {
@@ -28,20 +29,32 @@ const getExecutiveById = async (req, res, next) => {
 // Create a new executive
 const createExecutive = async (req, res, next) => {
   try {
-    const { name, position, department, year, email, phone } = req.body;
+    const { name, position, department, session, email, phone,image } = req.body;
     const newExecutive = new Executive({
       name,
-      year,
+      session,
       position,
       department,
       email,
-      phone
+      phone,image
     });
     // error validation for unique email
     const existingExecutive = await Executive.findOne({ email });
     if (existingExecutive) {
       return res.status(400).json({ success: false, message: 'Email already exists' });
     }
+    let imageUrl = "";
+  
+      if (image) {
+        // Upload Base64 image to Cloudinary
+        const result = await cloudinary.uploader.upload(image, {
+          folder: "executives",
+        });
+        imageUrl = result.secure_url;
+      }
+  
+    newExecutive.image = imageUrl;
+
     const savedExecutive = await newExecutive.save();
     res.status(201).json({ success: true, data: savedExecutive });
   } catch (err) {

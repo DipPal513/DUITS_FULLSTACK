@@ -6,7 +6,7 @@ const TOKEN_KEY = 'authToken';
 
 
 
-const baseURL = process.env.BASE_URL || 'http://localhost:5000/api/v1';
+const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
 
 export const auth = {
   login: async (email, password) => {

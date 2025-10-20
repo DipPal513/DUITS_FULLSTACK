@@ -2,11 +2,11 @@
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Calendar, Clock, MapPin, Users } from "lucide-react";
 import { useEffect, useState } from "react";
-
+import api from "@/config/index";
 export default function Events() {
   const [loading, setLoading] = useState(false);
   const [events,setEvents] = useState([]);
-const API_URL = process.env.BASE_URL || 'http://localhost:5000/api/v1';
+const API_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5000/api/v1';
 
 
   useEffect(() => {
@@ -14,17 +14,8 @@ const API_URL = process.env.BASE_URL || 'http://localhost:5000/api/v1';
   }, []);
 
    const fetchEvents = async () => {
-    try {
-      setLoading(true);
-      const response = await fetch(`${API_URL}/event`);
-      const data = await response.json();
-      setEvents(data.events || []);
-    } catch (error) {
-      console.error('Error fetching events:', error);
-      toast.error('Failed to fetch events', 'error');
-    } finally {
-      setLoading(false);
-    }
+   const data = await api.get('/event');
+   setEvents(data.events || []);
   };
 
   const programs = [

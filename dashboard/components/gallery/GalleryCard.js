@@ -1,7 +1,6 @@
 
-import { Calendar, Edit, ExternalLink, MapPin, Trash2 } from 'lucide-react';
-const API_URL = process.env.BASE_URL || 'http://localhost:5000/api/v1';
-
+import { Calendar, Edit, Trash2 } from 'lucide-react';
+const API_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 const galleryCard = ({ gallery, onEdit, onDelete }) => {
   const formatDate = (dateString) => {

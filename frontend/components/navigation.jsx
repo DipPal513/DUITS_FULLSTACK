@@ -22,9 +22,8 @@ export default function Navigation() {
     { href: "/", label: "Home" },
     { href: "/about", label: "About" },
     { href: "/events", label: "Events" },
-    // { href: "/projects", label: "Projects" },
     { href: "/team", label: "Team" },
-    { href: "/blog", label: "Blog" },
+    // { href: "/blog", label: "Blog" },
     { href: "/gallery", label: "Gallery" },
     { href: "/contact", label: "Contact" },
   ]
@@ -32,7 +31,7 @@ export default function Navigation() {
   return (
     <nav
       className={` ${
-        isScrolled ? "bg-background/80 backdrop-blur-lg border-b border-border" : "bg-transparent"
+        isScrolled ? "transition duration-200 bg-background/80 backdrop-blur-lg border-b border-border fixed w-full z-50" : "bg-transparent"
       }`}
     >
       <div className="container mx-auto px-4 lg:px-8">

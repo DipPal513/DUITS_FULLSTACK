@@ -6,6 +6,7 @@ import { Check } from "lucide-react"
 import { useState } from "react"
 import toast from "react-hot-toast"
 import MembershipForm from "./membership_form"
+import api from "@/config"
 export default function Membership() {
   const [formData, setFormData] = useState({
     name: "",
@@ -45,16 +46,7 @@ export default function Membership() {
     setIsSubmitting(true)
 
     try {
-      const response = await axios.post(
-        "http://localhost:5000/api/v1/member/register",
-        formData,
-        {
-          headers: {
-            "Content-Type": "application/json",
-          },
-          timeout: 10000,
-        }
-      )
+      const response = await api.post("/member/register", formData);
 
       // handle successful response
       setSuccessMessage(response.data?.message || "Registration successful.")

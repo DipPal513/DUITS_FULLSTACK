@@ -9,7 +9,7 @@ import toast from "react-hot-toast"
 
 export default function RegisterPage() {
 
-  const baseURL = process.env.BASE_URL || 'http://localhost:5000/api/v1';
+  const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
   const router = useRouter()
   const { register, isAuthenticated } = useAuth()
   const [formData, setFormData] = useState({

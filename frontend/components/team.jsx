@@ -4,7 +4,7 @@ import axios from "axios"
 import { Github, Linkedin, Mail } from "lucide-react"
 import React, { useEffect } from "react"
 export default function Team() {
-  const baseurl = process.env.BASE_URL || "http://localhost:5000/api/v1"
+  const baseurl = process.env.NEXT_PUBLIC_API_BASE_URL;
   // load executive from api using axios and so proper error validation and store in state
   const [executives, setExecutives] = React.useState([])
   useEffect(() => {
@@ -33,18 +33,18 @@ export default function Team() {
           {executives.map((member, index) => (
             <Card
               key={index}
-              className="overflow-hidden border-border hover:border-primary/50 transition-all duration-300 hover:-translate-y-1 group"
+              className="overflow-hidden border-border py-0 hover:border-primary/50 transition-all duration-300 hover:-translate-y-1 group"
             >
-              <div className="relative h-64 overflow-hidden bg-muted">
+              <div className="relative overflow-hidden h-64 bg-muted">
                 <img
-                  src={member.image || "/placeholder.svg"}
+                  src={member.image}
                   alt={member.name}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300"
                 />
               </div>
               <div className="p-6">
                 <h3 className="font-bold text-xl mb-1">{member.name}</h3>
-                <p className="text-sm text-primary font-medium mb-3">{member.role}</p>
+                <p className="text-sm text-primary font-medium mb-3">{member.position}</p>
                 <p className="text-sm text-muted-foreground mb-4 leading-relaxed">{member.bio}</p>
 
                 <div className="flex gap-3">

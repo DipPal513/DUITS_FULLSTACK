@@ -1,25 +1,20 @@
 "use client"
 
 import { Card } from "@/components/ui/card";
+import api from "@/config";
 import { X } from "lucide-react";
 import { useEffect, useState } from "react";
-import axios from "axios";
 export default function Gallery() {
   const [selectedImage, setSelectedImage] = useState(null);
   const [gallery, setGallery] = useState([]);
-const API_URL = process.env.BASE_URL || 'http://localhost:5000/api/v1';
 
 useEffect(() => {
     fetchGalleryImages();
 },[]);
-  const fetchGalleryImages = async () => {
- try{
-     // This function would ideally fetch images from an API
-    const res = await axios.get(`${API_URL}/gallery`);
-    setGallery(res.data.galleries);
- }catch(error){
-    console.error("Error fetching gallery images:", error);
- }
+
+const fetchGalleryImages = async () => {
+const data = await api.get('/gallery');
+setGallery(data.galleries || []);
   }
 
   return (
@@ -36,14 +31,14 @@ useEffect(() => {
           {gallery.map((item, index) => (
             <Card
               key={index}
-              className="overflow-hidden border-border/50 hover:border-primary/50 transition-all duration-300 cursor-pointer group"
+              className="overflow-hidden border-border/50 py-0 hover:border-primary/50 transition-all duration-300 cursor-pointer group"
               onClick={() => setSelectedImage(item)}
             >
-              <div className="relative h-64 overflow-hidden">
+              <div className="relative h-96 overflow-hidden">
                 <img
                   src={item.image}
                   alt={item.title}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
+                  className="w-full h-full object-contain group-hover:scale-110 transition-transform duration-300"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   <div className="absolute bottom-0 left-0 right-0 p-4">

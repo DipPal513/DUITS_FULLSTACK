@@ -9,7 +9,7 @@ const ExecutiveSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
-  year: {
+  session: {
     type: String,
     required: false,
   },
@@ -23,6 +23,10 @@ const ExecutiveSchema = new mongoose.Schema({
     unique: true,
   },
   phone: {
+    type: String,
+    required: true,
+  },
+  image: {
     type: String,
     required: false,
   },

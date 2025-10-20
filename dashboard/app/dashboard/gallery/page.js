@@ -7,9 +7,7 @@ import GalleryFormModal from "@/components/gallery/GalleryFormModal";
 import { Calendar, Loader, Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-const API_URL = process.env.BASE_URL || 'http://localhost:5000/api/v1';
-
-
+const API_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 // Main Dashboard Component
 export default function GallerysDashboard() {
@@ -65,7 +63,7 @@ const base64Image = await convertToBase64(formData.image[0]);
         title: formData.title,
         description: formData.description,
         image: base64Image,
-       category: formData.category,
+        category: formData.category,
         date: formData.date,
         
       }
@@ -95,7 +93,7 @@ const base64Image = await convertToBase64(formData.image[0]);
       fetchGallerys();
 
       if (editingGallery) {
-        setGallerys(gallerys.map(gallery => 
+        setgallerys(gallerys.map(gallery => 
           gallery._id === editingGallery._id ? result.gallery : gallery
         ));
         toast.success('gallery updated successfully!');
@@ -115,7 +113,7 @@ const base64Image = await convertToBase64(formData.image[0]);
   };
 
   const handleDeleteClick = (gallery) => {
-    setgalleryToDelete(gallery);
+    setGalleryToDelete(gallery);
     setIsDeleteModalOpen(true);
   };
 
@@ -123,7 +121,9 @@ const base64Image = await convertToBase64(formData.image[0]);
     try {
       setLoading(true);
       const response = await fetch(`${API_URL}/gallery/${galleryToDelete._id}`, {
-        method: 'DELETE'
+        method: 'DELETE',
+        withCredentials: true,
+        credentials: 'include',
       });
 
       if (!response.ok) throw new Error('Failed to delete gallery');
@@ -131,7 +131,7 @@ const base64Image = await convertToBase64(formData.image[0]);
       setgallerys(gallerys.filter(gallery => gallery._id !== galleryToDelete._id));
       toast.success('gallery deleted successfully!');
       setIsDeleteModalOpen(false);
-      setgalleryToDelete(null);
+      setGalleryToDelete(null);
     } catch (error) {
       console.error('Error deleting gallery:', error);
       toast.error('Failed to delete gallery', 'error');
@@ -221,7 +221,7 @@ console.log("all the gallerys here.,", gallerys);
           gallery={galleryToDelete}
           onClose={() => {
             setIsDeleteModalOpen(false);
-            setgalleryToDelete(null);
+            setGalleryToDelete(null);
           }}
           onConfirm={handleConfirmDelete}
           loading={loading}

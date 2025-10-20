@@ -8,6 +8,15 @@ import axios from "axios"
 import toast from "react-hot-toast"
 
 export default function ExecutivesPage() {
+
+const convertToBase64 = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (err) => reject(err);
+  });
+
   const isAdmin = true
   const [executives, setExecutives] = useState([])
   const [filteredExecutives, setFilteredExecutives] = useState([])
@@ -23,15 +32,16 @@ export default function ExecutivesPage() {
   const [filterDepartment, setFilterDepartment] = useState("")
   const { token } = useAuth()
   
-  const baseURL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5000/api/v1'
+  const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
 
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     position: "",
     department: "",
-    year: "",
-   
+    session: "",
+    phone: "",
+    image: null
   })
 
   useEffect(() => {
@@ -83,21 +93,29 @@ export default function ExecutivesPage() {
     e.preventDefault()
     
     // Validate form
-    if (!formData.name || !formData.email || !formData.position || !formData.department || !formData.year) {
+    if (!formData.name || !formData.email || !formData.position || !formData.department || !formData.session) {
       toast.error("Please fill in all required fields")
       return
     }
-
+    const base64Image = await convertToBase64(formData.image);
     setLoading(true)
     const loadingToast = toast.loading(editingExecutive ? "Updating executive..." : "Adding executive...")
-
+    const payLoad = {
+      name: formData.name,
+      email: formData.email,
+      position: formData.position,
+      department: formData.department,
+      session: formData.session,
+      image: base64Image,
+      phone: formData.phone
+    }
     try {
       if (editingExecutive) {
         // Update existing executive
         const res = await axios.put(
           `${baseURL}/executive/${editingExecutive._id}`, 
-          formData, 
-          { headers: { Authorization: `Bearer ${token}` } }
+          payLoad, 
+          {withCredentials:true}
         )
         const updatedExecs = executives.map(exec => 
           exec._id === editingExecutive._id ? res.data.data : exec
@@ -108,8 +126,8 @@ export default function ExecutivesPage() {
         // Add new executive
         const res = await axios.post(
           `${baseURL}/executive`, 
-          formData, 
-          {withCredentials:true}
+          payLoad, 
+          {withCredentials:true,credentials:"include"}
         )
         setExecutives([res.data.data, ...executives])
         toast.success("Executive added successfully", { id: loadingToast })
@@ -143,8 +161,9 @@ export default function ExecutivesPage() {
         email: executiveData.email || "",
         position: executiveData.position || "",
         department: executiveData.department || "",
-        year: executiveData.year || "",
-        
+        session: executiveData.session || "",
+        phone: executiveData.phone || "",
+        image: executiveData.image || null
       })
       
       toast.success("Executive loaded", { id: loadingToast })
@@ -171,7 +190,7 @@ export default function ExecutivesPage() {
     try {
       await axios.delete(
         `${baseURL}/executive/${executiveToDelete._id}`, 
-        { headers: { Authorization: `Bearer ${token}` } }
+        { withCredentials:true,credentials:"include" }
       )
       
       const updatedExecs = executives.filter(exec => exec._id !== executiveToDelete._id)
@@ -200,8 +219,8 @@ export default function ExecutivesPage() {
       email: "",
       position: "",
       department: "",
-      year: "",
-    
+      session: "",
+      image: null
     })
     setEditingExecutive(null)
     setShowModal(false)
@@ -214,8 +233,8 @@ export default function ExecutivesPage() {
       email: "",
       position: "",
       department: "",
-      year: "",
-     
+      session: "",
+      
     })
     setShowModal(true)
   }
@@ -223,7 +242,7 @@ export default function ExecutivesPage() {
   const positions = ["President", "Vice President", "Secretary", "Treasurer", "Technical Lead", "Event Coordinator", "Marketing Head", "Design Lead"]
   const departments = [...new Set(executives.map(e => e.department))]
 
-  const positionOrder = ["President", "Vice President", "Secretary", "Treasurer", "Technical Lead", "Event Coordinator", "Marketing Head", "Design Lead"]
+  const positionOrder = ["President", "Vice President", "Secretary", "Treasurer", "Technical Lead", "Event Coordinator", "Marketing Head", "Junior Executive"]
   const sortedExecutives = [...filteredExecutives].sort((a, b) => {
     const aIndex = positionOrder.indexOf(a.position)
     const bIndex = positionOrder.indexOf(b.position)
@@ -329,9 +348,7 @@ export default function ExecutivesPage() {
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0 transition-transform duration-200 hover:scale-110">
-                            <span className="text-sm font-semibold text-indigo-600">
-                              {executive.name[0]}
-                            </span>
+                           <img src={executive.image} alt={executive.name} />
                           </div>
                           <div className="min-w-0">
                             <div className="font-medium text-slate-900 truncate">{executive.name}</div>
@@ -345,7 +362,7 @@ export default function ExecutivesPage() {
                         </span>
                       </td>
                       <td className="px-6 py-4 text-sm text-slate-600">{executive.department}</td>
-                      <td className="px-6 py-4 text-sm text-slate-600">{executive.year}</td>
+                      <td className="px-6 py-4 text-sm text-slate-600">{executive.session}</td>
                       <td className="px-6 py-4">
                         <div className="flex items-center justify-end gap-2">
                           <button
@@ -415,6 +432,18 @@ export default function ExecutivesPage() {
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">
+                    Photo 
+                  </label>
+                  <input
+                    type="file"
+                    onChange={(e) => setFormData({ ...formData, image: e.target.files[0] })}
+                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                    disabled={loading}
+                  />
+           
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">
                     Name <span className="text-red-500">*</span>
                   </label>
                   <input
@@ -442,7 +471,20 @@ export default function ExecutivesPage() {
                     disabled={loading}
                   />
                 </div>
-
+<div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                    Phone <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    required
+                    value={formData.phone}
+                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
+                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                    placeholder="123-456-7890"
+                    disabled={loading}
+                  />
+                </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">
                     Position <span className="text-red-500">*</span>
@@ -478,20 +520,22 @@ export default function ExecutivesPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">
-                    Year <span className="text-red-500">*</span>
+                    Session <span className="text-red-500">*</span>
                   </label>
                   <select
                     required
-                    value={formData.year}
-                    onChange={(e) => setFormData({ ...formData, year: e.target.value })}
+                    value={formData.session}
+                    onChange={(e) => setFormData({ ...formData, session: e.target.value })}
                     className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
                     disabled={loading}
                   >
-                    <option value="">Select Year</option>
-                    <option value="1st Year">1st Year</option>
-                    <option value="2nd Year">2nd Year</option>
-                    <option value="3rd Year">3rd Year</option>
-                    <option value="4th Year">4th Year</option>
+                    <option value="">Select Session</option>
+                    <option value="2020-2021">2020-2021</option>
+                    <option value="2021-2022">2021-2022</option>
+                    <option value="2022-2023">2022-2023</option>
+                    <option value="2023-2024">2023-2024</option>
+                    <option value="2024-2025">2024-2025</option>
+                    <option value="2025-2026">2025-2026</option>
                   </select>
                 </div>
 
@@ -599,7 +643,7 @@ export default function ExecutivesPage() {
                 <div>
                   <h3 className="text-xl font-semibold text-slate-900">{selectedExecutive.name}</h3>
                   <p className="text-sm text-slate-600">{selectedExecutive.position} - {selectedExecutive.department}</p>
-                  <p className="text-sm text-slate-600">{selectedExecutive.year}</p>
+                  <p className="text-sm text-slate-600">{selectedExecutive?.session}</p>
                 </div>
               </div>
 
