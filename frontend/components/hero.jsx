@@ -22,7 +22,7 @@ export default function Hero() {
         <div className="max-w-5xl mx-auto text-center">
           <div className="relative mb-8 hidden md:block">
 
-            <div className="absolute -top-10 lef-2/6 animate-float">
+            <div className="absolute -top-10 left-1/6 animate-float">
               <div className="tech-card w-14 h-14 flex items-center justify-center backdrop-blur-sm">
                 <div className="corner-accent top-left" />
                 <div className="corner-accent top-right" />
@@ -36,14 +36,14 @@ export default function Hero() {
                 <Cpu className="w-7 h-7 text-accent" />
               </div>
             </div>
-            <div className="absolute top-5 left-1/6 animate-float" style={{ animationDelay: "2s" }}>
+            <div className="absolute top-5 left-2/8 animate-float" style={{ animationDelay: "2s" }}>
               <div className="tech-card w-14 h-14 flex items-center justify-center backdrop-blur-sm">
                 <div className="corner-accent bottom-left" />
                 <div className="corner-accent top-right" />
                 <Terminal className="w-7 h-7 text-primary" />
               </div>
             </div>
-            <div className="absolute top-0 right-2/5 animate-float" style={{ animationDelay: "1.5s" }}>
+            <div className="absolute top-0 right-2/8 animate-float" style={{ animationDelay: "1.5s" }}>
               <div className="tech-card w-14 h-14 flex items-center justify-center backdrop-blur-sm">
                 <div className="corner-accent top-left" />
                 <div className="corner-accent bottom-right" />
@@ -70,12 +70,12 @@ export default function Hero() {
 
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center px-4">
             <Button size="lg" className="group relative overflow-hidden w-full sm:w-auto">
-              <span className="relative z-10 flex items-center justify-center">
+              <span className="relative z-10 flex items-center cursor-pointer justify-center">
                 Get Started
                 <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
               </span>
             </Button>
-            <Button size="lg" variant="outline" className="tech-card bg-transparent w-full sm:w-auto">
+            <Button size="lg" variant="outline" className="tech-card cursor-pointer hover:text-black w-full sm:w-auto">
               Learn More
             </Button>
           </div>
