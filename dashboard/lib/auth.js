@@ -11,21 +11,34 @@ const baseURL = process.env.BASE_URL || 'http://localhost:5000/api/v1';
 export const auth = {
   login: async (email, password) => {
     try {
-      const response = await axios.post(baseURL + '/auth/login', { email, password });
+      const response = await axios.post(baseURL + '/auth/login', { email, password }, {
+        withCredentials: true,
+        
+      });
       const { user, token } = response.data;
-      
-      if (token) {
-        Cookies.set(TOKEN_KEY, token);
-        return { success: true, user, token };
+      if(response.status === 200) {
+        return { success: true,message:"Login successful", user, token };
       }
-      // now redirect to dashboard
-     
-
-      return { success: false, error: "Invalid credentials" };
     } catch (error) {
       return { 
         success: false, 
         error: error.response?.data?.message || "Login failed" 
+      };
+    }
+  },
+  checkMe: async () => {
+    try {
+     
+      const response = await axios.get(baseURL + '/auth/me', {
+        withCredentials: true,
+      });
+
+      return { success: true, user: response.data.user };
+    } catch (error) {
+      console.log("Error fetching current user:", error);
+      return { 
+        success: false, 
+        error: error.response?.data?.message || "Failed to fetch user data" 
       };
     }
   },
@@ -51,21 +64,14 @@ export const auth = {
 
   logout: async () => {
   try {
-    const token = Cookies.get(TOKEN_KEY);
+    
 
-    const response = await axios.post(
-      baseURL + '/auth/logout',
-      {},
-      {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      }
-    );
-
+    const response = await axios.post(baseURL + '/auth/logout', {}, {
+      withCredentials: true,
+    });
     if (response.status === 200) {
       // Only remove token after successful logout
-      Cookies.remove(TOKEN_KEY);
+     
       toast.success("Logged out successfully");
       
       return { success: true };
@@ -84,23 +90,14 @@ export const auth = {
   }
 },
 
-
-  getCurrentUser: () => {
-    const token = Cookies.get(TOKEN_KEY);
-    if (!token) return null;
-    try {
-      return JSON.parse(atob(token));
-    } catch {
-      return null;
-    }
-  },
+  
 
   isAuthenticated: () => {
-    return !!Cookies.get(TOKEN_KEY);
+    return !!user;
   },
 
   isAdmin: () => {
-    const user = auth.getCurrentUser();
-    return user?.role === "admin";
+    const user = auth.checkMe()
+    return user?.role === "ADMIN";
   },
 };

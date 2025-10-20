@@ -43,17 +43,7 @@ export const login = async (req, res, next) => {
     const user = await User.findOne({ email });
     if (!user) return res.status(400).json({ success: false, message: 'Invalid credentials' });
 
-    // if(user.email === process.env.ADMIN_EMAIL){
-    //   if(password !== process.env.ADMIN_PASSWORD){
-    //     return res.status(400).json({ success: false, message: 'Invalid credentials' });
-    //   }
-    //   // Generate JWT
-    //   const specialToken = jwt.sign({ id: user._id, role: 'admin' }, process.env.JWT_SECRET, {
-    //     expiresIn: '1d',
-    //   });
   
-    //   return res.json({ success: true, user: { id: user._id, name: user.name, email, role: 'admin' }, specialToken });
-    // }
      
     // Compare password
     const isMatch = await bcrypt.compare(password, user.password);
@@ -63,10 +53,10 @@ export const login = async (req, res, next) => {
     const token = jwt.sign({ id: user._id, role: user.role }, process.env.JWT_SECRET, {
       expiresIn: '1d',
     });
-
+    res.cookie('authToken', token, { httpOnly: true ,secure:false,sameSite:'Lax',maxAge:24*60*60*1000}); // 1 day
     res.json({ success: true, user: { id: user._id, name: user.name, email, role: user.role }, token });
   } catch (err) {
-    console.log(err)  
+    console.log(err);
     next(err);
   }
 };
@@ -94,10 +84,11 @@ export const roleChange = async (req, res, next) => {
   }
 };
 
-// Get current user
-export const getCurrentUser = async (req, res, next) => {
+// Me endpoint to get current user info from token
+export const checkMe = async (req, res, next) => {
   try {
-    const userId = req.user.id; // Set by auth middleware
+    console.log("checkMe called with user:", req.user);
+    const userId = req.user.id;
     const user = await User.findById(userId).select('-password');
     if (!user) return res.status(404).json({ success: false, message: 'User not found' });
 
@@ -109,7 +100,8 @@ export const getCurrentUser = async (req, res, next) => {
 
 // Logout user (for JWT, this is typically handled client-side by deleting the token)
 export const logout = (req, res) => {
-  // Invalidate token logic can be added here if using a token blacklist
+  // REMOVE COOKIE
+  res.clearCookie('authToken');
   res.json({ success: true, message: 'Logged out successfully' });
 };
 

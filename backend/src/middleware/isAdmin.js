@@ -1,11 +1,15 @@
-const isAdmin = (req, res, next) => {
+import jwt from 'jsonwebtoken';
 
-    console.log("isAdmin middleware ---", req.user);
-  if (req.user && req.user.role === 'ADMIN') {
+const isAdmin = (req, res, next) => {
+  const token = req.cookies.authToken;
+
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    if (decoded.role !== 'ADMIN') return res.status(403).json({ success: false, message: 'Access denied. Admins only.' });
     next();
-  } else {
-    res.status(403).json({ success: false, message: 'Access denied. Admins only.' });
   }
-};
+
+
+ 
+
 
 export default isAdmin;

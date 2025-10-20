@@ -1,23 +1,19 @@
 import express from 'express';
 import {
   createEvent,
-  getEvents,
-  getEvent,
-  updateEvent,
   deleteEvent,
+  getEvents,updateEvent
 } from './event.controller.js';
-
-import parser from '../../config/multer.js'; // Multer Cloudinary
+import isAuthenticated from '../../middleware/isAuthenticated.js';
+import isAdmin from '../../middleware/isAdmin.js';
 
 const router = express.Router();
 
 // Upload image while creating event
-router.post('/', parser.single('image'), createEvent);
-
-// CRUD routes
+router.post('/',isAuthenticated, createEvent);
 router.get('/', getEvents);
-router.get('/:id', getEvent);
-router.put('/:id', parser.single('image'), updateEvent);
-router.delete('/:id', deleteEvent);
+router.put('/:id', updateEvent);
+router.delete('/:id',isAuthenticated,isAdmin, deleteEvent);
+
 
 export default router;

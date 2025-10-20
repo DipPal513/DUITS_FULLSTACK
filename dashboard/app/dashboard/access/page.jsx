@@ -29,9 +29,7 @@ export default function MembersPage() {
         setError(null)
         try {
             const response = await axios.get('http://localhost:5000/api/v1/auth/users', {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
+               withCredentials: true,
             })
             setUsers(response.data.users)
         } catch (err) {
@@ -58,10 +56,8 @@ export default function MembersPage() {
             await axios.patch(`http://localhost:5000/api/v1/auth/users/${selectedUser._id}/role`, {
                 role: newRole
             }, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
-            })
+                withCredentials: true,
+            });
 
             const updated = users.map((user) =>
                 user._id === selectedUser._id ? { ...user, role: newRole } : user
@@ -99,9 +95,7 @@ export default function MembersPage() {
         try {
             // Uncomment and update when you have the delete endpoint
             await axios.delete(`http://localhost:5000/api/v1/auth/users/${userToDelete._id}`, {
-                headers: {
-                    Authorization: `Bearer ${token}`
-                }
+                 withCredentials: true
             })
             
             const updated = users.filter((user) => user._id !== userToDelete._id)

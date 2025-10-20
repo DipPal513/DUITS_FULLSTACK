@@ -4,8 +4,10 @@ import { useState, useEffect } from "react"
 import DashboardLayout from "@/components/DashboardLayout"
 // import { storage, STORAGE_KEYS } from "@/lib/storage"
 import { useAuth } from "@/contexts/AuthContext"
-
+import {convertToBase64} from "@/config/index"
 export default function GalleryPage() {
+const API_URL = process.env.BASE_URL || 'http://localhost:5000/api/v1';
+
   const { isAdmin } = useAuth()
   const [gallery, setGallery] = useState([])
   const [showModal, setShowModal] = useState(false)
@@ -16,9 +18,9 @@ export default function GalleryPage() {
   const [formData, setFormData] = useState({
     title: "",
     description: "",
-    category: "Event",
+    category: "",
     date: "",
-    imageUrl: "",
+    image: "",
   })
 
   useEffect(() => {
@@ -30,26 +32,29 @@ export default function GalleryPage() {
     setGallery(data)
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-
-    if (editingItem) {
-      // Update existing item
-      const updated = gallery.map((item) => (item.id === editingItem.id ? { ...formData, id: item.id } : item))
-      storage.set(STORAGE_KEYS.GALLERY, updated)
-      setGallery(updated)
-    } else {
-      // Add new item
-      const newItem = {
-        ...formData,
-        id: Date.now().toString(),
-        uploadDate: new Date().toISOString().split("T")[0],
-      }
-      const updated = [...gallery, newItem]
-      storage.set(STORAGE_KEYS.GALLERY, updated)
-      setGallery(updated)
+   
+    const base64Image = await convertToBase64(formData.image[0]);
+    const payLoad = {
+      title : formData.title,
+      description: formData.description,
+      category: formData.category,
+      date: formData.date,
+      image:base64Image
     }
+     const url = editingItem 
+        ? `${API_URL}/gallery/${editingEvent._id}` 
+        : `${API_URL}/galllery`;
+    const method = editingItem ? 'PUT' : 'POST';
 
+      const response = await fetch(url, {
+        method,
+         headers: { "Content-Type": "application/json" },
+        // send json format data
+        body: JSON.stringify(payLoad),
+        credentials:"include",
+      });
     resetForm()
   }
 
@@ -79,7 +84,7 @@ export default function GalleryPage() {
       description: "",
       category: "Event",
       date: "",
-      imageUrl: "",
+      image: "",
     })
     setEditingItem(null)
     setShowModal(false)
@@ -151,7 +156,7 @@ export default function GalleryPage() {
               {/* Image */}
               <div className="aspect-video bg-muted relative overflow-hidden">
                 <img
-                  src={item.imageUrl || `/placeholder.svg?height=400&width=600&query=${encodeURIComponent(item.title)}`}
+                  src={item.imageUrl}
                   alt={item.title}
                   className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                 />
@@ -272,12 +277,12 @@ export default function GalleryPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-foreground mb-2">Image URL</label>
+                <label className="block text-sm font-medium text-foreground mb-2">Image</label>
                 <input
-                  type="url"
-                  placeholder="https://example.com/image.jpg (optional - placeholder will be used)"
-                  value={formData.imageUrl}
-                  onChange={(e) => setFormData({ ...formData, imageUrl: e.target.value })}
+                  type="file"
+                  placeholder="example.png"
+                  value={formData.image}
+                  onChange={(e) => setFormData({ ...formData, image: e.target.value })}
                   className="w-full px-4 py-2 rounded-lg bg-background border border-input text-foreground focus:outline-none focus:ring-2 focus:ring-primary"
                 />
                 <p className="text-xs text-muted-foreground mt-1">Leave empty to use a placeholder image</p>
@@ -339,8 +344,7 @@ export default function GalleryPage() {
             <div className="bg-card border border-border rounded-xl overflow-hidden">
               <img
                 src={
-                  selectedImage.imageUrl ||
-                  `/placeholder.svg?height=800&width=1200&query=${encodeURIComponent(selectedImage.title) || "/placeholder.svg"}`
+                  selectedImage.image
                 }
                 alt={selectedImage.title}
                 className="w-full max-h-[70vh] object-contain bg-muted"

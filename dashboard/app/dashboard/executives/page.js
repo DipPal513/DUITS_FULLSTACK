@@ -109,7 +109,7 @@ export default function ExecutivesPage() {
         const res = await axios.post(
           `${baseURL}/executive`, 
           formData, 
-          { headers: { Authorization: `Bearer ${token}` } }
+          {withCredentials:true}
         )
         setExecutives([res.data.data, ...executives])
         toast.success("Executive added successfully", { id: loadingToast })

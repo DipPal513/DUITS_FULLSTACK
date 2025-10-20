@@ -4,8 +4,12 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { useAuth } from "@/contexts/AuthContext"
+import axios from "axios"
+import toast from "react-hot-toast"
 
 export default function RegisterPage() {
+
+  const baseURL = process.env.BASE_URL || 'http://localhost:5000/api/v1';
   const router = useRouter()
   const { register, isAuthenticated } = useAuth()
   const [formData, setFormData] = useState({
@@ -25,8 +29,22 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    setError("")
-
+    console.log(formData);
+    try{
+      const res = await axios.post(baseURL + '/auth/register', {name:formData.name, email: formData.email, password: formData.password });
+      console.log("response from register api", res);
+      if(res.status === 201){
+        toast.success("Registration successful! Please log in.");
+        router.push("/login");
+        return;
+      } else {
+        toast.error("Registration failed. Please try again.");
+      } 
+    } catch (error) {
+      console.error("Error during registration:", error);
+      toast.error("Registration failed. Please try again.");
+    }
+   
     // Validate passwords match
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match")

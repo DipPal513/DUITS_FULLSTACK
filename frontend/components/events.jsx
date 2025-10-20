@@ -1,36 +1,31 @@
-import { Button } from "@/components/ui/button"
-import { Calendar, MapPin, Users, ArrowRight, Clock } from "lucide-react"
+"use client";
+import { Button } from "@/components/ui/button";
+import { ArrowRight, Calendar, Clock, MapPin, Users } from "lucide-react";
+import { useEffect, useState } from "react";
 
 export default function Events() {
-  const events = [
-    {
-      title: "Web Development Workshop",
-      date: "March 15, 2024",
-      location: "Tech Lab, Room 301",
-      attendees: 45,
-      type: "Workshop",
-      description: "Learn modern web development with React and Next.js",
-      image: "/web-development-workshop-coding.jpg",
-    },
-    {
-      title: "AI & Machine Learning Hackathon",
-      date: "March 22-23, 2024",
-      location: "Innovation Center",
-      attendees: 120,
-      type: "Hackathon",
-      description: "Build innovative AI solutions in 24 hours",
-      image: "/ai-hackathon-technology.jpg",
-    },
-    {
-      title: "Cybersecurity Seminar",
-      date: "March 30, 2024",
-      location: "Auditorium A",
-      attendees: 80,
-      type: "Seminar",
-      description: "Understanding modern cybersecurity threats and solutions",
-      image: "/cybersecurity-digital-security.jpg",
-    },
-  ]
+  const [loading, setLoading] = useState(false);
+  const [events,setEvents] = useState([]);
+const API_URL = process.env.BASE_URL || 'http://localhost:5000/api/v1';
+
+
+  useEffect(() => {
+    fetchEvents();
+  }, []);
+
+   const fetchEvents = async () => {
+    try {
+      setLoading(true);
+      const response = await fetch(`${API_URL}/event`);
+      const data = await response.json();
+      setEvents(data.events || []);
+    } catch (error) {
+      console.error('Error fetching events:', error);
+      toast.error('Failed to fetch events', 'error');
+    } finally {
+      setLoading(false);
+    }
+  };
 
   const programs = [
     {
@@ -100,7 +95,7 @@ export default function Events() {
                       <span>{event.attendees} attending</span>
                     </div>
                   </div>
-                  <Button className="w-full group/btn">
+                  <Button className="w-full group/btn cursor-pointer hover:bg-gray-300">
                     Register Now
                     <ArrowRight className="ml-2 w-4 h-4 group-hover/btn:translate-x-1 transition-transform" />
                   </Button>

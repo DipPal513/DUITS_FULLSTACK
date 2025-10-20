@@ -4,16 +4,24 @@ import { useEffect, useState } from "react"
 import DashboardLayout from "@/components/DashboardLayout"
 
 import { useAuth } from "@/contexts/AuthContext"
+import { useRouter } from "next/navigation"
 
 export default function DashboardPage() {
-  const { user } = useAuth()
+  const { user,isAuthenticated } = useAuth()
   const [stats, setStats] = useState({
     members: 0,
     executives: 0,
     events: 0,
     gallery: 0,
   })
-
+  const router = useRouter();
+useEffect(() => {
+  if(isAuthenticated) {
+    router.push("/dashboard")
+  } else {
+    router.push("/login")
+  }
+}, [isAuthenticated])
   useEffect(() => {
     // Load stats from storage
     const members =  [{

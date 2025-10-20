@@ -6,14 +6,14 @@ import { useAuth } from "@/contexts/AuthContext"
 import { auth } from "@/lib/auth"
 export default function Sidebar() {
   const pathname = usePathname()
-  const { user, logout, isAdmin } = useAuth()
+  const { user, isAdmin ,setIsAuthenticated} = useAuth()
   const router = useRouter();
 
   const handleLogout = async () => {
     const result = await auth.logout();
-    console.log("logout result:", result);
     if (result.success) {
-      router.push("/login");
+      setIsAuthenticated(false);
+      router.push('/login');
     }
   };
   const navigation = [
