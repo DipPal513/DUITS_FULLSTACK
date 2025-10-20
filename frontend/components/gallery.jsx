@@ -1,44 +1,26 @@
 "use client"
 
-import { useState } from "react"
-import { Card } from "@/components/ui/card"
-import { X } from "lucide-react"
-
+import { Card } from "@/components/ui/card";
+import { X } from "lucide-react";
+import { useEffect, useState } from "react";
+import axios from "axios";
 export default function Gallery() {
-  const [selectedImage, setSelectedImage] = useState(null)
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [gallery, setGallery] = useState([]);
+const API_URL = process.env.BASE_URL || 'http://localhost:5000/api/v1';
 
-  const images = [
-    {
-      src: "/hackathon-team-coding.jpg",
-      title: "Annual Hackathon 2023",
-      category: "Hackathon",
-    },
-    {
-      src: "/workshop-presentation-tech.jpg",
-      title: "Web Development Workshop",
-      category: "Workshop",
-    },
-    {
-      src: "/team-meeting-collaboration.jpg",
-      title: "Team Building Event",
-      category: "Social",
-    },
-    {
-      src: "/tech-conference-speaker.png",
-      title: "Guest Speaker Session",
-      category: "Seminar",
-    },
-    {
-      src: "/award-ceremony-celebration.jpg",
-      title: "Project Showcase & Awards",
-      category: "Event",
-    },
-    {
-      src: "/coding-competition-students.jpg",
-      title: "Coding Competition",
-      category: "Competition",
-    },
-  ]
+useEffect(() => {
+    fetchGalleryImages();
+},[]);
+  const fetchGalleryImages = async () => {
+ try{
+     // This function would ideally fetch images from an API
+    const res = await axios.get(`${API_URL}/gallery`);
+    setGallery(res.data.galleries);
+ }catch(error){
+    console.error("Error fetching gallery images:", error);
+ }
+  }
 
   return (
     <section id="gallery" className="py-20 lg:py-32">
@@ -51,24 +33,24 @@ export default function Gallery() {
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {images.map((image, index) => (
+          {gallery.map((item, index) => (
             <Card
               key={index}
               className="overflow-hidden border-border/50 hover:border-primary/50 transition-all duration-300 cursor-pointer group"
-              onClick={() => setSelectedImage(image)}
+              onClick={() => setSelectedImage(item)}
             >
               <div className="relative h-64 overflow-hidden">
                 <img
-                  src={image.src || "/placeholder.svg"}
-                  alt={image.title}
+                  src={item.image}
+                  alt={item.title}
                   className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                   <div className="absolute bottom-0 left-0 right-0 p-4">
                     <span className="inline-block px-2 py-1 bg-primary text-primary-foreground text-xs font-medium rounded mb-2">
-                      {image.category}
+                      {item.category}
                     </span>
-                    <h3 className="text-white font-semibold">{image.title}</h3>
+                    <h3 className="text-white font-semibold">{item.title}</h3>
                   </div>
                 </div>
               </div>
@@ -90,8 +72,8 @@ export default function Gallery() {
             </button>
             <div className="max-w-5xl w-full">
               <img
-                src={selectedImage.src || "/placeholder.svg"}
-                alt={selectedImage.title}
+                src={selectedImage.image}
+                alt={"Selected"}
                 className="w-full h-auto rounded-lg"
               />
               <div className="mt-4 text-center">

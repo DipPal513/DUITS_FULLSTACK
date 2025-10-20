@@ -26,19 +26,19 @@ export default function Contact() {
     {
       icon: Mail,
       title: "Email",
-      value: "contact@itclub.com",
-      href: "mailto:contact@itclub.com",
+      value: "duits.official@gmail.com",
+      href: "mailto:duits.official@gmail.com",
     },
     {
       icon: Phone,
       title: "Phone",
-      value: "+1 (555) 123-4567",
-      href: "tel:+15551234567",
+      value: "01519-201101",
+      href: "tel:+00801519-201101",
     },
     {
       icon: MapPin,
       title: "Location",
-      value: "Tech Building, Room 201, University Campus",
+      value: "1st Floor, TSC, University of Dhaka 1205 Dhaka, Bangladesh",
       href: "#",
     },
   ]

@@ -46,7 +46,7 @@ export default function ExecutivesPage() {
     setLoading(true)
     try {
       const res = await axios.get(`${baseURL}/executive`, {
-        headers: { Authorization: `Bearer ${token}` }
+        withCredentials:true
       })
       setExecutives(res.data.data)
       setFilteredExecutives(res.data.data)
@@ -132,7 +132,7 @@ export default function ExecutivesPage() {
       // Fetch fresh data from API
       const res = await axios.get(
         `${baseURL}/executive/${executive._id}`, 
-        { headers: { Authorization: `Bearer ${token}` } }
+        {withCredentials:true}
       )
       
       const executiveData = res.data.data

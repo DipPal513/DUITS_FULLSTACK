@@ -9,6 +9,7 @@ import authRoutes from './modules/auth/auth.route.js';
 import errorHandler from './middleware/errorHandler.js';
 import memberRoutes from './modules/member/member.route.js';
 import executiveRoutes from './modules/executive/executive.route.js';
+import galleryRoutes from './modules/gallery/gallery.route.js';
 import eventRoutes from './modules/event/event.route.js';
 // Add routes
 
@@ -34,6 +35,7 @@ app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/member', memberRoutes);
 app.use('/api/v1/executive', executiveRoutes);
 app.use('/api/v1/event', eventRoutes) ;
+app.use('/api/v1/gallery', galleryRoutes) ;
 
 // Test route
 app.get('/api', (req, res) => {
