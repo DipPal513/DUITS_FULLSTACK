@@ -4,10 +4,11 @@ import DashboardLayout from '@/components/DashboardLayout';
 import DeleteModal from "@/components/event/DeleteModal";
 import EventCard from "@/components/event/EventCard";
 import EventFormModal from "@/components/event/EventFormModal";
+import axios from 'axios';
 import { Calendar, Loader, Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
-const API_URL = process.env.BASE_URL || 'http://localhost:5000/api/v1';
+const API_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 
 
@@ -55,11 +56,12 @@ const convertToBase64 = (file) =>
   const handleEditEvent = (event) => {
     setEditingEvent(event);
     setIsModalOpen(true);
+    
   };
 
   const handleFormSubmit = async (formData) => {
 
-const base64Image = await convertToBase64(formData.image[0]);
+const base64Image = editingEvent ? editingEvent.image : await convertToBase64(formData.image[0]);
 
       const payLoad = {
         title: formData.title,
@@ -122,13 +124,13 @@ const base64Image = await convertToBase64(formData.image[0]);
   const handleConfirmDelete = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${API_URL}/event/${eventToDelete._id}`, {
-        method: 'DELETE'
+      const response = await axios.delete(`${API_URL}/event/${eventToDelete._id}`, {
+       withCredentials: true,
       });
 
       if (!response.ok) throw new Error('Failed to delete event');
 
-      setEvents(events.filter(event => event._id !== eventToDelete._id));
+      fetchEvents();
       toast.success('Event deleted successfully!');
       setIsDeleteModalOpen(false);
       setEventToDelete(null);

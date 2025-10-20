@@ -43,7 +43,7 @@ import { useForm } from 'react-hook-form';
           </h2>
           <button
             onClick={onClose}
-            className="hover:bg-white/20 p-2 rounded-lg transition-colors"
+            className="hover:bg-white/20 p-2 cursor-pointer rounded-lg  transition-colors"
           >
             <X size={24} />
           </button>
@@ -173,7 +173,7 @@ import { useForm } from 'react-hook-form';
               type="button"
               onClick={onClose}
               disabled={loading}
-              className="flex-1 px-6 py-3 border-2 border-slate-300 text-slate-700 rounded-lg font-semibold hover:bg-slate-50 transition-colors disabled:opacity-50"
+              className="flex-1 px-6 py-3 cursor-pointer border-2 border-slate-300 text-slate-700 rounded-lg font-semibold hover:bg-slate-50 transition-colors disabled:opacity-50"
             >
               Cancel
             </button>
@@ -181,7 +181,7 @@ import { useForm } from 'react-hook-form';
               type="button"
               onClick={handleSubmit(handleFormSubmit)}
               disabled={loading}
-              className="flex-1 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all disabled:opacity-50 flex items-center justify-center gap-2"
+              className="flex-1 px-6 cursor-pointer py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-lg font-semibold hover:shadow-lg transition-all disabled:opacity-50 flex items-center justify-center gap-2"
             >
               {loading && <Loader className="animate-spin" size={20} />}
               {loading ? 'Saving...' : editingGallery ? 'Update gallery' : 'Create gallery'}

@@ -29,7 +29,7 @@ export default function MembersPage() {
         setIsLoading(true)
         setError(null)
         try {
-            const response = await axios.get('http://localhost:5000/api/v1/auth/users', {
+            const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/users`, {
                withCredentials: true,
             })
             setUsers(response.data.users)
@@ -54,7 +54,7 @@ export default function MembersPage() {
         const loadingToast = toast.loading('Updating role...')
         
         try {
-            await axios.patch(`http://localhost:5000/api/v1/auth/users/${selectedUser._id}/role`, {
+            await axios.patch(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/users/${selectedUser._id}/role`, {
                 role: newRole
             }, {
                 withCredentials: true,
@@ -95,7 +95,7 @@ export default function MembersPage() {
         
         try {
             // Uncomment and update when you have the delete endpoint
-            await axios.delete(`http://localhost:5000/api/v1/auth/users/${userToDelete._id}`, {
+            await axios.delete(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/users/${userToDelete._id}`, {
                  withCredentials: true
             })
             

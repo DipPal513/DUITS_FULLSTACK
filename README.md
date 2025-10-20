@@ -4,7 +4,7 @@ This repository contains the backend, dashboard and frontend components of our D
 
 ## Project Structure
 ```
-/
+
 ├── backend/
 │   ├── src/
 │   ├── package.json

@@ -6,7 +6,7 @@ import api from "@/config/index";
 export default function Events() {
   const [loading, setLoading] = useState(false);
   const [events,setEvents] = useState([]);
-const API_URL = process.env.NEXT_PUBLIC_BASE_URL || 'http://localhost:5000/api/v1';
+const API_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 
   useEffect(() => {

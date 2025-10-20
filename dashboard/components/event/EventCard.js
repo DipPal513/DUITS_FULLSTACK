@@ -1,6 +1,6 @@
 
 import { Calendar, Edit, ExternalLink, MapPin, Trash2 } from 'lucide-react';
-const API_URL = process.env.BASE_URL || 'http://localhost:5000/api/v1';
+const API_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
 
 const EventCard = ({ event, onEdit, onDelete }) => {

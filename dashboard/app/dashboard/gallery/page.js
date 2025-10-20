@@ -57,7 +57,7 @@ const convertToBase64 = (file) =>
 
   const handleFormSubmit = async (formData) => {
 
-const base64Image = await convertToBase64(formData.image[0]);
+const base64Image = editingGallery ? editingGallery.image : await convertToBase64(formData.image[0]);
 
       const payLoad = {
         title: formData.title,
@@ -68,7 +68,6 @@ const base64Image = await convertToBase64(formData.image[0]);
         
       }
 
-      console.log(`this is the payload`, payLoad);
     try {
       setLoading(true);
 
@@ -150,9 +149,9 @@ console.log("all the gallerys here.,", gallerys);
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
             <div>
               <h1 className="text-3xl md:text-4xl font-bold text-slate-800 mb-2">
-                gallerys Management
+                Gallery Management
               </h1>
-              <p className="text-slate-600">Create and manage your gallerys seamlessly</p>
+              <p className="text-slate-600">Create and manage your galleries seamlessly</p>
             </div>
             <button
               onClick={handleCreategallery}

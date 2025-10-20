@@ -23,13 +23,13 @@ const galleryCard = ({ gallery, onEdit, onDelete }) => {
         <div className="absolute top-3 right-3 flex gap-2 opacity-0 group-hover:opacity-100 transition-all duration-300">
           <button
             onClick={() => onEdit(gallery)}
-            className="bg-white/95 backdrop-blur-sm p-2.5 rounded-lg shadow-lg hover:bg-blue-50 transition-colors"
+            className="bg-white/95 backdrop-blur-sm p-2.5 cursor-pointer rounded-lg shadow-lg hover:bg-blue-50 transition-colors"
           >
             <Edit size={18} className="text-blue-600" />
           </button>
           <button
             onClick={() => onDelete(gallery)}
-            className="bg-white/95 backdrop-blur-sm p-2.5 rounded-lg shadow-lg hover:bg-red-50 transition-colors"
+            className="bg-white/95 backdrop-blur-sm p-2.5 cursor-pointer rounded-lg shadow-lg hover:bg-red-50 transition-colors"
           >
             <Trash2 size={18} className="text-red-600" />
           </button>

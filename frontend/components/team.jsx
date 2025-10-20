@@ -4,7 +4,7 @@ import axios from "axios"
 import { Github, Linkedin, Mail } from "lucide-react"
 import React, { useEffect } from "react"
 export default function Team() {
-  const baseurl = process.env.NEXT_PUBLIC_API_BASE_URL;
+  const baseurl = process.env.NEXT_PUBLIC_BASE_URL;
   // load executive from api using axios and so proper error validation and store in state
   const [executives, setExecutives] = React.useState([])
   useEffect(() => {

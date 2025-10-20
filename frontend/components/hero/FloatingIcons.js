@@ -1,69 +1,56 @@
-
 import gsap from "gsap"
-import { Atom, Binary, CloudLightning, Laptop, Rocket, Sparkles, Star, Zap } from "lucide-react"
+import { Binary, Code2, Cpu, Database, Github, Server, Terminal, Wifi } from "lucide-react"
 import { useEffect, useRef } from "react"
 
 export default function FloatingIcons() {
-
-  const headingRef = useRef(null)
-  const subtitleRef = useRef(null)
-  const buttonsRef = useRef(null)
-  const statsRef = useRef([])
-
   const iconsRef = useRef([])
 
   useEffect(() => {
-    // Initial animation for all icons
+    // Entrance animation and continuous floating
     iconsRef.current.forEach((icon, i) => {
       if (!icon) return
       
-      // Set initial state
-      gsap.set(icon, { 
-        opacity: 0, 
+      // Entrance
+      gsap.from(icon, {
+        opacity: 0,
         scale: 0,
-        rotation: Math.random() * 360 
+        duration: 0.8,
+        delay: i * 0.1,
+        ease: "back.out(1.5)"
       })
       
-      // Entrance animation
+      // Continuous random floating - Y axis
       gsap.to(icon, {
-        opacity: 0.7,
-        scale: 1,
-        duration: 1,
-        delay: i * 0.2,
-        ease: "elastic.out(1, 0.5)"
-      })
-      
-      // Continuous floating animation
-      gsap.to(icon, {
-        y: "+=10",
-        duration: 2 + Math.random() * 2,
+        y: `+=${15 + Math.random() * 20}`, // Random 15-35px movement
+        duration: 2 + Math.random() * 2, // Random 2-4s duration
         repeat: -1,
         yoyo: true,
         ease: "sine.inOut",
-        delay: i * 0.3
+        delay: Math.random() * 2 // Random start delay
       })
       
-      // Continuous rotation
+      // Continuous random floating - X axis
       gsap.to(icon, {
-        rotation: "+=360",
-        duration: 8 + Math.random() * 4,
+        x: `+=${10 + Math.random() * 15}`, // Random 10-25px movement
+        duration: 2.5 + Math.random() * 2, // Random 2.5-4.5s duration
         repeat: -1,
-        ease: "none",
-        delay: i * 0.1
+        yoyo: true,
+        ease: "sine.inOut",
+        delay: Math.random() * 2 // Random start delay
       })
       
-      // Random slight movements
+      // Subtle rotation
       gsap.to(icon, {
-        x: "+=20",
+        rotation: Math.random() > 0.5 ? 10 : -10,
         duration: 3 + Math.random() * 2,
         repeat: -1,
         yoyo: true,
         ease: "sine.inOut",
-        delay: i * 0.4
+        delay: Math.random() * 2
       })
     })
     
-    // Mouse move parallax effect
+    // Gentle cursor follow - moves slightly toward cursor
     const handleMouseMove = (e) => {
       const { clientX, clientY } = e
       const centerX = window.innerWidth / 2
@@ -72,15 +59,16 @@ export default function FloatingIcons() {
       iconsRef.current.forEach((icon, i) => {
         if (!icon) return
         
-        const speed = (i + 1) * 0.5
+        // Each icon follows with different speed (3-8px movement)
+        const speed = 0.3 + (i * 0.1)
         const x = (clientX - centerX) / centerX
         const y = (clientY - centerY) / centerY
         
         gsap.to(icon, {
-          x: `+=${x * speed * 20}`,
-          y: `+=${y * speed * 20}`,
-          duration: 0.5,
-          ease: "power2.out"
+          x: `+=${x * speed * 5}`,
+          y: `+=${y * speed * 5}`,
+          duration: 1,
+          ease: "power1.out"
         })
       })
     }
@@ -96,42 +84,28 @@ export default function FloatingIcons() {
   }, [])
 
   const icons = [
-    { Icon: Laptop, color: "text-blue-500", left: "5%", top: "15%" },
-    { Icon: Rocket, color: "text-purple-500", left: "90%", top: "20%" },
-    { Icon: Zap, color: "text-yellow-400", left: "10%", top: "70%" },
-    { Icon: Star, color: "text-pink-500", left: "85%", top: "65%" },
-    { Icon: Binary, color: "text-green-500", left: "15%", top: "45%" },
-    { Icon: Atom, color: "text-cyan-400", left: "92%", top: "45%" },
-    { Icon: CloudLightning, color: "text-orange-500", left: "8%", top: "85%" },
-    { Icon: Sparkles, color: "text-rose-500", left: "88%", top: "85%" },
+    { Icon: Code2, gradient: "from-blue-400 via-blue-500 to-cyan-500", left: "3%", top: "12%" },
+    { Icon: Cpu, gradient: "from-purple-400 via-pink-500 to-red-500", left: "92%", top: "18%" },
+    { Icon: Terminal, gradient: "from-yellow-400 via-orange-500 to-red-500", left: "8%", top: "68%" },
+    { Icon: Database, gradient: "from-pink-400 via-rose-500 to-purple-500", left: "88%", top: "72%" },
+    { Icon: Binary, gradient: "from-green-400 via-emerald-500 to-teal-500", left: "12%", top: "42%" },
+    { Icon: Server, gradient: "from-cyan-400 via-blue-500 to-indigo-500", left: "94%", top: "48%" },
+    { Icon: Wifi, gradient: "from-orange-400 via-red-500 to-pink-500", left: "5%", top: "88%" },
+    { Icon: Github, gradient: "from-rose-400 via-fuchsia-500 to-purple-500", left: "90%", top: "92%" },
   ]
 
   return (
     <>
-      {icons.map(({ Icon, color, left, top }, i) => (
+      {icons.map(({ Icon, gradient, left, top }, i) => (
         <div
           key={i}
           ref={(el) => (iconsRef.current[i] = el)}
           className="absolute hidden md:block pointer-events-none"
           style={{ left, top }}
-          onMouseEnter={(e) => {
-            gsap.to(e.currentTarget, {
-              scale: 1.3,
-              opacity: 1,
-              duration: 0.3,
-              ease: "back.out(1.7)"
-            })
-          }}
-          onMouseLeave={(e) => {
-            gsap.to(e.currentTarget, {
-              scale: 1,
-              opacity: 0.7,
-              duration: 0.3,
-              ease: "power2.out"
-            })
-          }}
         >
-          <Icon className={`w-8 h-8 ${color} drop-shadow-lg`} />
+          <div className={`w-12 h-12 rounded-full bg-gradient-to-br ${gradient} p-2.5 shadow-2xl`}>
+            <Icon className="w-full h-full text-white drop-shadow-md" />
+          </div>
         </div>
       ))}
     </>

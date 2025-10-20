@@ -16,6 +16,9 @@ export const auth = {
         
       });
       const { user, token } = response.data;
+      if(user.role !== "ADMIN") {
+        return { success: false, error: "Unauthorized Access" };
+      }
       if(response.status === 200) {
         return { success: true,message:"Login successful", user, token };
       }

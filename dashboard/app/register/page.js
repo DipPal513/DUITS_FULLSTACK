@@ -62,6 +62,8 @@ export default function RegisterPage() {
     const result = await register(formData.name, formData.email, formData.password)
 
     if (result.success) {
+      toast.success("Registration successful!")
+      setLoading(false)
       router.push("/dashboard")
     } else {
       setError(result.error || "Registration failed")
@@ -168,7 +170,7 @@ export default function RegisterPage() {
             <button
               type="submit"
               disabled={loading}
-              className="w-full py-3 px-4 bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="w-full cursor-pointer py-3 px-4 bg-primary hover:bg-primary/90 text-primary-foreground font-medium rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {loading ? (
                 <>

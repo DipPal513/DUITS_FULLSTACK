@@ -29,14 +29,16 @@ const getExecutiveById = async (req, res, next) => {
 // Create a new executive
 const createExecutive = async (req, res, next) => {
   try {
-    const { name, position, department, session, email, phone,image } = req.body;
+    const { name, position, department, session, email,year, phone,image } = req.body;
     const newExecutive = new Executive({
       name,
       session,
       position,
       department,
       email,
-      phone,image
+      year,
+      phone,
+      image
     });
     // error validation for unique email
     const existingExecutive = await Executive.findOne({ email });

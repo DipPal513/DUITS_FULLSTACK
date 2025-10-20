@@ -97,7 +97,7 @@ const convertToBase64 = (file) =>
       toast.error("Please fill in all required fields")
       return
     }
-    const base64Image = await convertToBase64(formData.image);
+    const base64Image = editingExecutive ? editingExecutive.image : await convertToBase64(formData.image);
     setLoading(true)
     const loadingToast = toast.loading(editingExecutive ? "Updating executive..." : "Adding executive...")
     const payLoad = {
@@ -107,7 +107,8 @@ const convertToBase64 = (file) =>
       department: formData.department,
       session: formData.session,
       image: base64Image,
-      phone: formData.phone
+      phone: formData.phone,
+      year: formData.year
     }
     try {
       if (editingExecutive) {
@@ -163,7 +164,8 @@ const convertToBase64 = (file) =>
         department: executiveData.department || "",
         session: executiveData.session || "",
         phone: executiveData.phone || "",
-        image: executiveData.image || null
+        image: executiveData.image || null,
+        year: executiveData.year || ""
       })
       
       toast.success("Executive loaded", { id: loadingToast })
@@ -338,6 +340,7 @@ const convertToBase64 = (file) =>
                     <th className="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">Executive</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">Position</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">Department</th>
+                    <th className="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">Session</th>
                     <th className="px-6 py-3 text-left text-xs font-medium text-slate-600 uppercase tracking-wider">Year</th>
                     <th className="px-6 py-3 text-right text-xs font-medium text-slate-600 uppercase tracking-wider">Actions</th>
                   </tr>
@@ -363,6 +366,7 @@ const convertToBase64 = (file) =>
                       </td>
                       <td className="px-6 py-4 text-sm text-slate-600">{executive.department}</td>
                       <td className="px-6 py-4 text-sm text-slate-600">{executive.session}</td>
+                      <td className="px-6 py-4 text-sm text-slate-600">{executive?.year}</td>
                       <td className="px-6 py-4">
                         <div className="flex items-center justify-end gap-2">
                           <button
@@ -517,7 +521,20 @@ const convertToBase64 = (file) =>
                     disabled={loading}
                   />
                 </div>
-
+    <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                    Year <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.year}
+                    onChange={(e) => setFormData({ ...formData, year: e.target.value })}
+                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                    placeholder="2026"
+                    disabled={loading}
+                  />
+                </div>
                 <div>
                   <label className="block text-sm font-medium text-slate-700 mb-1">
                     Session <span className="text-red-500">*</span>

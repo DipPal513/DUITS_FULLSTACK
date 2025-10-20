@@ -12,7 +12,8 @@ import { useForm } from 'react-hook-form';
         description: editingEvent.description,
         location: editingEvent.location,
         date: editingEvent.date?.split('T')[0],
-        registrationLink: editingEvent.registrationLink
+        registrationLink: editingEvent.registrationLink,
+        image: editingEvent.image
       });
     } else {
       reset({

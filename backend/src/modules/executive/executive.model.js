@@ -22,6 +22,10 @@ const ExecutiveSchema = new mongoose.Schema({
     required: true,
     unique: true,
   },
+  year: {
+    type: String,
+    required: true,
+  },
   phone: {
     type: String,
     required: true,
