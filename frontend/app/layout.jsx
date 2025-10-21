@@ -34,13 +34,14 @@ export const metadata = {
   viewport: {
     width: "device-width",
     initialScale: 1,
-    maximumScale: 1,
+    // The restrictive maximumScale property has been removed for better accessibility.
   },
   icons: [
     {rel:"apple-touch-icon",url:"icons/duits-512.png"},
     {rel:"icon",url:"icons/duits-512.png"},
   ]
 }
+
 
 export default function RootLayout({ children }) {
   return (

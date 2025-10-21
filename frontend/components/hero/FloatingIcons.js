@@ -51,27 +51,27 @@ export default function FloatingIcons() {
     })
     
     // Gentle cursor follow - moves slightly toward cursor
-    const handleMouseMove = (e) => {
-      const { clientX, clientY } = e
-      const centerX = window.innerWidth / 2
-      const centerY = window.innerHeight / 2
+    // const handleMouseMove = (e) => {
+    //   const { clientX, clientY } = e
+    //   const centerX = window.innerWidth / 2
+    //   const centerY = window.innerHeight / 2
       
-      iconsRef.current.forEach((icon, i) => {
-        if (!icon) return
+    //   iconsRef.current.forEach((icon, i) => {
+    //     if (!icon) return
         
-        // Each icon follows with different speed (3-8px movement)
-        const speed = 0.3 + (i * 0.1)
-        const x = (clientX - centerX) / centerX
-        const y = (clientY - centerY) / centerY
+    //     // Each icon follows with different speed (3-8px movement)
+    //     const speed = 0.3 + (i * 0.1)
+    //     const x = (clientX - centerX) / centerX
+    //     const y = (clientY - centerY) / centerY
         
-        gsap.to(icon, {
-          x: `+=${x * speed * 5}`,
-          y: `+=${y * speed * 5}`,
-          duration: 1,
-          ease: "power1.out"
-        })
-      })
-    }
+    //     gsap.to(icon, {
+    //       x: `+=${x * speed * 5}`,
+    //       y: `+=${y * speed * 5}`,
+    //       duration: 1,
+    //       ease: "power1.out"
+    //     })
+    //   })
+    // }
     
     // window.addEventListener("mousemove", handleMouseMove)
     
