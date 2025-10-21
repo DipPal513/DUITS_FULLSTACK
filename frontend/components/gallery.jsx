@@ -28,7 +28,7 @@ setGallery(data.galleries || []);
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {gallery.map((item, index) => (
+          {gallery.length === 0 ? <p className="">No images found</p> : gallery.map((item, index) => (
             <Card
               key={index}
               className="overflow-hidden border-border/50 py-0 hover:border-primary/50 transition-all duration-300 cursor-pointer group"

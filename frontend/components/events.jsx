@@ -43,14 +43,14 @@ const API_URL = process.env.NEXT_PUBLIC_BASE_URL;
           <h2 className="text-4xl md:text-5xl font-bold mb-6 uppercase tracking-tight">Events & Programs</h2>
           <p className="text-lg text-muted-foreground text-pretty leading-relaxed">
             Join our exciting events, workshops, and programs designed to enhance your skills and expand your network
-          </p>
+        </p>
         </div>
 
         {/* Upcoming Events */}
         <div className="mb-20">
           <h3 className="text-2xl font-bold mb-8 uppercase tracking-wide">Upcoming Events</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {events.map((event, index) => (
+            {events.length === 0 ? <p className="">No events found</p>: events?.map((event, index) => (
               <div key={index} className="tech-card overflow-hidden backdrop-blur-sm group relative">
                 <div className="corner-accent top-left" />
                 <div className="corner-accent top-right" />

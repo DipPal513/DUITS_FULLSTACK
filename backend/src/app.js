@@ -11,6 +11,7 @@ import memberRoutes from './modules/member/member.route.js';
 import executiveRoutes from './modules/executive/executive.route.js';
 import galleryRoutes from './modules/gallery/gallery.route.js';
 import eventRoutes from './modules/event/event.route.js';
+import noticeRoutes from './modules/notice/notice.route.js';
 // Add routes
 
 configDotenv();
@@ -36,6 +37,8 @@ app.use('/api/v1/member', memberRoutes);
 app.use('/api/v1/executive', executiveRoutes);
 app.use('/api/v1/event', eventRoutes) ;
 app.use('/api/v1/gallery', galleryRoutes) ;
+app.use('/api/v1/notice', noticeRoutes) ;
+
 
 // Test route
 app.get('/api', (req, res) => {
