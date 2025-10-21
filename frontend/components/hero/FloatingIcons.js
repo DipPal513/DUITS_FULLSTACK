@@ -73,14 +73,14 @@ export default function FloatingIcons() {
       })
     }
     
-    window.addEventListener("mousemove", handleMouseMove)
+    // window.addEventListener("mousemove", handleMouseMove)
     
-    return () => {
-      window.removeEventListener("mousemove", handleMouseMove)
-      iconsRef.current.forEach(icon => {
-        if (icon) gsap.killTweensOf(icon)
-      })
-    }
+    // return () => {
+    //   window.removeEventListener("mousemove", handleMouseMove)
+    //   iconsRef.current.forEach(icon => {
+    //     if (icon) gsap.killTweensOf(icon)
+    //   })
+    // }
   }, [])
 
   const icons = [

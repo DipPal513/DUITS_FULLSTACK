@@ -15,12 +15,42 @@ const inter = Inter({
 export const metadata = {
   title: "IT Club - Innovation & Technology",
   description: "Join our community of tech enthusiasts, innovators, and creators",
-  generator: "v0.app",
+  generator: "Next.js",
+  manifest:"/manifest.json",
+  keywords: [
+    "IT Club",
+    "Technology",
+    "Innovation",
+    "Community",
+    "Developers",
+    "Designers",
+    "Tech Enthusiasts",
+  ],
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "white" },
+    { media: "(prefers-color-scheme: dark)", color: "black" },
+  ],
+  authors: [{ name: "DUITS IT Club", url: "https://duits.org" }],
+  viewport: {
+    width: "device-width",
+    initialScale: 1,
+    maximumScale: 1,
+  },
+  icons: [
+    {rel:"apple-touch-icon",url:"icons/duits-512.png"},
+    {rel:"icon",url:"icons/duits-512.png"},
+  ]
 }
 
 export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
+    <head>
+      <meta name="theme-color" content="#fff" />
+      <link rel="manifest" href="/manifest.json" />
+      <link rel="icon" href="icons/duits-512.png" />
+      <link rel="apple-touch-icon" href="icons/duits-512.png" />
+    </head>
       <body className={`font-sans ${inter.variable} ${GeistSans.variable} ${GeistMono.variable} antialiased`}>
         <Toaster />
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
