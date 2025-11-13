@@ -31,7 +31,7 @@ export default function RegisterPage() {
     e.preventDefault()
     console.log(formData);
     try{
-      const res = await axios.post(baseURL + '/auth/register', {name:formData.name, email: formData.email, password: formData.password });
+      const res = await axios.post(baseURL + '/auth/register', {name:formData.name, email: formData.email, password: formData.password, role: "PENDING" });
       console.log("response from register api", res);
       if(res.status === 201){
         toast.success("Registration successful! Please log in.");

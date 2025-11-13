@@ -37,9 +37,8 @@ const convertToBase64 = (file) =>
   const fetchNotices = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${API_URL}/notice`);
-      const data = await response.json();
-      setNotices(data.notices || []);
+      const response = await axios.get(`${API_URL}/notice`);
+      setNotices(response.data.data || []);
     } catch (error) {
       console.error('Error fetching notices:', error);
       toast.error('Failed to fetch notices', 'error');
@@ -72,12 +71,12 @@ const base64Image = editingNotice ? editingNotice.image : await convertToBase64(
         registrationLink: formData.registrationLink,
       }
 
-      console.log(`this is the payload`, payLoad);
+      
     try {
       setLoading(true);
 
       const url = editingNotice 
-        ? `${API_URL}/notice/${editingNotice._id}` 
+        ? `${API_URL}/notice/${editingNotice.id}` 
         : `${API_URL}/notice`;
       
       const method = editingNotice ? 'PUT' : 'POST';
@@ -97,15 +96,15 @@ const base64Image = editingNotice ? editingNotice.image : await convertToBase64(
       fetchNotices();
 
       if (editingNotice) {
-        setNotices(notices.map(notice => 
-          notice._id === editingNotice._id ? result.notice : notice
+        setNotices(notices?.map(notice => 
+          notice.id === editingNotice.id ? result.notice : notice
         ));
         toast.success('Notice updated successfully!');
       } else {
         // setNotices([result.notice, ...notices]);
         toast.success('Notice created successfully!');
       }
-
+      fetchNotices();
       setIsModalOpen(false);
       setEditingNotice(null);
     } catch (error) {
@@ -124,13 +123,13 @@ const base64Image = editingNotice ? editingNotice.image : await convertToBase64(
   const handleConfirmDelete = async () => {
     try {
       setLoading(true);
-      const response = await axios.delete(`${API_URL}/notice/${noticeToDelete._id}`, {
+      const response = await axios.delete(`${API_URL}/notice/${noticeToDelete.id}`, {
        withCredentials: true,
       });
 
       if (response.status !== 200) toast.error(response.data.message || 'Failed to delete notice', 'error');
 
-      setNotices(notices.filter(notice => notice._id !== noticeToDelete._id));
+      setNotices(notices.filter(notice => notice.id !== noticeToDelete.id));
       setIsDeleteModalOpen(false);
       setNoticeToDelete(null);
       toast.success('Notice deleted successfully!');
@@ -141,7 +140,7 @@ const base64Image = editingNotice ? editingNotice.image : await convertToBase64(
       setLoading(false);
     }
   };
-console.log("all the notices here.,", notices);
+
   return (
     <DashboardLayout>
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-4 md:p-8">
@@ -177,9 +176,9 @@ console.log("all the notices here.,", notices);
 
           {/* Notices Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {notices.map(notice => (
+            {notices?.map(notice => (
               <NoticeCard
-                key={notice._id}
+                key={notice.id}
                 notice={notice}
                 onEdit={handleEditNotice}
                 onDelete={handleDeleteClick}

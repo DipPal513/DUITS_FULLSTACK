@@ -77,7 +77,7 @@ const base64Image = editingEvent ? editingEvent.image : await convertToBase64(fo
       setLoading(true);
 
       const url = editingEvent 
-        ? `${API_URL}/event/${editingEvent._id}` 
+        ? `${API_URL}/event/${editingEvent.id}` 
         : `${API_URL}/event`;
       
       const method = editingEvent ? 'PUT' : 'POST';
@@ -98,7 +98,7 @@ const base64Image = editingEvent ? editingEvent.image : await convertToBase64(fo
 
       if (editingEvent) {
         setEvents(events.map(event => 
-          event._id === editingEvent._id ? result.event : event
+          event.id === editingEvent.id ? result.event : event
         ));
         toast.success('Event updated successfully!');
       } else {
@@ -124,7 +124,7 @@ const base64Image = editingEvent ? editingEvent.image : await convertToBase64(fo
   const handleConfirmDelete = async () => {
     try {
       setLoading(true);
-      const response = await axios.delete(`${API_URL}/event/${eventToDelete._id}`, {
+      const response = await axios.delete(`${API_URL}/event/${eventToDelete.id}`, {
        withCredentials: true,
       });
 
@@ -179,7 +179,7 @@ console.log("all the events here.,", events);
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             {events.map(event => (
               <EventCard
-                key={event._id}
+                key={event.id}
                 event={event}
                 onEdit={handleEditEvent}
                 onDelete={handleDeleteClick}

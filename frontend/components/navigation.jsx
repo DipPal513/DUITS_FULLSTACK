@@ -37,10 +37,7 @@ export default function Navigation() {
       <div className="container mx-auto px-4 lg:px-8">
         <div className="flex items-center justify-between h-16 lg:h-20">
           <Link href="/" className="flex items-center gap-2 group">
-            <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center group-hover:scale-110 transition-transform">
-              <span className="text-primary-foreground font-mono font-bold text-lg">IT</span>
-            </div>
-            <span className="font-bold text-xl hidden sm:block">IT Club</span>
+           <img src="/icons/duits-512.png" alt="IT Club Logo" className="h-24 w-24 object-contain" />
           </Link>
 
           {/* Desktop Navigation */}

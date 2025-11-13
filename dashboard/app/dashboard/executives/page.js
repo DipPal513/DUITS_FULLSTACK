@@ -1,12 +1,12 @@
 "use client"
 
-import { useState, useEffect } from "react"
-import { Search, Plus, Edit2, Trash2, X, Mail, Building2, BookOpen, User, Filter, Eye, AlertTriangle } from "lucide-react"
 import DashboardLayout from "@/components/DashboardLayout"
 import { useAuth } from "@/contexts/AuthContext"
 import axios from "axios"
+import { AlertTriangle, Edit2, Eye, Mail, Plus, Search, Trash2, User, X } from "lucide-react"
+import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
-
+import DetailsExecutiveModal from "@/components/executive/Details"
 export default function ExecutivesPage() {
 
 const convertToBase64 = (file) =>
@@ -97,9 +97,9 @@ const convertToBase64 = (file) =>
       toast.error("Please fill in all required fields")
       return
     }
-    const base64Image = editingExecutive ? editingExecutive.image : await convertToBase64(formData.image);
+    const base64Image = editingExecutive ? editingExecutive?.image : await convertToBase64(formData.image);
     setLoading(true)
-    const loadingToast = toast.loading(editingExecutive ? "Updating executive..." : "Adding executive...")
+    const loadingToast = toast.loading(editingExecutive ? "Updating executive?..." : "Adding executive?...")
     const payLoad = {
       name: formData.name,
       email: formData.email,
@@ -114,14 +114,14 @@ const convertToBase64 = (file) =>
       if (editingExecutive) {
         // Update existing executive
         const res = await axios.put(
-          `${baseURL}/executive/${editingExecutive._id}`, 
+          `${baseURL}/executive/${editingExecutive?.id}`, 
           payLoad, 
           {withCredentials:true}
         )
         const updatedExecs = executives.map(exec => 
-          exec._id === editingExecutive._id ? res.data.data : exec
+          exec.id === editingExecutive?.id ? res.data.data : exec
         )
-        setExecutives(updatedExecs)
+        loadExecutives();
         toast.success("Executive updated successfully", { id: loadingToast })
       } else {
         // Add new executive
@@ -145,12 +145,11 @@ const convertToBase64 = (file) =>
 
   const handleEdit = async (executive) => {
     setLoading(true)
-    const loadingToast = toast.loading("Loading executive details...")
-    
+   
     try {
       // Fetch fresh data from API
       const res = await axios.get(
-        `${baseURL}/executive/${executive._id}`, 
+        `${baseURL}/executive/${executive?.id}`,
         {withCredentials:true}
       )
       
@@ -168,7 +167,7 @@ const convertToBase64 = (file) =>
         year: executiveData.year || ""
       })
       
-      toast.success("Executive loaded", { id: loadingToast })
+      // toast.success("Executive loaded", { id: loadingToast })
       setShowModal(true)
     } catch (error) {
       console.error("Error loading executive:", error)
@@ -187,15 +186,15 @@ const convertToBase64 = (file) =>
     if (!executiveToDelete) return
     
     setLoading(true)
-    const loadingToast = toast.loading("Deleting executive...")
+    const loadingToast = toast.loading("Deleting executive?...")
     
     try {
       await axios.delete(
-        `${baseURL}/executive/${executiveToDelete._id}`, 
+        `${baseURL}/executive/${executiveToDelete.id}`, 
         { withCredentials:true,credentials:"include" }
       )
       
-      const updatedExecs = executives.filter(exec => exec._id !== executiveToDelete._id)
+      const updatedExecs = executives.filter(exec => exec.id !== executiveToDelete.id)
       setExecutives(updatedExecs)
       
       toast.success("Executive deleted successfully", { id: loadingToast })
@@ -241,9 +240,8 @@ const convertToBase64 = (file) =>
     setShowModal(true)
   }
 
-  const positions = ["President", "Vice President", "Secretary", "Treasurer", "Technical Lead", "Event Coordinator", "Marketing Head", "Design Lead"]
-  const departments = [...new Set(executives.map(e => e.department))]
-
+  const positions = ["President", "Vice President", "Secretary", "Treasurer", "Technical Lead", "Event Coordinator", "Marketing Head", "Design Lead","Junior Executive"]
+ 
   const positionOrder = ["President", "Vice President", "Secretary", "Treasurer", "Technical Lead", "Event Coordinator", "Marketing Head", "Junior Executive"]
   const sortedExecutives = [...filteredExecutives].sort((a, b) => {
     const aIndex = positionOrder.indexOf(a.position)
@@ -297,18 +295,9 @@ const convertToBase64 = (file) =>
                 <option key={pos} value={pos}>{pos}</option>
               ))}
             </select>
-            <select
-              value={filterDepartment}
-              onChange={(e) => setFilterDepartment(e.target.value)}
-              className="px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-            >
-              <option value="">All Departments</option>
-              {departments.map(dept => (
-                <option key={dept} value={dept}>{dept}</option>
-              ))}
-            </select>
+           
           </div>
-          {(searchTerm || filterPosition || filterDepartment) && (
+          {(searchTerm || filterPosition ) && (
             <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between text-xs animate-in fade-in duration-200">
               <span className="text-slate-600">
                 Showing {sortedExecutives.length} of {executives.length} executives
@@ -346,26 +335,26 @@ const convertToBase64 = (file) =>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-slate-200">
-                  {sortedExecutives.map((executive) => (
-                    <tr key={executive._id} className="hover:bg-slate-50 transition-colors duration-150">
+                  {sortedExecutives?.map((executive,index) => (
+                    <tr key={index} className="hover:bg-slate-50 transition-colors duration-150">
                       <td className="px-6 py-4">
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0 transition-transform duration-200 hover:scale-110">
-                           <img src={executive.image} alt={executive.name} />
+                           <img src={executive?.image} alt={executive?.name} />
                           </div>
                           <div className="min-w-0">
-                            <div className="font-medium text-slate-900 truncate">{executive.name}</div>
-                            <div className="text-sm text-slate-500 truncate">{executive.email}</div>
+                            <div className="font-medium text-slate-900 truncate">{executive?.name}</div>
+                            <div className="text-sm text-slate-500 truncate">{executive?.email}</div>
                           </div>
                         </div>
                       </td>
                       <td className="px-6 py-4">
                         <span className="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium bg-indigo-100 text-indigo-700">
-                          {executive.position}
+                          {executive?.position}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-sm text-slate-600">{executive.department}</td>
-                      <td className="px-6 py-4 text-sm text-slate-600">{executive.session}</td>
+                      <td className="px-6 py-4 text-sm text-slate-600">{executive?.department}</td>
+                      <td className="px-6 py-4 text-sm text-slate-600">{executive?.session}</td>
                       <td className="px-6 py-4 text-sm text-slate-600">{executive?.year}</td>
                       <td className="px-6 py-4">
                         <div className="flex items-center justify-end gap-2">
@@ -638,42 +627,7 @@ const convertToBase64 = (file) =>
 
       {/* Details Modal */}
       {showDetailsModal && selectedExecutive && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in duration-200">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto animate-in zoom-in duration-200">
-            <div className="flex items-center justify-between p-4 border-b border-slate-200 sticky top-0 bg-white z-10">
-              <h2 className="text-lg font-semibold text-slate-900">Executive Details</h2>
-              <button
-                onClick={() => setShowDetailsModal(false)}
-                className="p-1 hover:bg-slate-100 rounded transition-all duration-200 hover:scale-110"
-              >
-                <X className="w-5 h-5 text-slate-500" />
-              </button>
-            </div>
-
-            <div className="p-6 space-y-4">
-              <div className="flex items-center gap-4">
-                <div className="w-16 h-16 rounded-full bg-indigo-100 flex items-center justify-center flex-shrink-0">
-                  <span className="text-2xl font-semibold text-indigo-600">
-                    {selectedExecutive.name[0]}
-                  </span>
-                </div>
-                <div>
-                  <h3 className="text-xl font-semibold text-slate-900">{selectedExecutive.name}</h3>
-                  <p className="text-sm text-slate-600">{selectedExecutive.position} - {selectedExecutive.department}</p>
-                  <p className="text-sm text-slate-600">{selectedExecutive?.session}</p>
-                </div>
-              </div>
-
-              <div className="space-y-2">
-                <div className="flex items-center gap-2 text-sm text-slate-600">
-                  <Mail className="w-4 h-4" />
-                  <span>{selectedExecutive.email}</span>
-                </div>
-               
-              </div>
-            </div>
-          </div>
-        </div>
+        <DetailsExecutiveModal selectedexecutive={selectedExecutive} setShowDetailsModal={setShowDetailsModal} />
       )}
     </DashboardLayout>
   )
