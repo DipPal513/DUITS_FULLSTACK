@@ -1,25 +1,28 @@
 "use client";
 
 import DashboardLayout from '@/components/DashboardLayout';
-import GalleryCard from "@/components/gallery/GalleryCard";
-import GalleryFormModal from "@/components/gallery/GalleryFormModal";
-import DeleteModal from "@/components/gallery/GalleryModal";
+import AchievementCard from "@/components/achievement/AchiementCard";
+import AchievementFormModal from "@/components/achievement/AchievementFormModal";
+import DeleteModal from "@/components/achievement/DeleteModal";
+import axios from 'axios';
 import { Calendar, Loader, Plus } from 'lucide-react';
 import { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 const API_URL = process.env.NEXT_PUBLIC_BASE_URL;
 
+
+
 // Main Dashboard Component
-export default function GallerysDashboard() {
-  const [gallerys, setgallerys] = useState([]);
+export default function AchievementsDashboard() {
+  const [achievements, setAchievements] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
-  const [editingGallery, setEditingGallery] = useState(null);
-  const [galleryToDelete, setGalleryToDelete] = useState(null);
+  const [editingAchievement, setEditingAchievement] = useState(null);
+  const [achievementToDelete, setAchievementToDelete] = useState(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    fetchGallerys();
+    fetchAchievements();
   }, []);
 
 const convertToBase64 = (file) =>
@@ -31,51 +34,53 @@ const convertToBase64 = (file) =>
   });
 
 
-  const fetchGallerys = async () => {
+  const fetchAchievements = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${API_URL}/gallery`);
+      const response = await fetch(`${API_URL}/achievement`);
       const data = await response.json();
-      setgallerys(data.galleries || []);
+      setAchievements(data.achievements || []);
     } catch (error) {
-      console.error('Error fetching gallerys:', error);
-      toast.error('Failed to fetch gallerys', 'error');
+      console.error('Error fetching achievements:', error);
+      toast.error('Failed to fetch achievements', 'error');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleCreategallery = () => {
-    setEditingGallery(null);
+  const handleCreateAchievement = () => {
+    setEditingAchievement(null);
     setIsModalOpen(true);
   };
 
-  const handleEditgallery = (gallery) => {
-    setEditingGallery(gallery);
+  const handleEditAchievement = (achievement) => {
+    setEditingAchievement(achievement);
     setIsModalOpen(true);
+    
   };
 
   const handleFormSubmit = async (formData) => {
 
-const base64Image = editingGallery ? editingGallery.image : await convertToBase64(formData.image[0]);
+const base64Image = editingAchievement ? editingAchievement.image : await convertToBase64(formData.image[0]);
 
       const payLoad = {
         title: formData.title,
         description: formData.description,
         image: base64Image,
-        category: formData.category,
+        location:formData.location,
         date: formData.date,
-        
+        registrationLink: formData.registrationLink,
       }
 
+      console.log(`this is the payload`, payLoad);
     try {
       setLoading(true);
 
-      const url = editingGallery 
-        ? `${API_URL}/gallery/${editingGallery.id}` 
-        : `${API_URL}/gallery`;
+      const url = editingAchievement 
+        ? `${API_URL}/achievement/${editingAchievement.id}` 
+        : `${API_URL}/achievement`;
       
-      const method = editingGallery ? 'PUT' : 'POST';
+      const method = editingAchievement ? 'PUT' : 'POST';
 
       const response = await fetch(url, {
         method,
@@ -86,59 +91,57 @@ const base64Image = editingGallery ? editingGallery.image : await convertToBase6
  
       });
 
-      if (!response.ok) throw new Error('Failed to save gallery');
+      if (!response.ok) throw new Error('Failed to save achievement');
 
       const result = await response.json();
-      fetchGallerys();
+      fetchAchievements();
 
-      if (editingGallery) {
-        setgallerys(gallerys.map(gallery => 
-          gallery.id === editingGallery.id ? result.gallery : gallery
+      if (editingAchievement) {
+        setAchievements(achievements.map(achievement => 
+          achievement.id === editingAchievement.id ? result.achievement : achievement
         ));
-        toast.success('gallery updated successfully!');
+        toast.success('Achievement updated successfully!');
       } else {
-        // setGallerys([result.gallery, ...gallerys]);
-        toast.success('gallery created successfully!');
+        // setAchievements([result.achievement, ...achievements]);
+        toast.success('Achievement created successfully!');
       }
 
       setIsModalOpen(false);
-      setEditingGallery(null);
+      setEditingAchievement(null);
     } catch (error) {
-      console.error('Error submitting gallery:', error);
-      toast.error('Failed to save gallery', 'error');
+      console.error('Error submitting achievement:', error);
+      toast.error('Failed to save achievement', 'error');
     } finally {
       setLoading(false);
     }
   };
 
-  const handleDeleteClick = (gallery) => {
-    setGalleryToDelete(gallery);
+  const handleDeleteClick = (achievement) => {
+    setAchievementToDelete(achievement);
     setIsDeleteModalOpen(true);
   };
 
   const handleConfirmDelete = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${API_URL}/gallery/${galleryToDelete.id}`, {
-        method: 'DELETE',
-        withCredentials: true,
-        credentials: 'include',
+      const response = await axios.delete(`${API_URL}/achievement/${achievementToDelete.id}`, {
+       withCredentials: true,
       });
 
-      if (!response.ok) throw new Error('Failed to delete gallery');
+      if (response.status !== 200) toast.error(response.data.message || 'Failed to delete achievement', 'error');
 
-      setgallerys(gallerys.filter(gallery => gallery.id !== galleryToDelete.id));
-      toast.success('gallery deleted successfully!');
+      setAchievements(achievements.filter(achievement => achievement.id !== achievementToDelete.id));
       setIsDeleteModalOpen(false);
-      setGalleryToDelete(null);
+      setAchievementToDelete(null);
+      toast.success('Achievement deleted successfully!');
     } catch (error) {
-      console.error('Error deleting gallery:', error);
-      toast.error('Failed to delete gallery', 'error');
+      console.error('Error deleting achievement:', error);
+      toast.error(error.message || 'Failed to delete achievement', 'error');
     } finally {
       setLoading(false);
     }
   };
-console.log("all the gallerys here.,", gallerys);
+console.log("all the achievements here.,", achievements);
   return (
     <DashboardLayout>
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-4 md:p-8">
@@ -149,78 +152,78 @@ console.log("all the gallerys here.,", gallerys);
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
             <div>
               <h1 className="text-3xl md:text-4xl font-bold text-slate-800 mb-2">
-                Gallery Management
+                Achievements Management
               </h1>
-              <p className="text-slate-600">Create and manage your galleries seamlessly</p>
+              <p className="text-slate-600">Create and manage your achievements seamlessly</p>
             </div>
             <button
-              onClick={handleCreategallery}
+              onClick={handleCreateAchievement}
               className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-200"
             >
               <Plus size={20} />
-              Create gallery
+              Create Achievement
             </button>
           </div>
 
           {/* Loading State */}
-          {loading && gallerys.length === 0 && (
+          {loading && achievements.length === 0 && (
             <div className="flex justify-center items-center py-20">
               <div className="text-center">
                 <Loader className="animate-spin text-blue-600 mx-auto mb-4" size={48} />
-                <p className="text-slate-600">Loading gallerys...</p>
+                <p className="text-slate-600">Loading achievements...</p>
               </div>
             </div>
           )}
 
-          {/* gallerys Grid */}
+          {/* Achievements Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {gallerys.map(gallery => (
-              <GalleryCard
-                key={gallery.id}
-                gallery={gallery}
-                onEdit={handleEditgallery}
+            {achievements.map(achievement => (
+              <AchievementCard
+                key={achievement.id}
+                achievement={achievement}
+                onEdit={handleEditAchievement}
                 onDelete={handleDeleteClick}
               />
             ))}
           </div>
 
           {/* Empty State */}
-          {!loading && gallerys.length === 0 && (
+          {!loading && achievements.length === 0 && (
             <div className="text-center py-20">
               <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-blue-100 to-indigo-100 mb-6">
                 <Calendar size={40} className="text-blue-600" />
               </div>
-              <h3 className="text-2xl font-bold text-slate-800 mb-2">No gallerys yet</h3>
-              <p className="text-slate-600 mb-6">Create your first gallery to get started</p>
+              <h3 className="text-2xl font-bold text-slate-800 mb-2">No achievements yet</h3>
+              <p className="text-slate-600 mb-6">Create your first achievement to get started</p>
               <button
-                onClick={handleCreategallery}
+                onClick={handleCreateAchievement}
                 className="inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-200 cursor-pointer"
               >
                 <Plus size={20} />
-                Create gallery
+                Create Achievement
               </button>
             </div>
           )}
         </div>
 
         {/* Modals */}
-        <GalleryFormModal
+        <AchievementFormModal
           isOpen={isModalOpen}
           onClose={() => {
             setIsModalOpen(false);
-            setEditingGallery(null);
+            setEditingAchievement(null);
           }}
           onSubmit={handleFormSubmit}
-          editingGallery={editingGallery}
+          editingAchievement={editingAchievement}
           loading={loading}
         />
 
         <DeleteModal
           isOpen={isDeleteModalOpen}
-          gallery={galleryToDelete}
+          achievement={achievementToDelete}
           onClose={() => {
             setIsDeleteModalOpen(false);
-            setGalleryToDelete(null);
+            setAchievementToDelete(null);
           }}
           onConfirm={handleConfirmDelete}
           loading={loading}

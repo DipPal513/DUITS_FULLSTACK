@@ -1,13 +1,13 @@
 "use client"
 
+import DeleteModal from "@/components/access/DeleteModal"
+import RoleModal from "@/components/access/RoleModal"
 import DashboardLayout from "@/components/DashboardLayout"
 import { useAuth } from "@/contexts/AuthContext"
 import axios from "axios"
-import { AlertTriangle, Delete, Trash2, UserX } from "lucide-react"
+import { Trash2, UserX } from "lucide-react"
 import { useEffect, useState } from "react"
 import { Toaster, toast } from "react-hot-toast"
-import RoleModal from "@/components/access/RoleModal"
-import DeleteModal from "@/components/access/DeleteModal"
 export default function MembersPage() {
     const { token, user: currentUser } = useAuth()
     const isAdmin = true
@@ -54,14 +54,14 @@ export default function MembersPage() {
         const loadingToast = toast.loading('Updating role...')
         
         try {
-            await axios.patch(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/users/${selectedUser._id}/role`, {
+            await axios.patch(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/users/${selectedUser.id}/role`, {
                 role: newRole
             }, {
                 withCredentials: true,
             });
 
             const updated = users.map((user) =>
-                user._id === selectedUser._id ? { ...user, role: newRole } : user
+                user.id === selectedUser.id ? { ...user, role: newRole } : user
             )
             setUsers(updated)
             
@@ -95,11 +95,11 @@ export default function MembersPage() {
         
         try {
             // Uncomment and update when you have the delete endpoint
-            await axios.delete(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/users/${userToDelete._id}`, {
+            await axios.delete(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/users/${userToDelete.id}`, {
                  withCredentials: true
             })
             
-            const updated = users.filter((user) => user._id !== userToDelete._id)
+            const updated = users.filter((user) => user.id !== userToDelete.id)
             setUsers(updated)
             
             toast.success(`${userToDelete.name} removed successfully`, {
@@ -121,7 +121,7 @@ export default function MembersPage() {
     }
 
     const isCurrentUser = (userId) => {
-        return currentUser?._id === userId || currentUser?.id === userId
+        return currentUser?.id === userId || currentUser?.id === userId
     }
 
     return (
@@ -157,9 +157,9 @@ export default function MembersPage() {
                                 </thead>
                                 <tbody className="divide-y divide-slate-200">
                                     {users.length > 0 ? users.map((user) => {
-                                        const isCurrent = isCurrentUser(user._id)
+                                        const isCurrent = isCurrentUser(user.id)
                                         return (
-                                            <tr key={user._id} className="hover:bg-slate-50 transition-colors duration-150">
+                                            <tr key={user.id} className="hover:bg-slate-50 transition-colors duration-150">
                                                 <td className="py-4 px-6">
                                                     <div className="flex items-center gap-3">
                                                         <div className={`w-10 h-10 rounded-full flex items-center justify-center transition-all duration-200 ${

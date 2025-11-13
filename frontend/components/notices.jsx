@@ -1,10 +1,10 @@
 "use client";
+import SkeletonLoader from "@/components/SkeletonLoader";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, Calendar, MapPin, Users, ExternalLink, Eye, Sparkles } from "lucide-react";
-import { useEffect, useState } from "react";
-import Link from "next/link";
 import api from "@/config/index";
-import { SkeletonLoader } from "@/components/SkeletonLoader";
+import { ArrowRight, Calendar, ExternalLink, Eye, MapPin, Sparkles, Users } from "lucide-react";
+import Link from "next/link";
+import { useEffect, useState } from "react";
 export default function Notices() {
   const [loading, setLoading] = useState(false);
   const [notices, setNotices] = useState([]);
@@ -67,7 +67,7 @@ export default function Notices() {
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {notices?.map((notice) => (
                 <article
-                  key={notice._id}
+                  key={notice.id}
                   className="tech-card overflow-hidden backdrop-blur-sm group relative hover:shadow-2xl transition-all duration-500"
                 >
                   <div className="corner-accent top-left" />
@@ -76,7 +76,7 @@ export default function Notices() {
                   <div className="corner-accent bottom-right" />
                   
                   {/* Image Section - Now clickable */}
-                  <Link href={`/notice/${notice._id}`} className="block relative h-52 overflow-hidden bg-muted cursor-pointer">
+                  <Link href={`/notice/${notice.id}`} className="block relative h-52 overflow-hidden bg-muted cursor-pointer">
                     <img
                       src={notice.image || "/placeholder.svg"}
                       alt={notice.title}
