@@ -32,7 +32,7 @@ const app = express();
 // Middleware
 app.use(express.json({limit:"10mb"}));
 app.use(cors( {
-  origin: ['http://localhost:3000', 'http://localhost:3001'], // Adjust as needed for your frontend
+  origin: ['https://duitsbd.org','https://dashboard.duitsbd.org','http://localhost:3000', 'http://localhost:3001'], // Adjust as needed for your frontend
   credentials: true,
 }));
 
