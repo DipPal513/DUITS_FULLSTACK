@@ -13,16 +13,19 @@ const inter = Inter({
 })
 
 export const metadata = {
-  title: "IT Club - Innovation & Technology",
+  title: "Dhaka University IT Society(DUITS)",
   description: "Join our community of tech enthusiasts, innovators, and creators",
   generator: "Next.js",
   manifest:"/manifest.json",
   keywords: [
+    "Dhaka",
+    "University",
+    "society",
     "IT Club",
     "Technology",
     "Innovation",
     "Community",
-    "Developers",
+    "Dhaka",
     "Designers",
     "Tech Enthusiasts",
   ],
