@@ -24,8 +24,7 @@ useEffect(() => {
     setError("")
     setLoading(true)
     const result = await login(formData.email, formData.password)
-    console.log("my final result that i wana show", result)
-
+   
     if (result.success) {
       
       setLoading(false)

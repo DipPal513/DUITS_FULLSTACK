@@ -167,7 +167,7 @@ const convertToBase64 = (file) =>
         phone: executiveData.phone || "",
         image: executiveData.image || null,
         year: executiveData.year || "",
-        duits_batch:executivData.duits_batch || ""
+        duits_batch: executiveData.duits_batch || ""
       })
       
       // toast.success("Executive loaded", { id: loadingToast })
@@ -194,7 +194,7 @@ const convertToBase64 = (file) =>
     try {
       await axios.delete(
         `${baseURL}/executive/${executiveToDelete.id}`, 
-        { withCredentials:true,credentials:"include" }
+        { withCredentials:true }
       )
       
       const updatedExecs = executives.filter(exec => exec.id !== executiveToDelete.id)
