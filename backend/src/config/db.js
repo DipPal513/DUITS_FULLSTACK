@@ -21,12 +21,11 @@ const { Pool } = pkg;
 
 
 const pool = new Pool({
-  host: "localhost",
-  user:"postgres",
-  password:"password",
-  database:"duits",
-  port:5432,
-  
+  host: "127.0.0.1",
+  user:"bvranzct_central_user",
+  password:"iecfbestiud",
+  database:"bvranzct_central",
+  port:5433,
 });
 
 pool.on('connect', () => {

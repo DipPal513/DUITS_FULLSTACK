@@ -53,31 +53,31 @@ export const createEventService = async (data) => {
   const { title, description, registrationLink, image, date, location } = data;
   const query = 'INSERT INTO events (title, description, registration_link, image, date, location) VALUES (?, ?, ?, ?, ?, ?)';
   const values = [title, description, registrationLink, image, date, location];
-  const [result] = await pool.execute(query, values);
+  const [result] = await pool.query(query, values);
   return result;
 };
 
 export const getEventsService = async () => {
   const query = 'SELECT * FROM events';
-  const [rows] = await pool.execute(query);
+  const [rows] = await pool.query(query);
   return rows;
 };
 
 export const getEventByIdService = async (id) => {
   const query = 'SELECT * FROM events WHERE id = ?';
-  const [rows] = await pool.execute(query, [id]);
+  const [rows] = await pool.query(query, [id]);
   return rows;
 };
 export const updateEventService = async (id, data) => {
   const { title, description, registrationLink, image, date, location } = data;
   const query = 'UPDATE events SET title = ?, description = ?, registration_link = ?, image = ?, date = ?, location = ? WHERE id = ?';
   const values = [title, description, registrationLink, image, date, location, id];
-  const [result] = await pool.execute(query, values);
+  const [result] = await pool.query(query, values);
   return result;
 };
 
 export const deleteEventService = async (id) => {
   const query = 'DELETE FROM events WHERE id = ?';
-  const [result] = await pool.execute(query, [id]);
+  const [result] = await pool.query(query, [id]);
   return result;
 };  
