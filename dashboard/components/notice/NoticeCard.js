@@ -25,7 +25,7 @@ const NoticeCard = ({ notice, onEdit, onDelete }) => {
       <div className="relative h-56 overflow-hidden bg-slate-800">
         <img
           src={notice?.image}
-          alt={notice.title}
+          alt={notice?.title}
           className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
         />
         <div className="absolute inset-0 bg-gradient-to-t from-slate-900 via-slate-900/60 to-transparent" />
@@ -65,7 +65,7 @@ const NoticeCard = ({ notice, onEdit, onDelete }) => {
         <div className="absolute bottom-0 left-0 right-0 p-5 transform translate-y-2 group-hover:translate-y-0 transition-transform duration-300">
           <div className="flex items-center gap-2 text-white/80 text-sm">
             <Calendar size={14} />
-            <span className="font-medium">{formatDate(notice.date)}</span>
+            <span className="font-medium">{formatDate(notice?.date)}</span>
           </div>
         </div>
       </div>
@@ -74,12 +74,12 @@ const NoticeCard = ({ notice, onEdit, onDelete }) => {
       <div className="relative p-6 space-y-4">
         {/* Title */}
         <h3 className="text-xl font-bold text-white line-clamp-2 group-hover:text-cyan-400 transition-colors duration-300">
-          {notice.title}
+          {notice?.title}
         </h3>
 
         {/* Description */}
         <p className="text-slate-400 text-sm line-clamp-2 leading-relaxed">
-          {notice.description}
+          {notice?.description}
         </p>
 
         {/* Info Row */}
@@ -88,12 +88,12 @@ const NoticeCard = ({ notice, onEdit, onDelete }) => {
           <div className="flex items-center gap-2 px-3 py-1.5 bg-slate-800/50 rounded-lg border border-slate-700">
             <Calendar size={14} className="text-purple-400" />
             <span className="text-xs text-slate-300 font-medium">
-              {formatDate(notice.date)}
+              {formatDate(notice?.date)}
             </span>
           </div>
 
           {/* Registration Link Badge */}
-          {notice.registrationLink && (
+          {notice?.registrationLink && (
             <a
               href={notice.registrationLink}
               target="_blank"
@@ -110,7 +110,7 @@ const NoticeCard = ({ notice, onEdit, onDelete }) => {
         {/* Action Buttons */}
         <div className="flex gap-3 pt-2">
           <Link 
-            href={`/notice/${notice.id}`}
+            href={`/notice/${notice?.id}`}
             className="flex-1 flex items-center justify-center gap-2 px-4 py-2.5 bg-cyan-500 hover:bg-cyan-600 text-white font-medium rounded-lg transition-all duration-300 group/btn"
           >
             <Eye size={16} />

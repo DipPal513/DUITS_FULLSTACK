@@ -5,14 +5,14 @@ import { useForm } from 'react-hook-form';
  const NoticeFormModal = ({ isOpen, onClose, onSubmit, editingNotice, loading }) => {
   const { register, handleSubmit, formState: { errors }, reset } = useForm();
 
+  console.log("editing notice: ",editingNotice)
   useEffect(() => {
     if (editingNotice) {
       reset({
         title: editingNotice.title,
         description: editingNotice.description,
-        
         deadline: editingNotice.deadline?.split('T')[0],
-        registrationLink: editingNotice.registrationLink,
+        registrationLink: editingNotice.registration_link,
         image: editingNotice.image
       });
     } else {

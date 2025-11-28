@@ -64,7 +64,7 @@ const convertToBase64 = (file) =>
 const base64Image = editingNotice ? editingNotice.image : await convertToBase64(formData.image[0]);
 
       const payLoad = {
-        title: formData.title,
+        title: formData?.title,
         description: formData.description,
         image: base64Image,
         location:formData.location,
@@ -77,7 +77,7 @@ const base64Image = editingNotice ? editingNotice.image : await convertToBase64(
       setLoading(true);
 
       const url = editingNotice 
-        ? `${API_URL}/notice/${editingNotice.id}` 
+        ? `${API_URL}/notice/${editingNotice?.id}` 
         : `${API_URL}/notice`;
       
       const method = editingNotice ? 'PUT' : 'POST';
@@ -98,7 +98,7 @@ const base64Image = editingNotice ? editingNotice.image : await convertToBase64(
 
       if (editingNotice) {
         setNotices(notices?.map(notice => 
-          notice.id === editingNotice.id ? result.notice : notice
+          notice?.id === editingNotice?.id ? result.notice : notice
         ));
         toast.success('Notice updated successfully!');
       } else {
@@ -130,7 +130,7 @@ const base64Image = editingNotice ? editingNotice.image : await convertToBase64(
 
       if (response.status !== 200) toast.error(response.data.message || 'Failed to delete notice', 'error');
 
-      setNotices(notices.filter(notice => notice.id !== noticeToDelete.id));
+      setNotices(notices.filter(notice => notice?.id !== noticeToDelete.id));
       setIsDeleteModalOpen(false);
       setNoticeToDelete(null);
       toast.success('Notice deleted successfully!');
@@ -177,9 +177,9 @@ const base64Image = editingNotice ? editingNotice.image : await convertToBase64(
 
           {/* Notices Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {notices.length > 0 ? notices?.map(notice => (
+            {notices.length > 0 ? notices?.map((notice, index) => (
               <NoticeCard
-                key={notice.id}
+                key={index}
                 notice={notice}
                 onEdit={handleEditNotice}
                 onDelete={handleDeleteClick}

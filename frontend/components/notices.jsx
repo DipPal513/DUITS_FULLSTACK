@@ -66,9 +66,9 @@ export default function Notices() {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {notices?.map((notice) => (
+              {notices?.map((notice,index) => (
                 <article
-                  key={notice.id}
+                  key={index}
                   className="tech-card overflow-hidden backdrop-blur-sm group relative hover:shadow-2xl transition-all duration-500"
                 >
                   <div className="corner-accent top-left" />
@@ -77,10 +77,10 @@ export default function Notices() {
                   <div className="corner-accent bottom-right" />
                   
                   {/* Image Section - Now clickable */}
-                  <Link href={`/notice/${notice.id}`} className="block relative h-52 overflow-hidden bg-muted cursor-pointer">
+                  <Link href={`/notice/${notice?.id}`} className="block relative h-52 overflow-hidden bg-muted cursor-pointer">
                     <img
                       src={notice.image || "/placeholder.svg"}
-                      alt={notice.title}
+                      alt={notice?.title}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-card via-card/60 to-transparent" />
@@ -106,9 +106,9 @@ export default function Notices() {
                   {/* Content Section */}
                   <div className="p-6 space-y-4">
                     {/* Title - Also clickable */}
-                    <Link href={`/notice/${notice.id}`}>
+                    <Link href={`/notice/${notice?.id}`}>
                       <h4 className="font-bold text-xl mb-3 uppercase tracking-wide line-clamp-2 hover:text-primary transition-colors cursor-pointer">
-                        {notice.title}
+                        {notice?.title}
                       </h4>
                     </Link>
                     
@@ -159,7 +159,7 @@ export default function Notices() {
                     <div className="flex flex-col gap-2.5 pt-4">
                       {/* Primary - View Details with Next.js Link */}
                       <Link 
-                        href={`/notice/${notice.id}`}
+                        href={`/notice/${notice?.id}`}
                         className="w-full"
                       >
                         <Button
