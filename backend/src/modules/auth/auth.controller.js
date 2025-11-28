@@ -80,29 +80,54 @@ export const login = async (req, res, next) => {
   }
 };
 
+import jwt from 'jsonwebtoken';
+// Assuming roleChangeService is imported correctly
+// Assuming you have access to process.env.JWT_SECRET
+
 export const roleChange = async (req, res, next) => {
   try {
     const { userId } = req.params;
     const { role } = req.body;
     console.log("requested userid", userId);
 
-    // Validate new role
-    // const validRoles = ['ADMIN', 'EDITOR', 'PENDING'];
-    // if (!validRoles.includes(newRole)) {
-    //   return res.status(400).json({ success: false, message: 'Invalid role specified' });
-    // }
-
-    // Update user role
+    // --- Database Update ---
     const user = await roleChangeService(userId, role);
-    if (!user) return res.status(404).json({ success: false, message: 'User not found' });
+    if (!user) {
+        return res.status(404).json({ success: false, message: 'User not found' });
+    }
+    
+    // --- 1. PREPARE NEW JWT PAYLOAD ---
+    const payload = {
+        id: user.id,
+        email: user.email,
+        role: user.role, // This is the new, updated role
+    };
 
-    res.json({ success: true, user: { id: user.id, name: user.name, email: user.email, role: user.role } });
+    // --- 2. SIGN NEW TOKEN ---
+    const newToken = jwt.sign(payload, process.env.JWT_SECRET, { 
+        expiresIn: '1d' // Use your desired expiration
+    });
+
+    // --- 3. SET NEW COOKIE (Crucial Step) ---
+    res.cookie('authToken', newToken, {
+        httpOnly: true,
+        // Set secure: true and sameSite: 'None' for production/cross-origin HTTPS
+        secure: process.env.NODE_ENV === 'production' ? true : false, 
+        sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
+        maxAge: 24 * 60 * 60 * 1000 // 1 day
+    });
+
+    // --- 4. SUCCESS RESPONSE ---
+    res.json({ 
+        success: true, 
+        message: `Role successfully updated to ${user.role}. New token issued.`,
+        user: { id: user.id, name: user.name, email: user.email, role: user.role } 
+    });
   } catch (err) {
     console.log(err)
     next(err);
   }
 }
-
 export const checkMe = async (req, res, next) => {
   try {
     console.log("checkMe called with user:", req.user);
