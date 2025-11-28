@@ -43,14 +43,14 @@
 import pool from "../../config/db.js";
 
 export const createExecutiveService = async (data) => {
-  const { name, position, session, department, email, year, phone, image } = data;
+  const { name, position, session, department, email, year, phone, image,duits_batch } = data;
 
   const query = `
-    INSERT INTO executives (name, position, session, department, email, year, phone, image)
-    VALUES ($1, $2, $3, $4, $5, $6, $7, $8)
+    INSERT INTO executives (name, position, session, department, email, year, phone, image,duits_batch)
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8,$9)
     RETURNING *;
   `;
-  const values = [name, position, session, department, email, year, phone, image];
+  const values = [name, position, session, department, email, year, phone, image,duits_batch];
   const result = await pool.query(query, values);
   return result.rows[0];
 };

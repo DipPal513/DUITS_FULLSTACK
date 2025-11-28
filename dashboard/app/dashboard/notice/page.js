@@ -38,7 +38,7 @@ const convertToBase64 = (file) =>
     try {
       setLoading(true);
       const response = await axios.get(`${API_URL}/notice`);
-      setNotices(response.data.data || []);
+      setNotices(response.data || []);
     } catch (error) {
       console.error('Error fetching notices:', error);
       toast.error('Failed to fetch notices', 'error');

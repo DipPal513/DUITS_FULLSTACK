@@ -9,7 +9,7 @@ import TechBackground from "@/components/tech-background"
 export default function Home() {
   return (
     <main className="min-h-screen">
-      <TechBackground />
+      {/* <TechBackground /> */}
       <Navigation />
       <Hero />
       <QuickActions />

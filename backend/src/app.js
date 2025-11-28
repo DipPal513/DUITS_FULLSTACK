@@ -14,13 +14,13 @@ import galleryRoutes from './modules/gallery/gallery.route.js';
 import eventRoutes from './modules/event/event.route.js';
 import noticeRoutes from './modules/notice/notice.route.js';
 import achievementRoute from './modules/achievement/achievement.route.js';
-import { createAchievement } from './modules/achievement/achievement.controller.js';
-import createAchievementTable from './modules/achievement/createAchievementTable.js';
-import createUserTable from './modules/auth/createUserdb.js';
-import noticeTableCreator from './modules/notice/noticeTableCreator.js';
-import galleryTableCreator from './modules/gallery/galleryTableMaker.js';
-import eventTableCreator from './modules/event/eventtablemaker.js';
-import executiveTable from './modules/executive/executiveTable.js';
+// import { createAchievement } from './modules/achievement/achievement.controller.js';
+// import createAchievementTable from './modules/achievement/createAchievementTable.js';
+// import createUserTable from './modules/auth/createUserdb.js';
+// import noticeTableCreator from './modules/notice/noticeTableCreator.js';
+// import galleryTableCreator from './modules/gallery/galleryTableMaker.js';
+// import eventTableCreator from './modules/event/eventtablemaker.js';
+// import executiveTable from './modules/executive/executiveTable.js';
 // Add routes
 
 configDotenv();
@@ -32,7 +32,7 @@ const app = express();
 // Middleware
 app.use(express.json({limit:"10mb"}));
 app.use(cors( {
-  origin: ['http://localhost:3000', 'http://localhost:3001'], // Adjust as needed for your frontend
+  origin: ['https://duitsbd.org','https://dashboard.duitsbd.org','http://localhost:3000', 'http://localhost:3001'], // Adjust as needed for your frontend
   credentials: true,
 }));
 

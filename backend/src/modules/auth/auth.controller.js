@@ -1,4 +1,4 @@
-import bcrypt from 'bcrypt';
+import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { checkMeService, getAllUsersService, loginUser, registerUserService, roleChangeService } from './auth.model.js';
 
@@ -66,7 +66,13 @@ export const login = async (req, res, next) => {
     const token = jwt.sign({ id: user.id, role: user.role }, process.env.JWT_SECRET, {
       expiresIn: '1d',
     });
-    res.cookie('authToken', token, { httpOnly: true ,secure:false,sameSite:'Lax',maxAge:24*60*60*1000}); // 1 day
+    res.cookie('authToken', token, { 
+    httpOnly: true,
+    secure: true, // MUST be TRUE for HTTPS
+    sameSite: 'None', // Allows cross-origin sending
+    maxAge: 24*60*60*1000,
+    // (Optional: add 'domain' if needed for specific subdomain settings)
+}); // 1 day
     res.json({ success: true, user: { id: user.id, name: user.name, email, role: user.role }, token });
   } catch (err) {
     console.log(err);

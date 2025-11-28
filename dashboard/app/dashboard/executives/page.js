@@ -41,7 +41,8 @@ const convertToBase64 = (file) =>
     department: "",
     session: "",
     phone: "",
-    image: null
+    image: null,
+    duits_batch:""
   })
 
   useEffect(() => {
@@ -108,7 +109,8 @@ const convertToBase64 = (file) =>
       session: formData.session,
       image: base64Image,
       phone: formData.phone,
-      year: formData.year
+      year: formData.year,
+      duits_batch:formData.duits_batch
     }
     try {
       if (editingExecutive) {
@@ -164,7 +166,8 @@ const convertToBase64 = (file) =>
         session: executiveData.session || "",
         phone: executiveData.phone || "",
         image: executiveData.image || null,
-        year: executiveData.year || ""
+        year: executiveData.year || "",
+        duits_batch:executivData.duits_batch || ""
       })
       
       // toast.success("Executive loaded", { id: loadingToast })
@@ -221,7 +224,8 @@ const convertToBase64 = (file) =>
       position: "",
       department: "",
       session: "",
-      image: null
+      image: null,
+      duits_batch:""
     })
     setEditingExecutive(null)
     setShowModal(false)
@@ -235,6 +239,7 @@ const convertToBase64 = (file) =>
       position: "",
       department: "",
       session: "",
+      duits_batch:""
       
     })
     setShowModal(true)
@@ -536,16 +541,32 @@ const convertToBase64 = (file) =>
                     disabled={loading}
                   >
                     <option value="">Select Session</option>
+                    <option value="2020-2021">2018-2019</option>
+                    <option value="2020-2021">2019-2020</option>
                     <option value="2020-2021">2020-2021</option>
                     <option value="2021-2022">2021-2022</option>
                     <option value="2022-2023">2022-2023</option>
                     <option value="2023-2024">2023-2024</option>
                     <option value="2024-2025">2024-2025</option>
                     <option value="2025-2026">2025-2026</option>
+                    <option value="2025-2026">2026-2027</option>
                   </select>
                 </div>
 
-                
+                <div>
+                  <label className="block text-sm font-medium text-slate-700 mb-1">
+                    DUITS batch <span className="text-red-500">*</span>
+                  </label>
+                  <input
+                    type="number"
+                    required
+                    value={formData.duits_batch}
+                    onChange={(e) => setFormData({ ...formData, duits_batch: e.target.value })}
+                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+                    placeholder="11"
+                    disabled={loading}
+                  />
+                </div>
               </div>
 
               <div className="flex gap-3 mt-6">
