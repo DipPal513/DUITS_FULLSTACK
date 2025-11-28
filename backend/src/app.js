@@ -1,19 +1,16 @@
-import express from 'express';
-import dotenv, { configDotenv } from 'dotenv';
+import cookieParser from 'cookie-parser';
 import cors from 'cors';
+import { configDotenv } from 'dotenv';
+import express from 'express';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import connectDB from './config/db.js';
-import cookieParser from 'cookie-parser';
+import achievementRoute from './modules/achievement/achievement.route.js';
 import authRoutes from './modules/auth/auth.route.js';
-import errorHandler from './middleware/errorHandler.js';
-import pool from './config/db.js';
-import memberRoutes from './modules/member/member.route.js';
+import eventRoutes from './modules/event/event.route.js';
 import executiveRoutes from './modules/executive/executive.route.js';
 import galleryRoutes from './modules/gallery/gallery.route.js';
-import eventRoutes from './modules/event/event.route.js';
+import memberRoutes from './modules/member/member.route.js';
 import noticeRoutes from './modules/notice/notice.route.js';
-import achievementRoute from './modules/achievement/achievement.route.js';
 // import { createAchievement } from './modules/achievement/achievement.controller.js';
 // import createAchievementTable from './modules/achievement/createAchievementTable.js';
 // import createUserTable from './modules/auth/createUserdb.js';
@@ -41,12 +38,7 @@ app.use(helmet());
 app.use(morgan('dev'));
 // createAchievementTable()
 app.use(cookieParser());
-// console.log("DB Connection String:", pool);
-// noticeTableCreator()
-// executiveTable();
-// galleryTableCreator()
-// eventTableCreator();
-// Routes
+
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/member', memberRoutes);
 app.use('/api/v1/executive', executiveRoutes);

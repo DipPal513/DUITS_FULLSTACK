@@ -43,7 +43,7 @@
 import pool from "../../config/db.js";
 
 export const createExecutiveService = async (data) => {
-  const { name, position, session, department, email, year, phone, image,duits_batch } = data;
+  const { name, position, session, department, email, year, phone, image, duits_batch } = data;
 
   const query = `
     INSERT INTO executives (name, position, session, department, email, year, phone, image,duits_batch)
