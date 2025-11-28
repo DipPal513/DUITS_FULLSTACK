@@ -80,7 +80,7 @@ export const login = async (req, res, next) => {
   }
 };
 
-import jwt from 'jsonwebtoken';
+
 // Assuming roleChangeService is imported correctly
 // Assuming you have access to process.env.JWT_SECRET
 
@@ -96,32 +96,12 @@ export const roleChange = async (req, res, next) => {
         return res.status(404).json({ success: false, message: 'User not found' });
     }
     
-    // --- 1. PREPARE NEW JWT PAYLOAD ---
-    const payload = {
-        id: user.id,
-        email: user.email,
-        role: user.role, // This is the new, updated role
-    };
-
-    // --- 2. SIGN NEW TOKEN ---
-    const newToken = jwt.sign(payload, process.env.JWT_SECRET, { 
-        expiresIn: '1d' // Use your desired expiration
-    });
-
-    // --- 3. SET NEW COOKIE (Crucial Step) ---
-    res.cookie('authToken', newToken, {
-        httpOnly: true,
-        // Set secure: true and sameSite: 'None' for production/cross-origin HTTPS
-        secure: process.env.NODE_ENV === 'production' ? true : false, 
-        sameSite: process.env.NODE_ENV === 'production' ? 'None' : 'Lax',
-        maxAge: 24 * 60 * 60 * 1000 // 1 day
-    });
-
+    
     // --- 4. SUCCESS RESPONSE ---
     res.json({ 
         success: true, 
-        message: `Role successfully updated to ${user.role}. New token issued.`,
-        user: { id: user.id, name: user.name, email: user.email, role: user.role } 
+        message: `Role successfully updated to ${user.role}.`,
+       
     });
   } catch (err) {
     console.log(err)

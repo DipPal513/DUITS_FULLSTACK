@@ -37,8 +37,9 @@ const convertToBase64 = (file) =>
   const fetchNotices = async () => {
     try {
       setLoading(true);
-      const response = await axios.get(`${API_URL}/notice`);
-      setNotices(response.data || []);
+      const response = await axios.get(`${API_URL}/notice`,{ withCredentials: true });
+      setNotices(response?.data?.data || []);
+      console.log(response)
     } catch (error) {
       console.error('Error fetching notices:', error);
       toast.error('Failed to fetch notices', 'error');
@@ -176,14 +177,14 @@ const base64Image = editingNotice ? editingNotice.image : await convertToBase64(
 
           {/* Notices Grid */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {notices?.map(notice => (
+            {notices.length > 0 ? notices?.map(notice => (
               <NoticeCard
                 key={notice.id}
                 notice={notice}
                 onEdit={handleEditNotice}
                 onDelete={handleDeleteClick}
               />
-            ))}
+            )): <p>No notices found!</p>}
           </div>
 
           {/* Empty State */}

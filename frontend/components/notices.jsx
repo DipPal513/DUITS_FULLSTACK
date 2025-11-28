@@ -18,6 +18,7 @@ export default function Notices() {
       setLoading(true);
       const data = await api.get('/notice');
       setNotices(data.notices || []);
+      console.log(notices)
     } catch (error) {
       console.error('Error fetching notices:', error);
     } finally {

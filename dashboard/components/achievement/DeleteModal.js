@@ -2,7 +2,7 @@
 
 import { Loader, Trash2 } from 'lucide-react';
 
-const DeleteModal = ({ isOpen, achievement, onClose, onConfirm, loading }) => {
+const DeleteModal = ({ isOpen, notice, onClose, onConfirm, loading }) => {
   if (!isOpen) return null;
 
   return (
