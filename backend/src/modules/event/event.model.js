@@ -58,7 +58,7 @@ export const createEventService = async (data) => {
 };
 
 export const getEventsService = async () => {
-  const query = 'SELECT * FROM events';
+  const query = 'SELECT * FROM events ORDER BY created_at DESC;';
   const [rows] = await pool.query(query);
   return rows;
 };

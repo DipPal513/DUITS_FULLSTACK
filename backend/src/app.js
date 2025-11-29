@@ -31,10 +31,25 @@ const app = express();
 // createUserTable();
 // Middleware
 app.use(express.json({limit:"10mb"}));
-app.use(cors( {
-  origin: ['https://duitsbd.org','https://dashboard.duitsbd.org','http://localhost:3000', 'http://localhost:3001'], // Adjust as needed for your frontend
-  credentials: true,
-}));
+
+const corsOptions = {
+    // 1. Explicitly allow your development origin
+     origin: ['https://duitsbd.org','https://dashboard.duitsbd.org','http://localhost:3000', 'http://localhost:3001'], // Adjust as needed for your frontend
+
+    // 2. Allow the complex methods (DELETE and PATCH)
+    methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'], 
+    
+    // 3. Allow sending of cookies and authorization headers
+    // This is crucial for sending your authToken and future CSRF tokens
+    credentials: true, 
+    
+    // 4. If you send custom headers (like Authorization, X-CSRFToken, etc.)
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRFToken'],
+    
+    optionsSuccessStatus: 204
+};
+
+app.use(cors(corsOptions));
 
 // app.use(errorHandler());
 app.use(helmet());

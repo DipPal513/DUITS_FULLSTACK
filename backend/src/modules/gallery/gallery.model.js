@@ -68,7 +68,7 @@ export const createGalleryService = async (data) => {
 export const getAllGalleryService = async () => {
   
   try {
-    const res = await pool.query('SELECT * FROM gallery ORDER BY date DESC;');
+    const res = await pool.query('SELECT * FROM gallery ORDER BY created_at DESC;');
     return res.rows;
   } catch (err) {
     throw err;

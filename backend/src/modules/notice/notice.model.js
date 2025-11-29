@@ -59,7 +59,7 @@ export const createNoticeService = async (data) => {
 export const getNoticesService = async () => {
   const query = `
     SELECT * FROM notices
-    ORDER BY deadline DESC;
+    ORDER BY created_at DESC;
   `;
   const result = await pool.query(query);
   return result.rows;

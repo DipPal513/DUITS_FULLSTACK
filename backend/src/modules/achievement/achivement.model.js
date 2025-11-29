@@ -57,7 +57,7 @@ export const createAchievementService = async ({ title, description, date, image
 export const getAllAchievementsService = async () => {
   const query = `
     SELECT * FROM achievements
-    ORDER BY date DESC;
+    ORDER BY created_at DESC;
   `;
   const result = await pool.query(query);
   return result.rows;

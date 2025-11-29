@@ -36,53 +36,6 @@ export const createAchievement = async (req, res, next) => {
   }
 };
 
- // Cloudinary setup file
-
-// Create a new achievement
-// export const createAchievement = async (req, res, next) => {
-//   try {
-//     const { title, description, date, image } = req.body;
-    
-//     let imageUrl = "";
-
-//     if (image) {
-//       // Upload Base64 image to Cloudinary
-//       const result = await cloudinary.uploader.upload(image, {
-//         folder: "achievements",
-//       });
-//       imageUrl = result.secure_url;
-//     }
-
-//     // Save achievement to MongoDB
-//     const achievement = await Achievement.create({
-//       title,
-//       description,
-      
-//       date,
-      
-//       image: imageUrl,
-//     });
-
-//     res.status(201).json({
-//       success: true,
-//       message: "Achievement created successfully",
-//       achievement,
-//     });
-//   } catch (err) {
-//     console.error(err);
-//     next(err);
-//   }
-// };
-
-//get achievements
-// export const getAchievements = async (req, res, next) => {
-//   try {
-//     const achievements = await Achievement.find().sort({ deadline: -1 }); // Sort by deadline descending
-//     res.json({ success: true, achievements });
-//   } catch (err) {
-//     next(err);
-//   }
-// }
 
 export const getAchievements = async (req, res, next) => {
   try {
@@ -92,31 +45,6 @@ export const getAchievements = async (req, res, next) => {
     console.error(err);
     next(err);
   }}
-// Updeadline achievement
-// export const updateAchievement = async (req, res, next) => {
-//   try {
-//     const { title, description } = req.body;
-//     const image = req.file;
-// let imageUrl = "";
-
-//     if (image) {
-//       // Upload Base64 image to Cloudinary
-//       const result = await cloudinary.uploader.upload(image, {
-//         folder: "achievements",
-//       });
-//       imageUrl = result.secure_url;
-//     }
-//     const updatedData = { title, description, date };
-//     if (image) updatedData.image = imageUrl;
-
-//     const achievement = await Achievement.findByIdAndUpdate(req.params.id, updatedData, { new: true });
-//     if (!achievement) return res.status(404).json({ success: false, message: 'Achievement not found' });
-//     res.json({ success: true, achievement });
-//   } catch (err) {
-//     next(err);
-//   }
-// };
-
 
 export const updateAchievement = async (req, res, next) => {
   try {
@@ -142,16 +70,7 @@ export const updateAchievement = async (req, res, next) => {
     next(err);
   }
 }
-// Delete achievement
-// export const deleteAchievement = async (req, res, next) => {
-//   try {
-//     const achievement = await Achievement.findByIdAndDelete(req.params.id);
-//     if (!achievement) return res.status(404).json({ success: false, message: 'Achievement not found' });
-//     res.json({ success: true, message: 'Achievement deleted successfully' });
-//   } catch (err) {
-//     next(err);
-//   }
-// };
+
 
 export const deleteAchievement = async (req, res, next) => {
   try {
