@@ -7,6 +7,7 @@ import { AlertTriangle, Edit2, Eye, Mail, Plus, Search, Trash2, User, X } from "
 import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
 import DetailsExecutiveModal from "@/components/executive/Details"
+
 export default function ExecutivesPage() {
 
 const convertToBase64 = (file) =>
@@ -189,8 +190,9 @@ const convertToBase64 = (file) =>
     if (!executiveToDelete) return
     
     setLoading(true)
-    const loadingToast = toast.loading("Deleting executive?...")
+    const loadingToast = toast.loading("Deleting executive...")
     
+    console.log("csrfToken",token);
     try {
       await axios.delete(
         `${baseURL}/executive/${executiveToDelete.id}`, 

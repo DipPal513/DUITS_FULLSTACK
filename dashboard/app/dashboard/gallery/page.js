@@ -34,7 +34,7 @@ const convertToBase64 = (file) =>
   const fetchGallerys = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${API_URL}/gallery`);
+      const response = await fetch(`${API_URL}/gallery`,{ credentials: 'include' });
       const data = await response.json();
       setgallerys(data.galleries || []);
     } catch (error) {

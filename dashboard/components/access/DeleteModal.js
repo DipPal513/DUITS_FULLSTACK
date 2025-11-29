@@ -1,5 +1,5 @@
 import React from 'react'
-
+import { AlertTriangle, Trash2 } from 'lucide-react'
 export default function DeleteModal({ setShowDeleteModal, userToDelete, handleConfirmDelete, modalLoading, setUserToDelete }) {
   return (
    <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center z-50 p-4 animate-in fade-in duration-200">
