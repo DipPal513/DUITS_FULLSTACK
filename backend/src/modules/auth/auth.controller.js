@@ -17,8 +17,6 @@ export const register = async (req, res, next) => {
     next(err);
   }
 };
-
-
 export const login = async (req, res, next) => {
   try {
     const { email, password } = req.body;
@@ -37,22 +35,17 @@ export const login = async (req, res, next) => {
     });
     res.cookie('authToken', token, { 
     httpOnly: true,
-    secure: true, // MUST be TRUE for HTTPS
-    sameSite: 'None', // Allows cross-origin sending
+    secure: true, 
+    sameSite: 'None', 
     maxAge: 24*60*60*1000,
-    // (Optional: add 'domain' if needed for specific subdomain settings)
-}); // 1 day
+   
+}); 
     res.json({ success: true, user: { id: user.id, name: user.name, email, role: user.role }, token });
   } catch (err) {
     console.log(err);
     next(err);
   }
 };
-
-
-// Assuming roleChangeService is imported correctly
-// Assuming you have access to process.env.JWT_SECRET
-
 export const roleChange = async (req, res, next) => {
   try {
     const { userId } = req.params;
@@ -64,9 +57,7 @@ export const roleChange = async (req, res, next) => {
     if (!user) {
         return res.status(404).json({ success: false, message: 'User not found' });
     }
-    
-    
-    // --- 4. SUCCESS RESPONSE ---
+
     res.json({ 
         success: true, 
         message: `Role successfully updated to ${user.role}.`,
@@ -89,13 +80,11 @@ export const checkMe = async (req, res, next) => {
     next(err);
   }
 };
-
 export const logout = (req, res) => {
-  // REMOVE COOKIE
+  
   res.clearCookie('authToken');
   res.json({ success: true, message: 'Logged out successfully' });
 };
-
 export const getAllUsers = async (req, res, next) => {
   try {
     const users = await getAllUsersService();
@@ -104,7 +93,6 @@ export const getAllUsers = async (req, res, next) => {
     next(err);
   }
 };
-
 export const deleteUser = async (req, res, next) => {
   try {
     const { userId } = req.params;

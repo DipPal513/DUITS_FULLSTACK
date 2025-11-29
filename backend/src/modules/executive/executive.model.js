@@ -1,44 +1,3 @@
-// import mongoose from 'mongoose';
-
-// const ExecutiveSchema = new mongoose.Schema({
-//   name: {
-//     type: String,
-//     required: true,
-//   },
-//   position: {
-//     type: String,
-//     required: true,
-//   },
-//   session: {
-//     type: String,
-//     required: false,
-//   },
-//   department: {
-//     type: String,
-//     required: true,
-//   },
-//   email: {
-//     type: String,
-//     required: true,
-//     unique: true,
-//   },
-//   year: {
-//     type: String,
-//     required: true,
-//   },
-//   phone: {
-//     type: String,
-//     required: true,
-//   },
-//   image: {
-//     type: String,
-//     required: false,
-//   },
-// }, { timestamps: true });
-
-// const Executive = mongoose.model('Executive', ExecutiveSchema);
-
-// export default Executive;
 
 import pool from "../../config/db.js";
 
@@ -55,11 +14,37 @@ export const createExecutiveService = async (data) => {
   return result.rows[0];
 };
 
-export const getExecutivesService = async () => {
-  const query = 'SELECT * FROM executives';
-  const result = await pool.query(query);
-  return result.rows;
+export const getExecutivesService = async (limit = 10, page = 1) => {
+  const offset = (page - 1) * limit;
+
+  
+  const dataQuery = `
+    SELECT * FROM executives
+    ORDER BY created_at DESC
+    LIMIT $1 
+    OFFSET $2;
+  `;
+
+  
+  const countQuery = `
+    SELECT COUNT(*) 
+    FROM executives;
+  `;
+
+  const [dataResult, countResult] = await Promise.all([
+    pool.query(dataQuery, [limit, offset]),
+    pool.query(countQuery)
+  ]);
+
+  
+  return {
+    executives: dataResult.rows,
+    totalCount: parseInt(countResult.rows[0].count, 10), 
+    currentPage: page,
+    limit: limit
+  };
 };
+
 
 export const getExecutiveByIdService = async (id) => {
   console.log("Getting executive by ID:", id);
@@ -96,7 +81,6 @@ export const updateExecutiveService = async (id, data) => {
 
   return result.rows[0];
 };
-
 
 export const deleteExecutiveService = async (id) => {
   const intid = parseInt(id);

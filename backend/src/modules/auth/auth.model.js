@@ -87,7 +87,5 @@ export const deleteUserService = async (userId) => {
 };    
 
 export const logoutService = async (userId) => {
-  // For JWT, logout is typically handled client-side by deleting the token.
-  // This function can be used to handle server-side session invalidation if needed.
   return;
 };

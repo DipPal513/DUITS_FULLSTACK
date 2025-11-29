@@ -1,67 +1,39 @@
 import express from 'express';
-import dotenv, { configDotenv } from 'dotenv';
+import  { configDotenv } from 'dotenv';
 import cors from 'cors';
 import helmet from 'helmet';
 import morgan from 'morgan';
-import connectDB from './config/db.js';
 import cookieParser from 'cookie-parser';
 import authRoutes from './modules/auth/auth.route.js';
-import errorHandler from './middleware/errorHandler.js';
-import pool from './config/db.js';
 import memberRoutes from './modules/member/member.route.js';
 import executiveRoutes from './modules/executive/executive.route.js';
 import galleryRoutes from './modules/gallery/gallery.route.js';
 import eventRoutes from './modules/event/event.route.js';
 import noticeRoutes from './modules/notice/notice.route.js';
 import achievementRoute from './modules/achievement/achievement.route.js';
-// import { createAchievement } from './modules/achievement/achievement.controller.js';
-// import createAchievementTable from './modules/achievement/createAchievementTable.js';
-// import createUserTable from './modules/auth/createUserdb.js';
-// import noticeTableCreator from './modules/notice/noticeTableCreator.js';
-// import galleryTableCreator from './modules/gallery/galleryTableMaker.js';
-// import eventTableCreator from './modules/event/eventtablemaker.js';
-// import executiveTable from './modules/executive/executiveTable.js';
-// Add routes
-
+// import errorHandler from './middleware/errorHandler.js';
 configDotenv();
 
-// connectDB();
-
 const app = express();
-// createUserTable();
-// Middleware
+
 app.use(express.json({limit:"10mb"}));
 
 const corsOptions = {
-    // 1. Explicitly allow your development origin
-     origin: ['https://duitsbd.org','https://dashboard.duitsbd.org','http://localhost:3000', 'http://localhost:3001'], // Adjust as needed for your frontend
-
-    // 2. Allow the complex methods (DELETE and PATCH)
+    origin: ['https://duitsbd.org','https://dashboard.duitsbd.org','http://localhost:3000', 'http://localhost:3001'], 
     methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'], 
-    
-    // 3. Allow sending of cookies and authorization headers
-    // This is crucial for sending your authToken and future CSRF tokens
     credentials: true, 
-    
-    // 4. If you send custom headers (like Authorization, X-CSRFToken, etc.)
     allowedHeaders: ['Content-Type', 'Authorization', 'X-CSRFToken'],
-    
     optionsSuccessStatus: 204
 };
 
 app.use(cors(corsOptions));
 
-// app.use(errorHandler());
 app.use(helmet());
-app.use(morgan('dev'));
-// createAchievementTable()
+
+app.use(morgan('dev')); 
+
 app.use(cookieParser());
-// console.log("DB Connection String:", pool);
-// noticeTableCreator()
-// executiveTable();
-// galleryTableCreator()
-// eventTableCreator();
-// Routes
+
 app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/member', memberRoutes);
 app.use('/api/v1/executive', executiveRoutes);
@@ -76,6 +48,6 @@ app.get('/api', (req, res) => {
   res.json({ success: true, message: 'Backend is working 🚀' });
 });
 
-// Error handling middleware
+// app.use(errorHandler());
 
 export default app;

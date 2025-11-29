@@ -1,52 +1,3 @@
-// import mongoose from 'mongoose';
-
-// const eventSchema = new mongoose.Schema({
-//   title: { 
-//     type: String, 
-//     required: true, 
-//     trim: true 
-//   },
-//   description: { 
-//     type: String, 
-//     trim: true 
-//   },
-//   registrationLink: { 
-//     type: String, 
-//     trim: true 
-//   },
-//   image: { 
-//     type: String, 
-//     trim: true 
-//   },
-//   date: { 
-//     type: Date, 
-//     required: true 
-//   },
-//   location: { 
-//     type: String, 
-//     trim: true 
-//   },
-//   createdAt: { 
-//     type: Date, 
-//     default: Date.now 
-//   },
-//   updatedAt: { 
-//     type: Date, 
-//     default: Date.now 
-//   },
-// });
-
-// // Auto-update `updatedAt` before saving
-// eventSchema.pre('save', function (next) {
-//   this.updatedAt = Date.now();
-//   next();
-// });
-
-// const Event = mongoose.model('Event', eventSchema);
-
-// export default Event;
-
-
 import pool from "../../config/db.js";
 
 export const createEventService = async (data) => {
@@ -56,18 +7,45 @@ export const createEventService = async (data) => {
   const [result] = await pool.query(query, values);
   return result;
 };
+export const getEventsService = async (limit = 10, page = 1) => {
+  const offset = (page - 1) * limit;
 
-export const getEventsService = async () => {
-  const query = 'SELECT * FROM events ORDER BY created_at DESC;';
-  const [rows] = await pool.query(query);
-  return rows;
+  
+  const dataQuery = `
+    SELECT * FROM events
+    ORDER BY created_at DESC
+    LIMIT $1 
+    OFFSET $2;
+  `;
+
+  
+  const countQuery = `
+    SELECT COUNT(*) 
+    FROM events;
+  `;
+
+  const [dataResult, countResult] = await Promise.all([
+    pool.query(dataQuery, [limit, offset]),
+    pool.query(countQuery)
+  ]);
+
+  
+  return {
+    achievements: dataResult.rows,
+    totalCount: parseInt(countResult.rows[0].count, 10), 
+    currentPage: page,
+    limit: limit
+  };
 };
+
+
 
 export const getEventByIdService = async (id) => {
   const query = 'SELECT * FROM events WHERE id = ?';
   const [rows] = await pool.query(query, [id]);
   return rows;
 };
+
 export const updateEventService = async (id, data) => {
   const { title, description, registrationLink, image, date, location } = data;
   const query = 'UPDATE events SET title = ?, description = ?, registration_link = ?, image = ?, date = ?, location = ? WHERE id = ?';

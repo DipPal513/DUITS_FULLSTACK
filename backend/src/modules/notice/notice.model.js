@@ -1,47 +1,4 @@
-// import mongoose from 'mongoose';
 
-// const noticeSchema = new mongoose.Schema({
-//   title: { 
-//     type: String, 
-//     required: true, 
-//     trim: true 
-//   },
-//   description: { 
-//     type: String, 
-//     trim: true 
-//   },
-//   registrationLink: { 
-//     type: String, 
-//     trim: true 
-//   },
-//   image: { 
-//     type: String, 
-//     trim: true 
-//   },
-//   deadline: { 
-//     type: Date, 
-//     required: true 
-//   },
-  
-//   createdAt: { 
-//     type: Date, 
-//     default: Date.now 
-//   },
-//   updatedAt: { 
-//     type: Date, 
-//     default: Date.now 
-//   },
-// });
-
-// // Auto-update `updatedAt` before saving
-// noticeSchema.pre('save', function (next) {
-//   this.updatedAt = Date.now();
-//   next();
-// });
-
-// const Notice = mongoose.model('Notice', noticeSchema);
-
-// export default Notice;
 import pool from "../../config/db.js";
 
 export const createNoticeService = async (data) => {
@@ -56,13 +13,34 @@ export const createNoticeService = async (data) => {
   return result.rows[0];
 };
 
-export const getNoticesService = async () => {
-  const query = `
+export const getNoticesService = async (limit = 10, page = 1) => {
+  const offset = (page - 1) * limit;
+
+  
+  const dataQuery = `
     SELECT * FROM notices
-    ORDER BY created_at DESC;
+    ORDER BY created_at DESC
+    LIMIT $1 
+    OFFSET $2;
   `;
-  const result = await pool.query(query);
-  return result.rows;
+
+  const countQuery = `
+    SELECT COUNT(*) 
+    FROM notices;
+  `;
+
+  const [dataResult, countResult] = await Promise.all([
+    pool.query(dataQuery, [limit, offset]),
+    pool.query(countQuery)
+  ]);
+
+  
+  return {
+    notices: dataResult.rows,
+    totalCount: parseInt(countResult.rows[0].count, 10), 
+    currentPage: page,
+    limit: limit
+  };
 };
 
 export const updateNoticeService = async (id, data) => {

@@ -9,6 +9,7 @@ import { Toaster } from "react-hot-toast"
 export const metadata = {
   title: "IT Club Dashboard",
   description: "Dynamic IT Club Management System",
+  
 }
 
 export default function RootLayout({ children }) {

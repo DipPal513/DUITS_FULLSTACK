@@ -1,13 +1,15 @@
 "use client"
 
 import DashboardLayout from "@/components/DashboardLayout"
+import DetailsExecutiveModal from "@/components/executive/Details"
+import DeleteModal from "@/components/executive/DeleteModal"
 import { useAuth } from "@/contexts/AuthContext"
 import axios from "axios"
-import { AlertTriangle, Edit2, Eye, Mail, Plus, Search, Trash2, User, X } from "lucide-react"
+import { AlertTriangle, Edit2, Eye, Plus, Search, Trash2, User, X } from "lucide-react"
 import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
-import DetailsExecutiveModal from "@/components/executive/Details"
-
+import ExecutivePopUp from "@/components/executive/ExecutivePopUp"
+import ExecutiveFilter from "@/components/executive/ExecutiveFilter"
 export default function ExecutivesPage() {
 
 const convertToBase64 = (file) =>
@@ -60,8 +62,8 @@ const convertToBase64 = (file) =>
       const res = await axios.get(`${baseURL}/executive`, {
         withCredentials:true
       })
-      setExecutives(res.data.data)
-      setFilteredExecutives(res.data.data)
+      setExecutives(res.data.data?.executives)
+      setFilteredExecutives(res.data.data?.executives)
     } catch (error) {
       console.error("Error loading executives:", error)
       toast.error("Failed to load executives")
@@ -280,48 +282,7 @@ const convertToBase64 = (file) =>
         </div>
 
         {/* Filters Bar */}
-        <div className="bg-white rounded-lg border border-slate-200 p-4 transition-all duration-200">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
-            <div className="md:col-span-2 relative">
-              <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-              <input
-                type="text"
-                placeholder="Search executives..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-9 pr-4 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-              />
-            </div>
-            <select
-              value={filterPosition}
-              onChange={(e) => setFilterPosition(e.target.value)}
-              className="px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-            >
-              <option value="">All Positions</option>
-              {positions.map(pos => (
-                <option key={pos} value={pos}>{pos}</option>
-              ))}
-            </select>
-           
-          </div>
-          {(searchTerm || filterPosition ) && (
-            <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between text-xs animate-in fade-in duration-200">
-              <span className="text-slate-600">
-                Showing {sortedExecutives.length} of {executives.length} executives
-              </span>
-              <button
-                onClick={() => {
-                  setSearchTerm("")
-                  setFilterPosition("")
-                  setFilterDepartment("")
-                }}
-                className="text-indigo-600 hover:text-indigo-700 font-medium transition-colors duration-200"
-              >
-                Clear all
-              </button>
-            </div>
-          )}
-        </div>
+       <ExecutiveFilter searchTerm={searchTerm} setSearchTerm={setSearchTerm} filterPosition={filterPosition} positions={positions} setFilterPosition={setFilterPosition} executives={executives} sortedExecutives={sortedExecutives} setFilterDepartment={setFilterDepartment} />
         
         {loading && !showModal && !showDeleteModal ? (
           <div className="flex items-center justify-center py-12 bg-white rounded-lg border border-slate-200">
@@ -413,239 +374,12 @@ const convertToBase64 = (file) =>
 
       {/* Add/Edit Modal */}
       {showModal && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in duration-200">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-md max-h-[90vh] overflow-y-auto animate-in zoom-in duration-200">
-            <div className="flex items-center justify-between p-4 border-b border-slate-200 sticky top-0 bg-white z-10">
-              <h2 className="text-lg font-semibold text-slate-900">
-                {editingExecutive ? "Edit Executive" : "Add Executive"}
-              </h2>
-              <button
-                onClick={resetForm}
-                className="p-1 hover:bg-slate-100 rounded transition-all duration-200 hover:scale-110"
-                disabled={loading}
-              >
-                <X className="w-5 h-5 text-slate-500" />
-              </button>
-            </div>
-
-            <form onSubmit={handleSubmit} className="p-4">
-              <div className="space-y-4">
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">
-                    Photo 
-                  </label>
-                  <input
-                    type="file"
-                    onChange={(e) => setFormData({ ...formData, image: e.target.files[0] })}
-                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-                    disabled={loading}
-                  />
-           
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">
-                    Name <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.name}
-                    onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-                    placeholder="John Doe"
-                    disabled={loading}
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">
-                    Email <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="email"
-                    required
-                    value={formData.email}
-                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-                    placeholder="john.doe@example.com"
-                    disabled={loading}
-                  />
-                </div>
-<div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">
-                    Phone <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="number"
-                    required
-                    value={formData.phone}
-                    onChange={(e) => setFormData({ ...formData, phone: e.target.value })}
-                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-                    placeholder="123-456-7890"
-                    disabled={loading}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">
-                    Position <span className="text-red-500">*</span>
-                  </label>
-                  <select
-                    required
-                    value={formData.position}
-                    onChange={(e) => setFormData({ ...formData, position: e.target.value })}
-                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-                    disabled={loading}
-                  >
-                    <option value="">Select Position</option>
-                    {positions.map(pos => (
-                      <option key={pos} value={pos}>{pos}</option>
-                    ))}
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">
-                    Department <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.department}
-                    onChange={(e) => setFormData({ ...formData, department: e.target.value })}
-                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-                    placeholder="Computer Science"
-                    disabled={loading}
-                  />
-                </div>
-    <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">
-                    Year <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.year}
-                    onChange={(e) => setFormData({ ...formData, year: e.target.value })}
-                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-                    placeholder="2026"
-                    disabled={loading}
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">
-                    Session <span className="text-red-500">*</span>
-                  </label>
-                  <select
-                    required
-                    value={formData.session}
-                    onChange={(e) => setFormData({ ...formData, session: e.target.value })}
-                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-                    disabled={loading}
-                  >
-                    <option value="">Select Session</option>
-                    <option value="2020-2021">2018-2019</option>
-                    <option value="2020-2021">2019-2020</option>
-                    <option value="2020-2021">2020-2021</option>
-                    <option value="2021-2022">2021-2022</option>
-                    <option value="2022-2023">2022-2023</option>
-                    <option value="2023-2024">2023-2024</option>
-                    <option value="2024-2025">2024-2025</option>
-                    <option value="2025-2026">2025-2026</option>
-                    <option value="2025-2026">2026-2027</option>
-                  </select>
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-slate-700 mb-1">
-                    DUITS batch <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type="number"
-                    required
-                    value={formData.duits_batch}
-                    onChange={(e) => setFormData({ ...formData, duits_batch: e.target.value })}
-                    className="w-full px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
-                    placeholder="11"
-                    disabled={loading}
-                  />
-                </div>
-              </div>
-
-              <div className="flex gap-3 mt-6">
-                <button
-                  type="button"
-                  onClick={resetForm}
-                  className="flex-1 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105"
-                  disabled={loading}
-                >
-                  Cancel
-                </button>
-                <button
-                  type="submit"
-                  disabled={loading}
-                  className="flex-1 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg text-sm font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 hover:shadow-lg"
-                >
-                  {loading ? (
-                    <span className="flex items-center justify-center gap-2">
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      {editingExecutive ? "Updating..." : "Adding..."}
-                    </span>
-                  ) : (
-                    editingExecutive ? "Update Executive" : "Add Executive"
-                  )}
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
+       <ExecutivePopUp editingExecutive={editingExecutive} setEditingExecutive={setEditingExecutive} loading={loading} handleSubmit={handleSubmit} formData={formData} setFormData={setFormData} resetForm={resetForm} positions={positions} />
       )}
 
       {/* Delete Confirmation Modal */}
       {showDeleteModal && executiveToDelete && (
-        <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-in fade-in duration-200">
-          <div className="bg-white rounded-lg shadow-xl w-full max-w-md animate-in zoom-in duration-200">
-            <div className="p-6">
-              <div className="flex items-center justify-center w-12 h-12 rounded-full bg-red-100 mx-auto mb-4">
-                <AlertTriangle className="w-6 h-6 text-red-600" />
-              </div>
-              
-              <h3 className="text-lg font-semibold text-slate-900 text-center mb-2">
-                Delete Executive
-              </h3>
-              
-              <p className="text-sm text-slate-600 text-center mb-6">
-                Are you sure you want to delete <span className="font-semibold text-slate-900">{executiveToDelete.name}</span>? This action cannot be undone.
-              </p>
-              
-              <div className="flex gap-3">
-                <button
-                  onClick={() => {
-                    setShowDeleteModal(false)
-                    setExecutiveToDelete(null)
-                  }}
-                  className="flex-1 px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-700 rounded-lg text-sm font-medium transition-all duration-200 hover:scale-105"
-                  disabled={loading}
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={handleDelete}
-                  disabled={loading}
-                  className="flex-1 px-4 py-2 bg-red-600 hover:bg-red-700 text-white rounded-lg text-sm font-medium transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed hover:scale-105 hover:shadow-lg"
-                >
-                  {loading ? (
-                    <span className="flex items-center justify-center gap-2">
-                      <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
-                      Deleting...
-                    </span>
-                  ) : (
-                    "Delete"
-                  )}
-                </button>
-              </div>
-            </div>
-          </div>
-        </div>
+        <DeleteModal loading={loading}  executiveToDelete={executiveToDelete} setShowDeleteModal={setShowDeleteModal}setExecutiveToDelete={setExecutiveToDelete} handleDelete={handleDelete}/>
       )}
 
       {/* Details Modal */}

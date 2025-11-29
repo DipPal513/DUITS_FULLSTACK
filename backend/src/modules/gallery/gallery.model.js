@@ -1,50 +1,3 @@
-// import mongoose from 'mongoose';
-
-// const gallerySchema = new mongoose.Schema({
-//   title: { 
-//     type: String, 
-//     required: true, 
-//     trim: true 
-//   },
-//   description: { 
-//     type: String, 
-//     trim: true 
-//   },
- 
-//   image: { 
-//     type: String, 
-//     trim: true 
-//   },
-//   date: { 
-//     type: Date, 
-//     required: true 
-//   },
-//   category: { 
-//     type: String, 
-//     required: true, 
-//     trim: true 
-//   },
-//   createdAt: { 
-//     type: Date, 
-//     default: Date.now 
-//   },
-//   updatedAt: { 
-//     type: Date, 
-//     default: Date.now 
-//   },
-// });
-
-// // Auto-update `updatedAt` before saving
-// gallerySchema.pre('save', function (next) {
-//   this.updatedAt = Date.now();
-//   next();
-// });
-
-// const Gallery = mongoose.model('Gallery', gallerySchema);
-
-// export default Gallery;
-
-
 import pool from "../../config/db.js";
 
 
@@ -65,15 +18,36 @@ export const createGalleryService = async (data) => {
   }
 };
 
-export const getAllGalleryService = async () => {
+export const getAllGalleryService = async (limit = 10, page = 1) => {
+  const offset = (page - 1) * limit;
+
   
-  try {
-    const res = await pool.query('SELECT * FROM gallery ORDER BY created_at DESC;');
-    return res.rows;
-  } catch (err) {
-    throw err;
-  }
+  const dataQuery = `
+    SELECT * FROM gallery
+    ORDER BY created_at DESC
+    LIMIT $1 
+    OFFSET $2;
+  `;
+  
+  const countQuery = `
+    SELECT COUNT(*) 
+    FROM gallery;
+  `;
+
+  const [dataResult, countResult] = await Promise.all([
+    pool.query(dataQuery, [limit, offset]),
+    pool.query(countQuery)
+  ]);
+
+  
+  return {
+    galleries: dataResult.rows,
+    totalCount: parseInt(countResult.rows[0].count, 10), 
+    currentPage: page,
+    limit: limit
+  };
 };
+
 
 export const getGalleryByIdService = async (id) => {
  

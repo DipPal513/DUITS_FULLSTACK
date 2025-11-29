@@ -1,15 +1,26 @@
 "use client";
+
 import DashboardLayout from '@/components/DashboardLayout';
 import AchievementCard from "@/components/achievement/AchiementCard";
 import AchievementFormModal from "@/components/achievement/AchievementFormModal";
 import DeleteModal from "@/components/achievement/DeleteModal";
+import { usePagination, PaginationControls } from '@/hook/usePagination';
 import axios from 'axios';
 import { Calendar, Loader, Plus } from 'lucide-react';
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import toast from 'react-hot-toast';
+
 const API_URL = process.env.NEXT_PUBLIC_BASE_URL;
+const ITEMS_PER_PAGE = 10;
 
-
+// Utility function to convert file to base64
+const convertToBase64 = (file) =>
+  new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = (err) => reject(err);
+  });
 
 // Main Dashboard Component
 export default function AchievementsDashboard() {
@@ -19,33 +30,34 @@ export default function AchievementsDashboard() {
   const [editingAchievement, setEditingAchievement] = useState(null);
   const [achievementToDelete, setAchievementToDelete] = useState(null);
   const [loading, setLoading] = useState(false);
+  const [totalAchievements, setTotalAchievements] = useState(0);
 
-  useEffect(() => {
-    fetchAchievements();
-  }, []);
+  // Initialize pagination hook
+  const pagination = usePagination(totalAchievements, ITEMS_PER_PAGE);
 
-const convertToBase64 = (file) =>
-  new Promise((resolve, reject) => {
-    const reader = new FileReader();
-    reader.readAsDataURL(file);
-    reader.onload = () => resolve(reader.result);
-    reader.onerror = (err) => reject(err);
-  });
-
-
-  const fetchAchievements = async () => {
+  // Fetch achievements with pagination
+  const fetchAchievements = useCallback(async (page = 1, limit = ITEMS_PER_PAGE) => {
     try {
       setLoading(true);
-      const response = await fetch(`${API_URL}/achievement`);
+      const url = `${API_URL}/achievement?page=${page}&limit=${limit}`;
+      const response = await fetch(url);
       const data = await response.json();
-      setAchievements(data.achievements || []);
+      
+      setAchievements(data?.data?.achievements || []);
+      setTotalAchievements(data?.totalCount || data?.data?.achievements?.length || 0);
+      
+     
     } catch (error) {
       console.error('Error fetching achievements:', error);
-      toast.error('Failed to fetch achievements', 'error');
+      toast.error('Failed to fetch achievements');
     } finally {
       setLoading(false);
     }
-  };
+  }, []);
+
+  useEffect(() => {
+    fetchAchievements(pagination.currentPage, ITEMS_PER_PAGE);
+  }, [pagination.currentPage, fetchAchievements]);
 
   const handleCreateAchievement = () => {
     setEditingAchievement(null);
@@ -55,25 +67,29 @@ const convertToBase64 = (file) =>
   const handleEditAchievement = (achievement) => {
     setEditingAchievement(achievement);
     setIsModalOpen(true);
-    
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setEditingAchievement(null);
   };
 
   const handleFormSubmit = async (formData) => {
+    try {
+      setLoading(true);
 
-const base64Image = editingAchievement ? editingAchievement.image : await convertToBase64(formData.image[0]);
+      const base64Image = editingAchievement?.image || await convertToBase64(formData.image[0]);
 
-      const payLoad = {
+      const payload = {
         title: formData.title,
         description: formData.description,
         image: base64Image,
-        location:formData.location,
+        location: formData.location,
         date: formData.date,
         registrationLink: formData.registrationLink,
-      }
+      };
 
-      console.log(`this is the payload`, payLoad);
-    try {
-      setLoading(true);
+      console.log('Payload:', payload);
 
       const url = editingAchievement 
         ? `${API_URL}/achievement/${editingAchievement.id}` 
@@ -83,33 +99,19 @@ const base64Image = editingAchievement ? editingAchievement.image : await conver
 
       const response = await fetch(url, {
         method,
-         headers: { "Content-Type": "application/json" },
-        // send json format data
-        body: JSON.stringify(payLoad),
-        credentials:"include",
- 
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+        credentials: "include",
       });
 
       if (!response.ok) throw new Error('Failed to save achievement');
 
-      const result = await response.json();
-      fetchAchievements();
-
-      if (editingAchievement) {
-        setAchievements(achievements.map(achievement => 
-          achievement.id === editingAchievement.id ? result.achievement : achievement
-        ));
-        toast.success('Achievement updated successfully!');
-      } else {
-        // setAchievements([result.achievement, ...achievements]);
-        toast.success('Achievement created successfully!');
-      }
-
-      setIsModalOpen(false);
-      setEditingAchievement(null);
+      toast.success(editingAchievement ? 'Achievement updated successfully!' : 'Achievement created successfully!');
+      closeModal();
+      fetchAchievements(pagination.currentPage, ITEMS_PER_PAGE);
     } catch (error) {
       console.error('Error submitting achievement:', error);
-      toast.error('Failed to save achievement', 'error');
+      toast.error('Failed to save achievement');
     } finally {
       setLoading(false);
     }
@@ -120,32 +122,50 @@ const base64Image = editingAchievement ? editingAchievement.image : await conver
     setIsDeleteModalOpen(true);
   };
 
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+    setAchievementToDelete(null);
+  };
+
   const handleConfirmDelete = async () => {
     try {
       setLoading(true);
       const response = await axios.delete(`${API_URL}/achievement/${achievementToDelete.id}`, {
-       withCredentials: true,
+        withCredentials: true,
       });
 
-      if (response.status !== 200) toast.error(response.data.message || 'Failed to delete achievement', 'error');
+      if (response.status !== 200) {
+        toast.error(response.data.message || 'Failed to delete achievement');
+        return;
+      }
 
-      setAchievements(achievements.filter(achievement => achievement.id !== achievementToDelete.id));
-      setIsDeleteModalOpen(false);
-      setAchievementToDelete(null);
       toast.success('Achievement deleted successfully!');
+      closeDeleteModal();
+      
+      // If we deleted the last item on a page, go back one page
+      if (achievements.length === 1 && pagination.currentPage > 1) {
+        pagination.goToPrevious();
+      } else {
+        fetchAchievements(pagination.currentPage, ITEMS_PER_PAGE);
+      }
     } catch (error) {
       console.error('Error deleting achievement:', error);
-      toast.error(error.message || 'Failed to delete achievement', 'error');
+      toast.error(error.message || 'Failed to delete achievement');
     } finally {
       setLoading(false);
     }
   };
-console.log("all the achievements here.,", achievements);
+
+  console.log("Pagination Debug:", { 
+    currentPage: pagination.currentPage, 
+    totalPages: pagination.totalPages,
+    totalAchievements,
+    achievements: achievements.length 
+  });
+
   return (
     <DashboardLayout>
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-4 md:p-8">
-       
-
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
@@ -153,7 +173,14 @@ console.log("all the achievements here.,", achievements);
               <h1 className="text-3xl md:text-4xl font-bold text-slate-800 mb-2">
                 Achievements Management
               </h1>
-              <p className="text-slate-600">Create and manage your achievements seamlessly</p>
+              <p className="text-slate-600">
+                Create and manage your achievements seamlessly
+                {totalAchievements > 0 && (
+                  <span className="ml-2 text-sm font-medium text-blue-600">
+                    ({totalAchievements} total)
+                  </span>
+                )}
+              </p>
             </div>
             <button
               onClick={handleCreateAchievement}
@@ -165,29 +192,49 @@ console.log("all the achievements here.,", achievements);
           </div>
 
           {/* Loading State */}
-          {loading && achievements.length === 0 && (
+          {loading && achievements.length === 0 ? (
             <div className="flex justify-center items-center py-20">
               <div className="text-center">
                 <Loader className="animate-spin text-blue-600 mx-auto mb-4" size={48} />
                 <p className="text-slate-600">Loading achievements...</p>
               </div>
             </div>
-          )}
+          ) : achievements.length > 0 ? (
+            <>
+              {/* Achievements Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                {achievements.map((achievement) => (
+                  <AchievementCard
+                    key={achievement.id}
+                    achievement={achievement}
+                    onEdit={handleEditAchievement}
+                    onDelete={handleDeleteClick}
+                  />
+                ))}
+              </div>
 
-          {/* Achievements Grid */}
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-            {achievements.map(achievement => (
-              <AchievementCard
-                key={achievement.id}
-                achievement={achievement}
-                onEdit={handleEditAchievement}
-                onDelete={handleDeleteClick}
-              />
-            ))}
-          </div>
-
-          {/* Empty State */}
-          {!loading && achievements.length === 0 && (
+              {/* Pagination Controls */}
+              {totalAchievements > 0 && (
+                <PaginationControls
+                  currentPage={pagination.currentPage}
+                  totalPages={pagination.totalPages}
+                  startIndex={pagination.startIndex}
+                  endIndex={pagination.endIndex}
+                  totalItems={totalAchievements}
+                  onPageChange={pagination.goToPage}
+                  canGoPrevious={pagination.canGoPrevious}
+                  canGoNext={pagination.canGoNext}
+                  onPrevious={pagination.goToPrevious}
+                  onNext={pagination.goToNext}
+                  onFirst={pagination.goToFirst}
+                  onLast={pagination.goToLast}
+                  showFirstLast={true}
+                  showInfo={true}
+                />
+              )}
+            </>
+          ) : (
+            /* Empty State */
             <div className="text-center py-20">
               <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-blue-100 to-indigo-100 mb-6">
                 <Calendar size={40} className="text-blue-600" />
@@ -208,10 +255,7 @@ console.log("all the achievements here.,", achievements);
         {/* Modals */}
         <AchievementFormModal
           isOpen={isModalOpen}
-          onClose={() => {
-            setIsModalOpen(false);
-            setEditingAchievement(null);
-          }}
+          onClose={closeModal}
           onSubmit={handleFormSubmit}
           editingAchievement={editingAchievement}
           loading={loading}
@@ -220,10 +264,7 @@ console.log("all the achievements here.,", achievements);
         <DeleteModal
           isOpen={isDeleteModalOpen}
           achievement={achievementToDelete}
-          onClose={() => {
-            setIsDeleteModalOpen(false);
-            setAchievementToDelete(null);
-          }}
+          onClose={closeDeleteModal}
           onConfirm={handleConfirmDelete}
           loading={loading}
         />

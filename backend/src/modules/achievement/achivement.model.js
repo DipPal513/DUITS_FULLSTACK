@@ -1,44 +1,3 @@
-// import mongoose from 'mongoose';
-
-// const achievementSchema = new mongoose.Schema({
-//   title: { 
-//     type: String, 
-//     required: true, 
-//     trim: true 
-//   },
-//   description: { 
-//     type: String, 
-//     trim: true 
-//   },
- 
-//   image: { 
-//     type: String, 
-//     trim: true 
-//   },
-//   date: { 
-//     type: Date, 
-//     required: true 
-//   },
-  
-//   createdAt: { 
-//     type: Date, 
-//     default: Date.now 
-//   },
-//   updatedAt: { 
-//     type: Date, 
-//     default: Date.now 
-//   },
-// });
-
-// // Auto-update `updatedAt` before saving
-// achievementSchema.pre('save', function (next) {
-//   this.updatedAt = Date.now();
-//   next();
-// });
-
-// const Achievement = mongoose.model('Achievement', achievementSchema);
-
-// export default Achievement;
 
 
 import pool from "../../config/db.js";
@@ -54,13 +13,35 @@ export const createAchievementService = async ({ title, description, date, image
   return result.rows[0];
 };
 
-export const getAllAchievementsService = async () => {
-  const query = `
+export const getAllAchievementsService = async (limit = 10, page = 1) => {
+  const offset = (page - 1) * limit;
+
+  
+  const dataQuery = `
     SELECT * FROM achievements
-    ORDER BY created_at DESC;
+    ORDER BY created_at DESC
+    LIMIT $1 
+    OFFSET $2;
   `;
-  const result = await pool.query(query);
-  return result.rows;
+
+  
+  const countQuery = `
+    SELECT COUNT(*) 
+    FROM achievements;
+  `;
+
+  const [dataResult, countResult] = await Promise.all([
+    pool.query(dataQuery, [limit, offset]),
+    pool.query(countQuery)
+  ]);
+
+  
+  return {
+    achievements: dataResult.rows,
+    totalCount: parseInt(countResult.rows[0].count, 10), 
+    currentPage: page,
+    limit: limit
+  };
 };
 
 export const updateAchievementByIdService = async (id, { title, description, date, image }) => {

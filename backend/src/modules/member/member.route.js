@@ -9,7 +9,7 @@ import {
 
 const router = express.Router();
 
-// Public route for student registration
+// Public route req for admin registration
 router.post('/register', registerMember);
 
 // Admin routes

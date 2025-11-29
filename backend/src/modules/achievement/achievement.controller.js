@@ -36,15 +36,17 @@ export const createAchievement = async (req, res, next) => {
   }
 };
 
-
 export const getAchievements = async (req, res, next) => {
   try {
-    const achievements = await getAllAchievementsService();
-    handleResponse(res, 200, true, "Achievements retrieved successfully", { achievements });
-  } catch (err) {
+   const page = parseInt(req.query.page) || 1; 
+    const limit = parseInt(req.query.limit) || 10; 
+    const finalLimit = Math.min(limit, 50); 
+    const achievements = await getAllAchievementsService(finalLimit, page);
+    res.status(200).json({ success: true, data: achievements });} catch (err) {
     console.error(err);
     next(err);
-  }}
+  }
+};
 
 export const updateAchievement = async (req, res, next) => {
   try {
@@ -70,7 +72,6 @@ export const updateAchievement = async (req, res, next) => {
     next(err);
   }
 }
-
 
 export const deleteAchievement = async (req, res, next) => {
   try {

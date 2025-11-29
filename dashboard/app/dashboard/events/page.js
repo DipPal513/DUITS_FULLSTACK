@@ -31,10 +31,10 @@ const convertToBase64 = (file) =>
     reader.readAsDataURL(file);
     reader.onload = () => resolve(reader.result);
     reader.onerror = (err) => reject(err);
-  });
+});
 
 
-  const fetchEvents = async () => {
+const fetchEvents = async () => {
     try {
       setLoading(true);
       const response = await fetch(`${API_URL}/event`);
@@ -46,7 +46,7 @@ const convertToBase64 = (file) =>
     } finally {
       setLoading(false);
     }
-  };
+};
 
   const handleCreateEvent = () => {
     setEditingEvent(null);
@@ -59,11 +59,11 @@ const convertToBase64 = (file) =>
     
   };
 
-  const handleFormSubmit = async (formData) => {
+const handleFormSubmit = async (formData) => {
 
 const base64Image = editingEvent ? editingEvent.image : await convertToBase64(formData.image[0]);
 
-      const payLoad = {
+const payLoad = {
         title: formData.title,
         description: formData.description,
         image: base64Image,
@@ -71,9 +71,7 @@ const base64Image = editingEvent ? editingEvent.image : await convertToBase64(fo
         date: formData.date,
         registrationLink: formData.registrationLink,
       }
-
-      console.log(`this is the payload`, payLoad);
-    try {
+  try {
       setLoading(true);
 
       const url = editingEvent 
@@ -85,10 +83,8 @@ const base64Image = editingEvent ? editingEvent.image : await convertToBase64(fo
       const response = await fetch(url, {
         method,
          headers: { "Content-Type": "application/json" },
-        // send json format data
         body: JSON.stringify(payLoad),
         credentials:"include",
- 
       });
 
       if (!response.ok) throw new Error('Failed to save event');
@@ -116,12 +112,12 @@ const base64Image = editingEvent ? editingEvent.image : await convertToBase64(fo
     }
   };
 
-  const handleDeleteClick = (event) => {
+const handleDeleteClick = (event) => {
     setEventToDelete(event);
     setIsDeleteModalOpen(true);
-  };
+};
 
-  const handleConfirmDelete = async () => {
+const handleConfirmDelete = async () => {
     try {
       setLoading(true);
       const response = await axios.delete(`${API_URL}/event/${eventToDelete.id}`, {
@@ -140,13 +136,12 @@ const base64Image = editingEvent ? editingEvent.image : await convertToBase64(fo
     } finally {
       setLoading(false);
     }
-  };
-console.log("all the events here.,", events);
+};
+
   return (
     <DashboardLayout>
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-4 md:p-8">
        
-
         <div className="max-w-7xl mx-auto">
           {/* Header */}
           <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
