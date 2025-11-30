@@ -2,9 +2,9 @@ import pool from "../../config/db.js";
 
 export const createEventService = async (data) => {
   const { title, description, registrationLink, image, date, location } = data;
-  const query = 'INSERT INTO events (title, description, registration_link, image, date, location) VALUES (?, ?, ?, ?, ?, ?)';
+  const query = 'INSERT INTO events (title, description, registration_link, image, date, location) VALUES ($1, $2, $3, $4, $5, $6) RETURNING *';
   const values = [title, description, registrationLink, image, date, location];
-  const [result] = await pool.query(query, values);
+  const result = await pool.query(query, values);
   return result;
 };
 export const getEventsService = async (limit = 10, page = 1) => {
@@ -31,9 +31,10 @@ export const getEventsService = async (limit = 10, page = 1) => {
 
   
   return {
-    achievements: dataResult.rows,
+    events: dataResult.rows,
     totalCount: parseInt(countResult.rows[0].count, 10), 
     currentPage: page,
+    totalPages: Math.ceil(parseInt(countResult.rows[0].count, 10) / limit),
     limit: limit
   };
 };
@@ -55,7 +56,7 @@ export const updateEventService = async (id, data) => {
 };
 
 export const deleteEventService = async (id) => {
-  const query = 'DELETE FROM events WHERE id = ?';
-  const [result] = await pool.query(query, [id]);
+  const query = 'DELETE FROM events WHERE id = $1';
+  const result = await pool.query(query, [id]);
   return result;
 };  

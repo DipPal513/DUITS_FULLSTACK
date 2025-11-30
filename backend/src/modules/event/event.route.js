@@ -13,7 +13,7 @@ const router = express.Router();
 router.post('/',isAuthenticated, createEvent);
 router.get('/', getEvents);
 router.put('/:id', updateEvent);
-router.delete('/:id',isAuthenticated,isAdmin, deleteEvent);
+router.delete('/:id',isAuthenticated, deleteEvent);
 
 
 export default router;

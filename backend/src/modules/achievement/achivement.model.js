@@ -39,6 +39,7 @@ export const getAllAchievementsService = async (limit = 10, page = 1) => {
   return {
     achievements: dataResult.rows,
     totalCount: parseInt(countResult.rows[0].count, 10), 
+    totalPages: Math.ceil(parseInt(countResult.rows[0].count, 10) / limit),
     currentPage: page,
     limit: limit
   };

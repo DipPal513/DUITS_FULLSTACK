@@ -1,11 +1,11 @@
-import { GeistSans } from "geist/font/sans"
-import { GeistMono } from "geist/font/mono"
-import { Inter } from "next/font/google"
-import { Analytics } from "@vercel/analytics/next"
-import { Suspense } from "react"
-import "./globals.css"
 import { ThemeProvider } from "@/components/theme-provider"
+import { Analytics } from "@vercel/analytics/next"
+import { GeistMono } from "geist/font/mono"
+import { GeistSans } from "geist/font/sans"
+import { Inter } from "next/font/google"
+import { Suspense } from "react"
 import { Toaster } from "react-hot-toast"
+import "./globals.css"
 
 const inter = Inter({
   subsets: ["latin"],

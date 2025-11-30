@@ -65,10 +65,10 @@ export default function PresidentMessage() {
         {/* Header */}
         <div className="text-center mb-16">
           <h1 className="text-4xl md:text-5xl font-semibold mb-3 tracking-tight">
-            Messages from Our Chairperson
+            Messages from Our President
           </h1>
           <p className="text-neutral-500 text-base">
-            A message from the Chairperson of the Department of CSE
+            A message from the President of the club of DUITS
           </p>
         </div>
 
