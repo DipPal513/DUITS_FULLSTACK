@@ -1,9 +1,10 @@
+import { Github, Instagram, Linkedin, Mail, Twitter } from "lucide-react"
 import Link from "next/link"
-import { Github, Linkedin, Twitter, Instagram, Mail } from "lucide-react"
+import { FaFacebook, FaLocationArrow, FaPhoneAlt } from "react-icons/fa"
 
 export default function Footer() {
   const socialLinks = [
-    { icon: Github, href: "#", label: "GitHub" },
+    { icon: FaFacebook, href: "https://www.facebook.com/Dhaka.University.IT.Society.DUITS/", label: "Facebook" },
     { icon: Linkedin, href: "#", label: "LinkedIn" },
     { icon: Twitter, href: "#", label: "Twitter" },
     { icon: Instagram, href: "#", label: "Instagram" },
@@ -37,17 +38,31 @@ export default function Footer() {
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12">
           {/* Brand */}
           <div className="lg:col-span-2">
-            <Link href="/" className="flex items-center gap-2 mb-4">
-              <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
-                <span className="text-primary-foreground font-mono font-bold text-lg">IT</span>
-              </div>
-              <span className="font-bold text-xl">IT Club</span>
+            <div className="flex items-center">
+              <Link href="/" className="flex items-center gap-2 mb-4">
+              <img src="/icons/duits-512.png" alt="IT Club Logo" className="w-20 h-20" />
             </Link>
-            <p className="text-sm text-muted-foreground mb-6 leading-relaxed max-w-sm">
-              Empowering the next generation of tech innovators through collaboration, learning, and hands-on
-              experience.
-            </p>
-            <div className="flex gap-3">
+            <h2 className="text-2xl font-bold mb-4">IT Club of DUITS</h2>
+            </div>
+           
+            
+            {/* all contact details here */}
+            <div className="">
+              <div className="flex gap-2 items-center mb-2">
+                <FaPhoneAlt/>
+              <p>01519-201101</p>
+              </div>
+              <div className="flex gap-2 items-center mb-2">
+                <Mail/>
+              <p>duits.official@gmail.com</p> 
+              </div>
+              <div className="flex gap-2 items-center">
+                <FaLocationArrow/>
+              <p>1st Floor, TSC, University of Dhaka, Dhaka, Bangladesh</p>
+              </div>
+
+            </div>
+            <div className="flex gap-3 mt-6">
               {socialLinks.map((social, index) => (
                 <a
                   key={index}

@@ -1,10 +1,9 @@
 "use client"
 
-import { Button } from "@/components/ui/button"
+import DarkVeil from "@/components/DarkVeil"
 import gsap from "gsap"
 import { ArrowRight, Code2, Terminal } from "lucide-react"
 import { useEffect, useRef } from "react"
-import DarkVeil from "@/components/DarkVeil"
 
 export default function Hero() {
   const headingRef = useRef(null)
@@ -58,7 +57,7 @@ export default function Hero() {
       />
 
       {/* Layer 3: Hero Content */}
-      <div className="relative z-20  pt-10 sm:pt-0 container mx-auto px-6 lg:px-8 py-20">
+      <div className="relative z-20  pt-30 container mx-auto px-6 lg:px-8 py-20">
         <div className="max-w-5xl mx-auto text-center">
           
           {/* IT Club Badge */}

@@ -273,7 +273,7 @@ export default function Achievements() {
   }, [])
 
   return (
-    <section className="pb-24 bg-black">
+    <section className="py-24  dark:bg-black bg-gray-200 transition-colors">
       <div className="container mx-auto px-4 lg:px-8">
         {/* Header */}
         <div ref={headerRef} className="max-w-4xl mx-auto text-center mb-20">

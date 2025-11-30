@@ -3,7 +3,7 @@ import ScrollVelocity from "@/components/ScrollVelocity"
 
 export default function ScrollText() {
   return (
-   <section className="pb-12">
+   <section className="pb-12 pt-10 sm:pt-0 bg-gray-200 dark:bg-black overflow-hidden">
 
 
     <ScrollVelocity

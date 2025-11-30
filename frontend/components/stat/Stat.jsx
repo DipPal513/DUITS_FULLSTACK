@@ -19,7 +19,7 @@ export default function Stat() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-950 via-black to-gray-900 flex items-center justify-center p-4 md:p-8 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br dark:from-gray-950 dark:via-black  dark:to-gray-900 bg-gray-200 flex items-center justify-center p-4 md:p-8 relative overflow-hidden">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-20 left-20 w-72 h-72 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-pulse"></div>
@@ -38,7 +38,7 @@ export default function Stat() {
             </div>
           </div>
           
-          <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r from-white via-gray-200 to-gray-400 bg-clip-text text-transparent">
+          <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r dark:from-white dark:via-gray-200 dark:to-gray-400 from-gray-800 via-gray-500 to-gray-800 bg-clip-text text-transparent">
             DUITS COUNTS
           </h1>
           <p className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto">
@@ -57,9 +57,9 @@ export default function Stat() {
             >
               {/* Card */}
               <div className={`
-                relative bg-gradient-to-br from-gray-900/80 to-gray-950/80 
-                backdrop-blur-xl rounded-2xl p-8 
-                border border-gray-800 
+                relative bg-gradient-to-br dark:from-gray-900/80 dark:to-gray-950/80 
+                backdrop-blur-xl rounded-2xl p-8  dark:bg-gray-900
+                border dark:border-gray-800 border-gray-400 
                 transition-all duration-500 ease-out
                 ${hoveredIndex === index ? ' scale-100 border-blue-500/50 shadow-2xl shadow-blue-500/20' : 'hover:border-gray-700'}
               `}>
@@ -83,7 +83,7 @@ export default function Stat() {
                 {/* Number */}
                 <div className={`
                   text-5xl md:text-6xl font-bold mb-4 
-                  text-white
+                  text-black dark:text-white
                   transition-all duration-500
                   ${hoveredIndex === index ? 'scale-110' : ''}
                 `}>
@@ -99,7 +99,7 @@ export default function Stat() {
                 </div>
 
                 {/* Label */}
-                <div className="text-gray-300 text-base md:text-lg font-medium leading-tight">
+                <div className="dark:text-gray-300 text-gray-500 text-base md:text-lg font-medium leading-tight">
                   {stat.label}
                 </div>
 
