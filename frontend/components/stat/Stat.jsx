@@ -39,7 +39,7 @@ export default function Stat() {
           </div>
           
           <h1 className="text-5xl md:text-7xl font-bold mb-6 bg-gradient-to-r dark:from-white dark:via-gray-200 dark:to-gray-400 from-gray-800 via-gray-500 to-gray-800 bg-clip-text text-transparent">
-            DUITS COUNTS
+            DUITS by the Numbers
           </h1>
           <p className="text-gray-400 text-lg md:text-xl max-w-2xl mx-auto">
             Our impact in the university and beyond

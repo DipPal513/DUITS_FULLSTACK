@@ -1,6 +1,6 @@
-import Navigation from "@/components/navigation"
-import Gallery from "@/components/gallery"
 import Footer from "@/components/footer"
+import PhotoGallery from "@/components/gallery"
+import Navigation from "@/components/navigation"
 import TechBackground from "@/components/tech-background"
 
 export default function GalleryPage() {
@@ -9,7 +9,7 @@ export default function GalleryPage() {
       <TechBackground />
       <Navigation />
       <div className="pt-20">
-        <Gallery />
+        <PhotoGallery />
       </div>
       <Footer />
     </main>

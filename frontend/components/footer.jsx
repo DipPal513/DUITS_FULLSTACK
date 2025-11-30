@@ -42,7 +42,7 @@ export default function Footer() {
               <Link href="/" className="flex items-center gap-2 mb-4">
               <img src="/icons/duits-512.png" alt="IT Club Logo" className="w-20 h-20" />
             </Link>
-            <h2 className="text-2xl font-bold mb-4">IT Club of DUITS</h2>
+            <h2 className="text-2xl font-bold mb-4 ms-2">IT Club of DUITS</h2>
             </div>
            
             
