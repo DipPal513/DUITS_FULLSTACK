@@ -40,23 +40,21 @@ export default function Footer() {
           <div className="lg:col-span-2">
             <div className="flex items-center">
               <Link href="/" className="flex items-center gap-2 mb-4">
-              <img src="/icons/duits-512.png" alt="IT Club Logo" className="w-20 h-20" />
+              <img src="/icons/duits-512.png" alt="IT Club Logo" className="w-20 h-20 rounded-lg" />
             </Link>
-            <h2 className="text-2xl font-bold mb-4 ms-2">IT Club of DUITS</h2>
+            <h2 className="text-2xl font-bold mb-4 ms-2">Dhaka University IT Society</h2>
             </div>
            
-            
-            {/* all contact details here */}
-            <div className="">
-              <div className="flex gap-2 items-center mb-2">
+            <div className="flex flex-col gap-4 mt-4">
+              <div className="flex gap-3 items-center mb-2">
                 <FaPhoneAlt/>
               <p>01519-201101</p>
               </div>
-              <div className="flex gap-2 items-center mb-2">
+              <div className="flex gap-3 items-center mb-2">
                 <Mail/>
               <p>duits.official@gmail.com</p> 
               </div>
-              <div className="flex gap-2 items-center">
+              <div className="flex gap-3 items-center">
                 <FaLocationArrow/>
               <p>1st Floor, TSC, University of Dhaka, Dhaka, Bangladesh</p>
               </div>
@@ -76,7 +74,7 @@ export default function Footer() {
             </div>
           </div>
 
-          {/* Links */}
+       
           {Object.entries(footerLinks).map(([title, links]) => (
             <div key={title}>
               <h3 className="font-semibold mb-4">{title}</h3>

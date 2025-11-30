@@ -5,7 +5,7 @@ import { Code2, Sparkles, Users2, Rocket } from 'lucide-react';
 export default function WhatWeDo() {
  
   return (
-    <div className={`min-h-screen transition-colors duration-300 dark:bg-gray-900 bg-gray-200`}>
+    <div className={`min-h-screen transition-colors duration-300 bg-gradient-to-br dark:from-gray-950 dark:via-black  dark:to-gray-900 bg-gray-200`}>
      
       <div className="max-w-6xl mx-auto px-6 py-20">
         {/* Main Header */}
