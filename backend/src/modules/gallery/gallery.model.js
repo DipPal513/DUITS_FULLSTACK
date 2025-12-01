@@ -17,35 +17,12 @@ export const createGalleryService = async (data) => {
     throw err;
   }
 };
+// remove pagination for gallery
+export const getAllGalleryService = async () => {
+ 
 
-export const getAllGalleryService = async (limit = 10, page = 1) => {
-  const offset = (page - 1) * limit;
-
-  
-  const dataQuery = `
-    SELECT * FROM gallery
-    ORDER BY created_at DESC
-    LIMIT $1 
-    OFFSET $2;
-  `;
-  
-  const countQuery = `
-    SELECT COUNT(*) 
-    FROM gallery;
-  `;
-
-  const [dataResult, countResult] = await Promise.all([
-    pool.query(dataQuery, [limit, offset]),
-    pool.query(countQuery)
-  ]);
-
-  
-  return {
-    galleries: dataResult.rows,
-    totalCount: parseInt(countResult.rows[0].count, 10), 
-    currentPage: page,
-    limit: limit
-  };
+  const res = await pool.query('SELECT * FROM gallery ORDER BY created_at DESC;');
+  return res.rows;
 };
 
 

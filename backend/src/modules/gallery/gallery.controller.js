@@ -34,13 +34,10 @@ export const createGallery = async (req, res, next) => {
 
 export const getGallery = async (req, res, next) => {
   try {
-     const page = parseInt(req.query.page) || 1; 
-      const limit = parseInt(req.query.limit) || 10; 
-      const finalLimit = Math.min(limit, 50); 
-      const galleries = await getAllGalleryService(finalLimit, page);
-      res.status(200).json({ success: true, data: galleries });} catch (err) {
-      console.error(err);
-      next(err);
+    const galleries = await getAllGalleryService();
+    res.status(200).json({ success: true, data: { galleries, totalCount: galleries.length } });
+  } catch (err) {
+    next(err);    
     }
 };  
 

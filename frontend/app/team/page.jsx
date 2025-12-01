@@ -8,7 +8,7 @@ export default function TeamPage() {
     <main className="min-h-screen">
       <TechBackground />
       <Navigation />
-      <div className="pt-20">
+      <div>
         <Team />
       </div>
       <Footer />

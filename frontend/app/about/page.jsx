@@ -8,7 +8,7 @@ export default function AboutPage() {
     <main className="min-h-screen">
       <TechBackground />
       <Navigation />
-      <div className="pt-20">
+      <div>
         <About />
       </div>
       <Footer />
