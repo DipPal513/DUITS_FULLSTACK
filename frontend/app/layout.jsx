@@ -14,7 +14,7 @@ const inter = Inter({
 
 export const metadata = {
   title: "Dhaka University IT Society(DUITS)",
-  description: "Join our community of tech enthusiasts, innovators, and creators",
+  description: "DUITS is ",
   generator: "Next.js",
   manifest:"/manifest.json",
   keywords: [

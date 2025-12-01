@@ -3,11 +3,11 @@ const { Pool } = pkg;
 
 
 const pool = new Pool({
-  host: "127.0.0.1",
-  user:"bvranzct_central_user",
-  password:"iecfbestiud",
-  database:"bvranzct_central",
-  port:5433,
+  host: process.env.PG_HOST,
+  user:process.env.PG_USER,
+  password:process.env.PG_PASS,
+  database:process.env.PG_DB,
+  port:process.env.PG_PORT,
 });
 
 pool.on('connect', () => {
