@@ -1,6 +1,6 @@
 import bcrypt from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import { checkMeService, getAllUsersService, loginUser, registerUserService, roleChangeService } from './auth.model.js';
+import { checkMeService, getAllUsersService,deleteUserService, loginUser, registerUserService, roleChangeService } from './auth.model.js';
 
 
 export const register = async (req, res, next) => {
