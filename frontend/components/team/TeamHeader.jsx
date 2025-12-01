@@ -1,107 +1,179 @@
-import { Users, Calendar, ChevronLeft, ChevronRight } from "lucide-react"
-import { useState } from "react"
+import { Users, Calendar, ChevronLeft, ChevronRight, X } from "lucide-react"
 
-const TeamHeader = ({ currentPage, teamsPerPage, totalTeams, loading, onYearChange, availableYears = [] }) => {
-  const currentYear = new Date().getFullYear()
-  const [selectedYear, setSelectedYear] = useState(currentYear)
-
-  // Generate years array if not provided
-  const years = availableYears.length > 0 
-    ? availableYears 
-    : Array.from({ length: 7 }, (_, i) => currentYear - 5 + i).reverse()
-
-  const handleYearChange = (year) => {
-    setSelectedYear(year)
-    onYearChange?.(year)
-  }
-
+const TeamHeader = ({ 
+  totalTeams, 
+  loading, 
+  onYearChange, 
+  onBatchChange,
+  onClearFilters,
+  selectedYear = "",
+  selectedBatch = "",
+  availableYears = [],
+  availableBatches = []
+}) => {
+  const currentYearIndex = availableYears.indexOf(selectedYear);
+  
   const handlePrevYear = () => {
-    const currentIndex = years.indexOf(selectedYear)
-    if (currentIndex < years.length - 1) {
-      handleYearChange(years[currentIndex + 1])
+    if (currentYearIndex < availableYears.length - 1) {
+      onYearChange(availableYears[currentYearIndex + 1]);
     }
-  }
+  };
 
   const handleNextYear = () => {
-    const currentIndex = years.indexOf(selectedYear)
-    if (currentIndex > 0) {
-      handleYearChange(years[currentIndex - 1])
+    if (currentYearIndex > 0) {
+      onYearChange(availableYears[currentYearIndex - 1]);
     }
-  }
+  };
 
-  const canGoPrev = years.indexOf(selectedYear) < years.length - 1
-  const canGoNext = years.indexOf(selectedYear) > 0
+  const canGoPrev = selectedYear && currentYearIndex < availableYears.length - 1;
+  const canGoNext = selectedYear && currentYearIndex > 0;
+
+  const hasActiveFilters = selectedYear || selectedBatch;
 
   return (
     <div className="max-w-4xl mx-auto mb-12">
       {/* Header Section */}
       <div className="text-center mb-8">
-        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-primary/10 text-primary text-sm font-semibold mb-4">
+        <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-500/10 dark:bg-blue-400/10 text-blue-600 dark:text-blue-400 text-sm font-semibold mb-4 border border-blue-200 dark:border-blue-800">
           <Users className="w-4 h-4" />
           Our Teams
         </div>
-        <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text">
+        <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-gray-900 to-gray-600 dark:from-white dark:to-gray-400 bg-clip-text text-transparent">
           Meet Our Team Members
         </h2>
-        <p className="text-base text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-          Explore our talented team members across different years and discover the people who make it all possible
+        <p className="text-base text-gray-600 dark:text-gray-400 max-w-2xl mx-auto leading-relaxed">
+          Explore our talented team members across different years and batches
         </p>
       </div>
 
-      {/* Year Filter Component */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 bg-card border rounded-lg shadow-sm">
-        <div className="flex items-center gap-4 w-full sm:w-auto">
-          <div className="flex items-center gap-2 text-sm font-medium text-foreground">
-            <Calendar className="w-4 h-4 text-primary" />
-            <span>Year:</span>
-          </div>
-          
-          <div className="flex items-center gap-2">
-            <button
-              onClick={handlePrevYear}
-              disabled={!canGoPrev}
-              className={`
-                p-1.5 rounded-md transition-all duration-200
-                ${canGoPrev 
-                  ? 'bg-muted hover:bg-muted/80 text-foreground' 
-                  : 'bg-muted/50 text-muted-foreground/50 cursor-not-allowed'
-                }
-              `}
-            >
-              <ChevronLeft className="w-4 h-4" />
-            </button>
+      {/* Filter Component */}
+      <div className="flex flex-col gap-4 p-6 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg shadow-sm">
+        {/* Year Filter */}
+        {availableYears.length > 0 && (
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+            <div className="flex items-center gap-4 w-full sm:w-auto">
+              <div className="flex items-center gap-2 text-sm font-medium text-gray-900 dark:text-white">
+                <Calendar className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+                <span>Year:</span>
+              </div>
+              
+              <div className="flex items-center gap-2">
+                <button
+                  onClick={handlePrevYear}
+                  disabled={!canGoPrev}
+                  className={`
+                    p-1.5 rounded-md transition-all duration-200
+                    ${canGoPrev 
+                      ? 'bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-white' 
+                      : 'bg-gray-100/50 dark:bg-gray-700/50 text-gray-400 dark:text-gray-600 cursor-not-allowed'
+                    }
+                  `}
+                >
+                  <ChevronLeft className="w-4 h-4" />
+                </button>
 
-            <div className="px-6 py-2 rounded-md bg-primary text-primary-foreground font-bold text-lg shadow-md min-w-[100px] text-center">
-              {selectedYear}
+                <div className={`px-6 py-2 rounded-md font-bold text-lg shadow-md min-w-[100px] text-center transition-colors ${
+                  selectedYear 
+                    ? 'bg-blue-600 dark:bg-blue-500 text-white' 
+                    : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400'
+                }`}>
+                  {selectedYear || 'All Years'}
+                </div>
+
+                <button
+                  onClick={handleNextYear}
+                  disabled={!canGoNext}
+                  className={`
+                    p-1.5 rounded-md transition-all duration-200
+                    ${canGoNext 
+                      ? 'bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-900 dark:text-white' 
+                      : 'bg-gray-100/50 dark:bg-gray-700/50 text-gray-400 dark:text-gray-600 cursor-not-allowed'
+                    }
+                  `}
+                >
+                  <ChevronRight className="w-4 h-4" />
+                </button>
+              </div>
             </div>
 
-            <button
-              onClick={handleNextYear}
-              disabled={!canGoNext}
-              className={`
-                p-1.5 rounded-md transition-all duration-200
-                ${canGoNext 
-                  ? 'bg-muted hover:bg-muted/80 text-foreground' 
-                  : 'bg-muted/50 text-muted-foreground/50 cursor-not-allowed'
-                }
-              `}
-            >
-              <ChevronRight className="w-4 h-4" />
-            </button>
+            {/* Teams Count */}
+            {!loading && totalTeams > 0 && (
+              <div className="text-sm text-gray-600 dark:text-gray-400 whitespace-nowrap">
+                <span className="font-semibold text-gray-900 dark:text-white">{totalTeams}</span>
+                {" "}member{totalTeams !== 1 ? 's' : ''}
+              </div>
+            )}
           </div>
-        </div>
+        )}
 
-        {/* Teams Count */}
-        {!loading && totalTeams > 0 && (
-          <div className="text-sm text-muted-foreground whitespace-nowrap">
-            <span className="font-semibold text-foreground">{(currentPage - 1) * teamsPerPage + 1}</span>
-            {" "}-{" "}
-            <span className="font-semibold text-foreground">
-              {Math.min(currentPage * teamsPerPage, totalTeams)}
-            </span>
-            {" "}of{" "}
-            <span className="font-semibold text-foreground">{totalTeams}</span>
-            {" "}members
+        {/* Batch Filter */}
+        {availableBatches.length > 0 && (
+          <div className="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <div className="flex items-center gap-2 text-sm font-medium text-gray-900 dark:text-white min-w-[60px]">
+              <Users className="w-4 h-4 text-blue-600 dark:text-blue-400" />
+              <span>Batch:</span>
+            </div>
+            
+            <div className="flex flex-wrap gap-2">
+              <button
+                onClick={() => onBatchChange("")}
+                className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                  !selectedBatch
+                    ? 'bg-blue-600 dark:bg-blue-500 text-white shadow-md'
+                    : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600'
+                }`}
+              >
+                All Batches
+              </button>
+              {availableBatches.map((batch) => (
+                <button
+                  key={batch}
+                  onClick={() => onBatchChange(batch)}
+                  className={`px-4 py-2 rounded-md text-sm font-medium transition-all ${
+                    selectedBatch === batch
+                      ? 'bg-blue-600 dark:bg-blue-500 text-white shadow-md'
+                      : 'bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600'
+                  }`}
+                >
+                  {batch}
+                </button>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Active Filters & Clear Button */}
+        {hasActiveFilters && (
+          <div className="flex flex-wrap items-center gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+            <span className="text-sm text-gray-600 dark:text-gray-400">Active filters:</span>
+            {selectedYear && (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-full text-sm font-medium">
+                Year: {selectedYear}
+                <button 
+                  onClick={() => onYearChange("")}
+                  className="hover:bg-blue-200 dark:hover:bg-blue-800 rounded-full p-0.5 transition-colors"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </span>
+            )}
+            {selectedBatch && (
+              <span className="inline-flex items-center gap-1.5 px-3 py-1.5 bg-blue-100 dark:bg-blue-900 text-blue-700 dark:text-blue-300 rounded-full text-sm font-medium">
+                Batch: {selectedBatch}
+                <button 
+                  onClick={() => onBatchChange("")}
+                  className="hover:bg-blue-200 dark:hover:bg-blue-800 rounded-full p-0.5 transition-colors"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </span>
+            )}
+            <button
+              onClick={onClearFilters}
+              className="ml-auto px-4 py-1.5 text-sm font-medium text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 rounded-md transition-colors"
+            >
+              Clear All
+            </button>
           </div>
         )}
       </div>

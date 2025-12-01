@@ -1,4 +1,4 @@
-import { Github, Instagram, Linkedin, Mail, Twitter } from "lucide-react"
+import { Instagram, Linkedin, Mail, Twitter } from "lucide-react"
 import Link from "next/link"
 import { FaFacebook, FaLocationArrow, FaPhoneAlt } from "react-icons/fa"
 
@@ -6,8 +6,6 @@ export default function Footer() {
   const socialLinks = [
     { icon: FaFacebook, href: "https://www.facebook.com/Dhaka.University.IT.Society.DUITS/", label: "Facebook" },
     { icon: Linkedin, href: "#", label: "LinkedIn" },
-    { icon: Twitter, href: "#", label: "Twitter" },
-    { icon: Instagram, href: "#", label: "Instagram" },
     { icon: Mail, href: "mailto:contact@itclub.com", label: "Email" },
   ]
 

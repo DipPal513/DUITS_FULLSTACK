@@ -1,16 +1,33 @@
 import { createExecutiveService, getExecutivesService, getExecutiveByIdService, deleteExecutiveService, updateExecutiveService } from './executive.model.js';
 
 export const getExecutives = async (req, res, next) => {
- try {
-    const page = parseInt(req.query.page) || 1; 
-     const limit = parseInt(req.query.limit) || 10; 
-     const finalLimit = Math.min(limit, 50); 
-     const executives = await getExecutivesService(finalLimit, page);
-     res.status(200).json({ success: true, data: executives });} catch (err) {
-     console.error(err);
-     next(err);
-   }
+  try {
+    const { year, batch } = req.query;
+    
+    // Build filters object
+    const filters = {};
+    
+    if (year) {
+      filters.year = parseInt(year);
+    }
+    
+    if (batch) {
+      filters.batch = batch;
+    }
+    
+    const executives = await getExecutivesService(filters);
+    
+    res.status(200).json({ 
+      success: true, 
+      data: executives 
+    });
+  } catch (err) {
+    console.error(err);
+    next(err);
+  }
 };
+
+
 
 export const getExecutiveById = async (req, res, next) => {
   try {

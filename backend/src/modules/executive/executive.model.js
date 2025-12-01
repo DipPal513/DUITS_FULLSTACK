@@ -14,37 +14,55 @@ export const createExecutiveService = async (data) => {
   return result.rows[0];
 };
 
-export const getExecutivesService = async (limit = 10, page = 1) => {
-  const offset = (page - 1) * limit;
-
+export const getExecutivesService = async (filters = {}) => {
+  const { year, batch } = filters;
   
+  let whereConditions = [];
+  let queryParams = [];
+  let paramIndex = 1;
+
+  // Add year filter if provided
+  if (year) {
+    whereConditions.push(`EXTRACT(YEAR FROM created_at) = $${paramIndex}`);
+    queryParams.push(year);
+    paramIndex++;
+  }
+
+  // Add batch filter if provided
+  if (batch) {
+    whereConditions.push(`duits_batch = $${paramIndex}`);
+    queryParams.push(batch);
+    paramIndex++;
+  }
+
+  // Build WHERE clause
+  const whereClause = whereConditions.length > 0 
+    ? `WHERE ${whereConditions.join(' AND ')}`
+    : '';
+
   const dataQuery = `
     SELECT * FROM executives
-    ORDER BY created_at DESC
-    LIMIT $1 
-    OFFSET $2;
+    ${whereClause}
+    ORDER BY created_at DESC;
   `;
-
   
   const countQuery = `
     SELECT COUNT(*) 
-    FROM executives;
+    FROM executives
+    ${whereClause};
   `;
 
   const [dataResult, countResult] = await Promise.all([
-    pool.query(dataQuery, [limit, offset]),
-    pool.query(countQuery)
+    pool.query(dataQuery, queryParams),
+    pool.query(countQuery, queryParams)
   ]);
 
-  
   return {
     executives: dataResult.rows,
-    totalCount: parseInt(countResult.rows[0].count, 10), 
-    currentPage: page,
-    limit: limit
+    totalCount: parseInt(countResult.rows[0].count, 10),
+    filters: { year, batch }
   };
 };
-
 
 export const getExecutiveByIdService = async (id) => {
   console.log("Getting executive by ID:", id);
