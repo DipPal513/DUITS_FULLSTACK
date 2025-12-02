@@ -10,7 +10,7 @@ export default function Home() {
   return (
     <main className="min-h-screen">
       {/* <TechBackground /> */}
-      <Navigation />
+    
       <Hero />
       <Stat />
       <ScrollText />
@@ -18,7 +18,7 @@ export default function Home() {
       <WhatWeDo />
      
       <Achievements />
-      <Footer />
+     
     </main>
   )
 }

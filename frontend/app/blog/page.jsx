@@ -7,11 +7,11 @@ export default function BlogPage() {
   return (
     <main className="min-h-screen">
       <TechBackground />
-      <Navigation />
+  
       <div className="pt-20">
         <Blog />
       </div>
-      <Footer />
+      
     </main>
   )
 }

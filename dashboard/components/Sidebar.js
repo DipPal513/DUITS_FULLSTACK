@@ -6,7 +6,7 @@ import { useAuth } from "@/contexts/AuthContext"
 import { auth } from "@/lib/auth"
 export default function Sidebar() {
   const pathname = usePathname()
-  const { user, isAdmin ,setIsAuthenticated} = useAuth()
+  const { user, isAdmin ,setIsAuthenticated} = useAuth();
   const router = useRouter();
 
   const handleLogout = async () => {
@@ -124,17 +124,10 @@ export default function Sidebar() {
       <div className="p-6 border-b border-border">
         <div className="flex items-center gap-3">
           <div className="w-10 h-10 rounded-lg bg-primary/10 border border-primary/20 flex items-center justify-center">
-            <svg className="w-6 h-6 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M9.75 17L9 20l-1 1h8l-1-1-.75-3M3 13h18M5 17h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-              />
-            </svg>
+            <img src="/icon.png" alt="IT Club Logo" className="w-8 h-8 object-contain" />
           </div>
           <div>
-            <h2 className="font-bold text-foreground">IT Club</h2>
+            <h2 className="font-bold text-foreground">DUITS</h2>
             <p className="text-xs text-muted-foreground">Dashboard</p>
           </div>
         </div>
