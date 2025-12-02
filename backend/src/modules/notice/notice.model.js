@@ -19,7 +19,7 @@ export const getNoticesService = async (limit = 10, page = 1) => {
   
   const dataQuery = `
     SELECT * FROM notices
-    ORDER BY created_at DESC
+    ORDER BY deadline DESC
     LIMIT $1 
     OFFSET $2;
   `;

@@ -20,25 +20,25 @@ import api from '@/config/index';
 import toast from 'react-hot-toast';
 import DetailsPageSkeletonLoader from '@/components/skeleton/DetailsPageSkeleton';
 
-const NoticeDetailsPage = () => {
+const EventDetailsPage = () => {
   const router = useRouter();
   const params = useParams();
-  const [notice, setNotice] = useState(null);
+  const [event, setEvent] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetchNoticeDetails();
+    fetchEventDetails();
   }, [params.id]);
 
-  const fetchNoticeDetails = async () => {
+  const fetchEventDetails = async () => {
     try {
       setLoading(true);
-      const data = await api.get(`/notice/${params.id}`);
+      const data = await api.get(`/event/${params.id}`);
       console.log(data)
-      setNotice(data?.data);
+      setEvent(data?.data);
       console.log(data?.data);
     } catch (error) {
-      console.error('Error fetching notice:', error);
+      console.error('Error fetching event:', error);
     } finally {
       setLoading(false);
     }
@@ -63,8 +63,8 @@ const NoticeDetailsPage = () => {
 
   const handleShare = async () => {
     const shareData = {
-      title: notice?.title,
-      text: notice?.description,
+      title: event?.title,
+      text: event?.description,
       url: window.location.href,
     };
 
@@ -82,7 +82,7 @@ const NoticeDetailsPage = () => {
 
   if (loading) return <DetailsPageSkeletonLoader />;
 
-  if (!notice) {
+  if (!event) {
     return (
       <div className="min-h-screen flex items-center justify-center py-20">
         <div className="text-center max-w-md mx-auto p-8">
@@ -90,15 +90,15 @@ const NoticeDetailsPage = () => {
             <Info className="w-10 h-10 text-muted-foreground" />
           </div>
           <h2 className="text-3xl font-bold mb-4 uppercase tracking-tight">
-            Notice Not Found
+            Event Not Found
           </h2>
           <p className="text-muted-foreground mb-8">
-            The notice you're looking for doesn't exist or has been removed.
+            The event you're looking for doesn't exist or has been removed.
           </p>
           <Link href="/notices">
             <Button size="lg" className="uppercase tracking-wide">
               <ArrowLeft className="mr-2 w-4 h-4" />
-              Back to Notices
+              Back to Events
             </Button>
           </Link>
         </div>
@@ -141,13 +141,13 @@ const NoticeDetailsPage = () => {
              
                   {/* Title */}
                   <h1 className="text-4xl md:text-5xl font-bold uppercase tracking-tight mt-5">
-                    {notice.title}
+                    {event.title}
                   </h1>
             <div className="rounded-xl overflow-hidden border border-border bg-card shadow-lg">
               <div className=" h-auto bg-muted">
                 <img
-                  src={notice.image || "/placeholder.svg"}
-                  alt={notice.title}
+                  src={event.image || "/placeholder.svg"}
+                  alt={event.title}
                   className="w-full h-full object-contain"
                 />
               
@@ -161,7 +161,7 @@ const NoticeDetailsPage = () => {
                   <div className="flex flex-wrap gap-4 text-sm">
                     <div className="flex items-center gap-2 px-3 py-1.5 bg-background/80 backdrop-blur-sm rounded-lg">
                       <Calendar className="w-4 h-4 text-primary" />
-                      <span className="font-medium">{formatShortDate(notice.deadline)}</span>
+                      <span className="font-medium">{formatShortDate(event.deadline)}</span>
                     </div>
                   
                   </div>
@@ -181,7 +181,7 @@ const NoticeDetailsPage = () => {
               </div>
               <div className="prose prose-slate dark:prose-invert max-w-none">
                 <p className="text-muted-foreground leading-relaxed whitespace-pre-line">
-                  {notice.description}
+                  {event.description}
                 </p>
               </div>
             </div>
@@ -208,13 +208,13 @@ const NoticeDetailsPage = () => {
                       Deadline
                     </p>
                     <p className="font-semibold text-sm">
-                      {formatDate(notice.deadline)}
+                      {formatDate(event.deadline)}
                     </p>
                   </div>
                 </div>
 
                 {/* Location */}
-                {notice.location && (
+                {event.location && (
                   <div className="flex items-start gap-4">
                     <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
                       <MapPin className="w-5 h-5 text-primary" />
@@ -224,14 +224,14 @@ const NoticeDetailsPage = () => {
                         Location
                       </p>
                       <p className="font-semibold text-sm break-words">
-                        {notice.location}
+                        {event.location}
                       </p>
                     </div>
                   </div>
                 )}
 
                 {/* Time */}
-                {notice.time && (
+                {event.time && (
                   <div className="flex items-start gap-4">
                     <div className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
                       <Clock className="w-5 h-5 text-primary" />
@@ -241,7 +241,7 @@ const NoticeDetailsPage = () => {
                         Time
                       </p>
                       <p className="font-semibold text-sm">
-                        {notice.time}
+                        {event.time}
                       </p>
                     </div>
                   </div>
@@ -252,7 +252,7 @@ const NoticeDetailsPage = () => {
             </div>
 
             {/* Registration CTA Card */}
-            {notice.registrationLink && (
+            {event.registrationLink && (
               <div className="rounded-xl border-2 border-primary/30 bg-gradient-to-br from-primary/5 to-primary/10 p-6 shadow-lg">
                 <h3 className="text-xl font-bold uppercase tracking-wide mb-2">
                   Ready to Join?
@@ -261,7 +261,7 @@ const NoticeDetailsPage = () => {
                   Register now to secure your spot and be part of this amazing event!
                 </p>
                 <Link
-                  href={notice.registrationLink}
+                  href={event.registrationLink}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
@@ -285,4 +285,4 @@ const NoticeDetailsPage = () => {
   );
 };
 
-export default NoticeDetailsPage;
+export default EventDetailsPage;

@@ -19,7 +19,7 @@ export const getAllAchievementsService = async (limit = 10, page = 1) => {
   
   const dataQuery = `
     SELECT * FROM achievements
-    ORDER BY created_at DESC
+    ORDER BY date DESC
     LIMIT $1 
     OFFSET $2;
   `;

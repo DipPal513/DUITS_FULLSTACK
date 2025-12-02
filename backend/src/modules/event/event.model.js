@@ -13,7 +13,7 @@ export const getEventsService = async (limit = 10, page = 1) => {
   
   const dataQuery = `
     SELECT * FROM events
-    ORDER BY created_at DESC
+    ORDER BY date DESC
     LIMIT $1 
     OFFSET $2;
   `;
@@ -42,17 +42,32 @@ export const getEventsService = async (limit = 10, page = 1) => {
 
 
 export const getEventByIdService = async (id) => {
-  const query = 'SELECT * FROM events WHERE id = ?';
-  const [rows] = await pool.query(query, [id]);
-  return rows;
+   const query = `
+    SELECT * FROM events
+    WHERE id = $1;
+  `;
+  const result = await pool.query(query, [id]);
+  return result.rows[0];
 };
 
 export const updateEventService = async (id, data) => {
   const { title, description, registrationLink, image, date, location } = data;
-  const query = 'UPDATE events SET title = ?, description = ?, registration_link = ?, image = ?, date = ?, location = ? WHERE id = ?';
+
+  // 1. Added 'RETURNING *' so the database sends back the updated row
+  const query = `
+    UPDATE events 
+    SET title = $1, description = $2, registration_link = $3, image = $4, date = $5, location = $6 
+    WHERE id = $7 
+    RETURNING *
+  `;
+  
   const values = [title, description, registrationLink, image, date, location, id];
-  const [result] = await pool.query(query, values);
-  return result;
+
+  // 2. Removed brackets: const result instead of const [result]
+  const result = await pool.query(query, values);
+
+  // 3. Return the first row from the result object
+  return result.rows[0];
 };
 
 export const deleteEventService = async (id) => {

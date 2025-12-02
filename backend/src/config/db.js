@@ -7,7 +7,7 @@ const pool = new Pool({
   user:"bvranzct_central_user",
   password:"iecfbestiud",
   database:"bvranzct_central",
-  port:process.env.PG_PORT,
+  port:5433,
 });
 
 pool.on('connect', () => {

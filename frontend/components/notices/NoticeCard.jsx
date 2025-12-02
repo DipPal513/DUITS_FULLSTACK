@@ -1,37 +1,24 @@
 'use client'
 
-import React from 'react'
-import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
-import { 
-  Calendar, 
-  Clock, 
-  MapPin, 
-  Users, 
+import {
   ArrowRight,
-  Sparkles,
+  Calendar,
   Music
 } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 
-const defaultNotice = {
-  id: 'evt-123',
-  title: 'Summer Music Festival 2024',
-  description: 'Join us for an unforgettable night of live performances and entertainment',
-  date: 'June 15, 2024',
-  time: '8:00 PM - 2:00 AM',
-  location: 'Central Park Amphitheater',
- 
-  category: 'Music Festival',
-  image: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=500&h=300&fit=crop',
-  accentColor: 'from-purple-500 to-pink-500',
-  price: '$45',
+const convertDateToReadableFormat = (dateString) => {
+  const options = { year: 'numeric', month: 'long', day: 'numeric' }
+  const date = new Date(dateString)
+  return date.toLocaleDateString(undefined, options)
 }
 
-const NoticeCard = ({ notice = defaultNotice }) => {
+const NoticeCard = ({ notice }) => {
   const router = useRouter()
 
   const handleViewDetails = () => {
-    router.push(`/notices/${notice.id || notice._id}`)
+    router.push(`/notice/${notice.id || notice._id}`)
   }
 
   return (
@@ -58,17 +45,7 @@ const NoticeCard = ({ notice = defaultNotice }) => {
           {/* Dark Overlay Base */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
           
-          {/* Category Badge */}
-          <div className="absolute top-4 left-4 z-10">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/95 backdrop-blur-sm shadow-md hover:shadow-lg transition-shadow">
-              <Music className="w-4 h-4 text-purple-600" />
-              <span className="text-xs font-bold text-gray-900">
-                {notice.category}
-              </span>
-            </div>
-          </div>
-
-      
+         
 
           {/* Floating Icon - appears on hover */}
           <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
@@ -103,17 +80,12 @@ const NoticeCard = ({ notice = defaultNotice }) => {
               <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center">
                 <Calendar className="w-4 h-4 text-purple-600" />
               </div>
-              <span className="font-medium">{notice.date}</span>
+              <span className="font-medium">{convertDateToReadableFormat(notice.deadline)}</span>
             </div>
 
           
             {/* Location */}
-            <div className="flex items-center gap-3 text-sm text-foreground/80 group-hover:text-foreground transition-colors duration-300">
-              <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center">
-                <MapPin className="w-4 h-4 text-blue-600" />
-              </div>
-              <span className="font-medium truncate">{notice.location}</span>
-            </div>
+            
 
             
           </div>
@@ -122,7 +94,7 @@ const NoticeCard = ({ notice = defaultNotice }) => {
           <div className="h-px bg-border/50 mb-4 group-hover:bg-gradient-to-r group-hover:from-purple-500/50 group-hover:via-transparent group-hover:to-pink-500/50 transition-all duration-500" />
 
           {/* CTA Button */}
-          <Button
+         {new Date(notice.deadline) > new Date() ? <Button
             onClick={(e) => {
               e.stopPropagation()
               handleViewDetails()
@@ -132,7 +104,7 @@ const NoticeCard = ({ notice = defaultNotice }) => {
           >
             <span>Get Tickets</span>
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
-          </Button>
+          </Button>: <p className='text-black font-semibold'>Notice Expired</p>}
         </div>
 
         {/* ===============================

@@ -9,6 +9,11 @@ import NoticeCard from "@/components/notices/NoticeCard"
 import GlobalSkeleton from "@/components/GlobalSkeleton"
 import NoticePagination from "@/components/notices/NoticePagination"
 
+const convertDateToReadableFormat = (dateString) => {
+  const options = { year: 'numeric', month: 'long', day: 'numeric' }
+  const date = new Date(dateString)
+  return date.toLocaleDateString(undefined, options)
+}
 
 const EmptyState = () => (
   <div className="text-center py-20">

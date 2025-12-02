@@ -33,7 +33,7 @@ export const getEventById = async (req, res, next) => {
   try {
     const event = await getEventByIdService(req.params.id);
     if (!event) return res.status(404).json({ success: false, message: 'Event not found' });
-    res.status(200).json({ success: true, event });
+    res.status(200).json({ success: true, data:event });
   } catch (err) {
     next(err);
   }

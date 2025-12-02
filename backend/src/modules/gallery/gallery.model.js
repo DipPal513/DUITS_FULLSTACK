@@ -19,7 +19,7 @@ export const createGalleryService = async (data) => {
 };
 // remove pagination for gallery
 export const getAllGalleryService = async () => {
-  const res = await pool.query('SELECT * FROM gallery ORDER BY created_at DESC;');
+  const res = await pool.query('SELECT * FROM gallery ORDER BY date DESC;');
   return res.rows;
 };
 

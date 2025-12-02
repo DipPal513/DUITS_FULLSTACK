@@ -1,33 +1,20 @@
 'use client'
 
-import React from 'react'
-import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
-import { 
-  Calendar, 
-  Clock, 
-  MapPin, 
-  Users, 
+import {
   ArrowRight,
-  Sparkles,
+  Calendar,
+  MapPin,
   Music
 } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 
-const defaultEvent = {
-  id: 'evt-123',
-  title: 'Summer Music Festival 2024',
-  description: 'Join us for an unforgettable night of live performances and entertainment',
-  date: 'June 15, 2024',
-  time: '8:00 PM - 2:00 AM',
-  location: 'Central Park Amphitheater',
- 
-  category: 'Music Festival',
-  image: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=500&h=300&fit=crop',
-  accentColor: 'from-purple-500 to-pink-500',
-  price: '$45',
+const convertDateToReadableFormat = (dateString) => {
+  const options = { year: 'numeric', month: 'long', day: 'numeric' }
+  const date = new Date(dateString)
+  return date.toLocaleDateString(undefined, options)
 }
-
-const EventCard = ({ event = defaultEvent }) => {
+const EventCard = ({ event }) => {
   const router = useRouter()
 
   const handleViewDetails = () => {
@@ -40,10 +27,7 @@ const EventCard = ({ event = defaultEvent }) => {
       className="group cursor-pointer h-full"
     >
       <div className="relative h-full overflow-hidden rounded-2xl bg-card shadow-lg transition-all duration-500 hover:shadow-2xl">
-        
-        {/* ===============================
-            1. IMAGE SECTION WITH OVERLAY
-        =============================== */}
+      
         <div className="relative h-48 md:h-56 overflow-hidden bg-muted">
           {/* Image */}
           <img
@@ -103,7 +87,7 @@ const EventCard = ({ event = defaultEvent }) => {
               <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center">
                 <Calendar className="w-4 h-4 text-purple-600" />
               </div>
-              <span className="font-medium">{event.date}</span>
+              <span className="font-medium">{convertDateToReadableFormat(event.date)}</span>
             </div>
 
           
@@ -122,7 +106,7 @@ const EventCard = ({ event = defaultEvent }) => {
           <div className="h-px bg-border/50 mb-4 group-hover:bg-gradient-to-r group-hover:from-purple-500/50 group-hover:via-transparent group-hover:to-pink-500/50 transition-all duration-500" />
 
           {/* CTA Button */}
-          <Button
+          {convertDateToReadableFormat(event.date) > new Date() ?<Button
             onClick={(e) => {
               e.stopPropagation()
               handleViewDetails()
@@ -132,7 +116,7 @@ const EventCard = ({ event = defaultEvent }) => {
           >
             <span>Get Tickets</span>
             <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
-          </Button>
+          </Button>: <p className='text-black font-semibold'>Event Expired</p>}
         </div>
 
         {/* ===============================

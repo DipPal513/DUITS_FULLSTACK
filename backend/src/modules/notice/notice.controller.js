@@ -52,7 +52,8 @@ export const singleNotice = async (req, res, next) => {
     if (notice.length === 0) {
       return res.status(404).json({ success: false, message: 'Notice not found' });
     }
-    res.status(200).json({ success: true, data: notice[0] });
+    res.status(200).json({ success: true, data: notice });
+   
   } catch (err) {
     next(err);
   }
