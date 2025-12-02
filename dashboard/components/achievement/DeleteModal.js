@@ -2,7 +2,7 @@
 
 import { Loader, Trash2 } from 'lucide-react';
 
-const DeleteModal = ({ isOpen, notice, onClose, onConfirm, loading }) => {
+const DeleteModal = ({ isOpen, achievement, onClose, onConfirm, loading }) => {
   if (!isOpen) return null;
 
   return (
@@ -12,9 +12,9 @@ const DeleteModal = ({ isOpen, notice, onClose, onConfirm, loading }) => {
           <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-red-100 mb-4">
             <Trash2 size={32} className="text-red-600" />
           </div>
-          <h3 className="text-2xl font-bold text-slate-800 mb-2">Delete Notice?</h3>
+          <h3 className="text-2xl font-bold text-slate-800 mb-2">Delete Achievement?</h3>
           <p className="text-slate-600">
-            Are you sure you want to delete <span className="font-semibold">"{notice?.title}"</span>? This action cannot be undone.
+            Are you sure you want to delete <span className="font-semibold">"{achievement?.title}"</span>? This action cannot be undone.
           </p>
         </div>
 
