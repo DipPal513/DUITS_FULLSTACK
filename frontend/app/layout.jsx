@@ -14,38 +14,102 @@ const inter = Inter({
   variable: "--font-inter",
 })
 
-export const metadata = {
-  title: "Dhaka University IT Society(DUITS)",
-  description: "DUITS is ",
-  generator: "Next.js",
-  manifest:"/manifest.json",
-  keywords: [
-    "Dhaka",
-    "University",
-    "society",
-    "IT Club",
-    "Technology",
-    "Innovation",
-    "Community",
-    "Dhaka",
-    "Designers",
-    "Tech Enthusiasts",
-  ],
+
+// 1. Viewport and Theme Color are now exported separately in Next.js 14+
+export const viewport = {
+  width: "device-width",
+  initialScale: 1,
+  maximumScale: 1,
   themeColor: [
-    { media: "(prefers-color-scheme: light)", color: "white" },
-    { media: "(prefers-color-scheme: dark)", color: "black" },
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#09090b" }, // Matches standard dark mode bg
   ],
-  authors: [{ name: "DUITS IT Club", url: "https://duits.org" }],
-  viewport: {
-    width: "device-width",
-    initialScale: 1,
-    // The restrictive maximumScale property has been removed for better accessibility.
+};
+
+export const metadata = {
+  // 2. metadataBase is CRITICAL for social images to work. 
+  // Replace with your actual deployed domain.
+  metadataBase: new URL("https://duits.org"), 
+
+  title: {
+    default: "Dhaka University IT Society (DUITS)",
+    template: "%s | DUITS", // Keeps titles consistent on inner pages (e.g., "Events | DUITS")
   },
-  icons: [
-    {rel:"apple-touch-icon",url:"icons/duits-512.png"},
-    {rel:"icon",url:"icons/duits-512.png"},
-  ]
-}
+  description:
+    "The official IT Society of Dhaka University. Fostering a community of tech enthusiasts, developers, and innovators through workshops, hackathons, and seminars.",
+  
+  applicationName: "DUITS Official",
+  authors: [{ name: "DUITS Technical Team", url: "https://duits.org" }],
+  generator: "Next.js",
+  
+  // 3. SEO Keywords (Added local context)
+  keywords: [
+    "DUITS",
+    "Dhaka University IT Society",
+    "Dhaka University",
+    "DU",
+    "IT Club BD",
+    "Technology Club",
+    "Programming Community",
+    "Hackathon Bangladesh",
+    "Tech Students",
+    "Software Engineering",
+    "Innovation",
+    "TSC",
+  ],
+
+  // 4. Open Graph (For Facebook, LinkedIn, Discord previews)
+  openGraph: {
+    title: "Dhaka University IT Society (DUITS)",
+    description: "The leading tech community of Dhaka University. Join us to shape the future of technology.",
+    url: "https://duits.org",
+    siteName: "DUITS",
+    locale: "en_US",
+    type: "website",
+    images: [
+      {
+        url: "/banner.jpg", // You need to add this image to your public folder (1200x630px)
+        width: 1200,
+        height: 630,
+        alt: "DUITS Community Banner",
+      },
+    ],
+  },
+
+  // 5. Twitter Card (For X/Twitter previews)
+  twitter: {
+    card: "summary_large_image",
+    title: "Dhaka University IT Society (DUITS)",
+    description: "Fostering innovation and technology at Dhaka University.",
+    creator: "@duits_official", // Replace with actual handle if you have one
+    images: ["/banner.jpg"],
+  },
+
+  icons: {
+    icon: "/icons/duits-512.png",
+    shortcut: "/icons/duits-512.png",
+    apple: "/icons/duits-512.png",
+    other: {
+      rel: "apple-touch-icon-precomposed",
+      url: "/icons/duits-512.png",
+    },
+  },
+
+  manifest: "/manifest.json",
+  
+  // 6. Robots (Tells Google it's okay to index this site)
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+};
 
 
 export default function RootLayout({ children }) {
