@@ -288,10 +288,10 @@ function HeroContent() {
 
   return (
     <div className="relative z-20 container mx-auto px-6 lg:px-8 mt-24 py-20">
-      <div className="max-w-6xl mx-auto text-center">
+      <div className="max-w-6xl mx-auto text-center mt-24">
         
         {/* Main Heading */}
-        <h1 className="text-5xl sm:text-6xl md:text-7xl lg:text-8xl font-bold mb-6 tracking-tight leading-[1.1]">
+        <h1 className="text-4xl sm:text-5xl md:text-7xl lg:text-6xl font-bold mb-6 tracking-tight leading-[1.1]">
           <span className="block text-gray-900 dark:text-white mb-2">
             Shape Tomorrow's
           </span>
@@ -303,7 +303,7 @@ function HeroContent() {
         </h1>
 
         {/* Subtitle */}
-        <p className="text-lg sm:text-xl md:text-2xl text-gray-600 dark:text-gray-400 mb-12 max-w-3xl mx-auto leading-relaxed">
+        <p className="text-lg sm:text-xl md:text-xl text-gray-600 dark:text-gray-400 mb-12 max-w-3xl mx-auto leading-relaxed">
           Where innovation meets creativity. Join a community of builders, designers, and dreamers creating the future of tech.
         </p>
 
