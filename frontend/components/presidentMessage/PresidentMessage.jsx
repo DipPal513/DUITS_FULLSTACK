@@ -4,7 +4,7 @@ export default function PresidentMessage() {
 
  
   return (
-    <div className=" bg-gray-200 dark:bg-black text-gray-900 dark:text-white py-32 px-4 md:px-8 transition-colors">
+    <div className=" bg-gray-200 dark:bg-black text-gray-900 dark:text-white py-32 px-2 sm:px-4 md:px-8 transition-colors">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16">
@@ -19,7 +19,7 @@ export default function PresidentMessage() {
         {/* Card */}
         <div
        
-          className="relative bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-2xl p-8 md:p-12 cursor-pointer overflow-hidden shadow-sm hover:shadow-md transition-shadow"
+          className="relative bg-white dark:bg-neutral-900 border border-gray-200 dark:border-neutral-800 rounded-2xl p-3 py-6 sm:p-8 md:p-12 cursor-pointer overflow-hidden shadow-sm hover:shadow-md transition-shadow"
         >
           {/* Animated border overlay */}
           <div

@@ -62,7 +62,7 @@ function ScrollStack({ children, className = "" }) {
 export default function WhatWeDo() {
   return (
     <div className="min-h-screen bg-gradient-to-br dark:from-gray-950 dark:via-black dark:to-gray-900 bg-gray-200">
-      <div className="max-w-6xl mx-auto px-6 py-20">
+      <div className="max-w-6xl mx-auto px-3 sm:px-6 py-20">
         <div className="mb-20">
           <div className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20">
             <div className="w-2 h-2 rounded-full dark:bg-blue-400 bg-blue-600 animate-pulse" />
@@ -95,18 +95,18 @@ export default function WhatWeDo() {
             </div>
        </div>
         <ScrollStack className="mt-24 space-y-16">
-          <ScrollStackItem className="rounded-2xl p-8 dark:bg-gradient-to-br dark:from-blue-900/50 dark:to-purple-900/50 dark:border-blue-800/50 bg-gradient-to-br from-blue-50 to-purple-50 border border-blue-200 shadow-2xl dark:backdrop-blur-md backdrop-blur-sm">
+          <ScrollStackItem className="rounded-2xl p-5 sm:p-8 dark:bg-gradient-to-br dark:from-blue-900/50 dark:to-purple-900/50 dark:border-blue-800/50 bg-gradient-to-br from-blue-50 to-purple-50 border border-blue-200 shadow-2xl dark:backdrop-blur-md backdrop-blur-sm">
             <div className="flex items-start gap-4 mb-4">
               <div className="p-3 rounded-xl dark:bg-blue-500/20 bg-blue-100">
                 <Code2 className="dark:text-blue-400 text-blue-600" size={28} />
               </div>
               <div>
-                <h2 className="text-3xl font-bold mb-3 dark:text-white text-gray-900">
+                <h2 className="text-xl sm:text-3xl font-bold mb-3 dark:text-white text-gray-900">
                   Learning & Development
                 </h2>
               </div>
             </div>
-            <p className="text-lg leading-relaxed dark:text-gray-300 text-gray-700">
+            <p className="text-sm sm:text-lg leading-relaxed dark:text-gray-300 text-gray-700">
               We believe that learning should be hands-on, engaging, and
               practical. Our workshops cover everything from web development and
               mobile app creation to artificial intelligence, machine learning,
@@ -118,18 +118,18 @@ export default function WhatWeDo() {
             </p>
           </ScrollStackItem>
 
-          <ScrollStackItem className="rounded-2xl p-8 dark:bg-gradient-to-br dark:from-green-900/50 dark:to-teal-900/50 dark:border-green-800/50 bg-gradient-to-br from-green-50 to-teal-50 border border-green-200 shadow-2xl dark:backdrop-blur-md backdrop-blur-sm">
+          <ScrollStackItem className="rounded-2xl p-5 sm:p-8 dark:bg-gradient-to-br dark:from-green-900/50 dark:to-teal-900/50 dark:border-green-800/50 bg-gradient-to-br from-green-50 to-teal-50 border border-green-200 shadow-2xl dark:backdrop-blur-md backdrop-blur-sm">
             <div className="flex items-start gap-4 mb-4">
               <div className="p-3 rounded-xl dark:bg-green-500/20 bg-green-100">
                 <Users2 className="dark:text-green-400 text-green-600" size={28} />
               </div>
               <div>
-                <h2 className="text-3xl font-bold mb-3 dark:text-white text-gray-900">
+                <h2 className="text-xl sm:text-3xl font-bold mb-3 dark:text-white text-gray-900">
                   Building Together
                 </h2>
               </div>
             </div>
-            <p className="text-lg leading-relaxed dark:text-gray-300 text-gray-700">
+            <p className="text-sm sm:text-lg leading-relaxed dark:text-gray-300 text-gray-700">
               Some of our best work happens when we collaborate. Throughout the
               year, we organize team projects where members work together to
               solve real problems — building campus management systems, creating
@@ -142,7 +142,7 @@ export default function WhatWeDo() {
             </p>
           </ScrollStackItem>
 
-          <ScrollStackItem className="rounded-2xl p-8 dark:bg-gradient-to-br dark:from-orange-900/50 dark:to-red-900/50 dark:border-orange-800/50 bg-gradient-to-br from-orange-50 to-red-50 border border-orange-200 shadow-2xl dark:backdrop-blur-md backdrop-blur-sm">
+          <ScrollStackItem className="rounded-2xl p-5 sm:p-8 dark:bg-gradient-to-br dark:from-orange-900/50 dark:to-red-900/50 dark:border-orange-800/50 bg-gradient-to-br from-orange-50 to-red-50 border border-orange-200 shadow-2xl dark:backdrop-blur-md backdrop-blur-sm">
             <div className="flex items-start gap-4 mb-4">
               <div className="p-3 rounded-xl dark:bg-orange-500/20 bg-orange-100">
                 <Sparkles
@@ -151,12 +151,12 @@ export default function WhatWeDo() {
                 />
               </div>
               <div>
-                <h2 className="text-3xl font-bold mb-3 dark:text-white text-gray-900">
+                <h2 className="text-xl sm:text-3xl font-bold mb-3 dark:text-white text-gray-900">
                   Compete & Excel
                 </h2>
               </div>
             </div>
-            <p className="text-lg leading-relaxed dark:text-gray-300 text-gray-700">
+            <p className="text-sm sm:text-lg leading-relaxed dark:text-gray-300 text-gray-700">
               Competition brings out the best in us. We regularly host
               hackathons, coding competitions, and tech challenges that push
               participants to think creatively under pressure. Our members have
@@ -169,7 +169,7 @@ export default function WhatWeDo() {
             </p>
           </ScrollStackItem>
 
-          <ScrollStackItem className="rounded-2xl p-8 dark:bg-gradient-to-br dark:from-violet-900/50 dark:to-pink-900/50 dark:border dark:border-violet-800/50 bg-gradient-to-br from-violet-50 to-pink-50 border shadow-2xl dark:backdrop-blur-md backdrop-blur-sm">
+          <ScrollStackItem className="rounded-2xl p-5 sm:p-8 dark:bg-gradient-to-br dark:from-violet-900/50 dark:to-pink-900/50 dark:border dark:border-violet-800/50 bg-gradient-to-br from-violet-50 to-pink-50 border shadow-2xl dark:backdrop-blur-md backdrop-blur-sm">
             <div className="flex items-start gap-4 mb-4">
               <div className="p-3 rounded-xl dark:bg-violet-500/20 bg-violet-100">
                 <Rocket
@@ -178,12 +178,12 @@ export default function WhatWeDo() {
                 />
               </div>
               <div>
-                <h2 className="text-3xl font-bold mb-3 dark:text-white text-gray-900">
+                <h2 className="text-xl sm:text-3xl font-bold mb-3 dark:text-white text-gray-900">
                   Innovation & Impact
                 </h2>
               </div>
             </div>
-            <p className="text-lg leading-relaxed dark:text-gray-300 text-gray-700">
+            <p className="text-sm sm:text-lg leading-relaxed dark:text-gray-300 text-gray-700">
               We're not just learning technology for its own sake — we're using
               it to make a difference. Our innovation lab is where ideas come to
               life, where students brainstorm solutions to campus challenges,
@@ -197,8 +197,8 @@ export default function WhatWeDo() {
             </p>
           </ScrollStackItem>
         </ScrollStack>
-
-          <div className="rounded-2xl py-6 bg-transparent">
+ 
+          <div className="rounded-2xl py-6 bg-transparent my-24">
             <div className="text-lg leading-relaxed space-y-4 dark:text-gray-300 text-gray-700">
               <p>
                 At the heart of everything we do is a simple belief: technology

@@ -56,14 +56,19 @@ export default function Navigation() {
           {/* Mobile Menu Button */}
           <div className="flex items-center gap-2 lg:hidden">
             <ThemeToggle />
-            <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2 text-gray-900 dark:text-white rounded-md hover:bg-black/10 dark:hover:bg-white/10">
+            <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2 text-gray-900 dark:text-white rounded-md z-50 relative hover:bg-black/10 dark:hover:bg-white/10">
               {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
             </button>
           </div>
         </div>
 
+      </div>
         {isMobileMenuOpen && (
-          <div className="lg:hidden py-4 border-t border-gray-200 dark:border-white/20 bg-white/95 dark:bg-black/95 backdrop-blur-lg fixed w-full left-0 px-4 z-[1000]">
+          <div className=" py-4 border-t border-gray-200  backdrop-blur-lg fixed w-full sm:w-1/2 left-0  z-[1000] top-0 h-screen px-6 pt-24 lg:-left-[1000] transition-all duration-1000  shadow-lg pt-20 z-0">
+
+            <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2 text-gray-900 dark:text-white rounded-md z-50 absolute top-5 right-5 hover:bg-black/10 dark:hover:bg-white/10">
+              {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}
+            </button>
             <div className="flex flex-col gap-2">
               {navLinks.map((link) => (
                 <Link
@@ -79,7 +84,6 @@ export default function Navigation() {
             </div>
           </div>
         )}
-      </div>
     </nav>
   )
 }
