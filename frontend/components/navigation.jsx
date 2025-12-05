@@ -64,7 +64,7 @@ export default function Navigation() {
 
       </div>
         {isMobileMenuOpen && (
-          <div className=" py-4 border-t border-gray-200  backdrop-blur-lg fixed w-full sm:w-1/2 left-0  z-[1000] top-0 h-screen px-6 pt-24 lg:-left-[1000] transition-all duration-1000  shadow-lg pt-20 z-0">
+          <div className=" py-4 border-t border-gray-200  backdrop-blur-lg fixed w-full sm:w-1/2 left-0  z-[1000] top-0 h-screen px-6  lg:-left-[1000] transition-all duration-1000  shadow-lg pt-20 ">
 
             <button onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)} className="p-2 text-gray-900 dark:text-white rounded-md z-50 absolute top-5 right-5 hover:bg-black/10 dark:hover:bg-white/10">
               {isMobileMenuOpen ? <X size={24} /> : <Menu size={24} />}

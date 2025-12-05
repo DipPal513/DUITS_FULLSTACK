@@ -6,8 +6,8 @@ import { Inter } from "next/font/google"
 import { Suspense } from "react"
 import { Toaster } from "react-hot-toast"
 import "./globals.css"
-import Navigation from "@/components/navigation"
 import Footer from "@/components/footer"
+import Navigation from "@/components/navigation"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -150,9 +150,7 @@ export default function RootLayout({ children }) {
         {children}
         <Footer />
         </Suspense>
-
         </ThemeProvider>
-        
         <Analytics />
       </body>
     </html>

@@ -4,7 +4,7 @@ import withPWA from "next-pwa";
 
 const nextConfig: NextConfig = {
   /* config options here */
- 
+  swcMinify: false,
   reactStrictMode: true,
   eslint: {
     ignoreDuringBuilds: true,

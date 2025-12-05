@@ -1,6 +1,4 @@
-import Navigation from "@/components/navigation"
-import Blog from "@/components/blog"
-import Footer from "@/components/footer"
+
 import TechBackground from "@/components/tech-background"
 
 export default function BlogPage() {
@@ -9,7 +7,7 @@ export default function BlogPage() {
       <TechBackground />
   
       <div className="pt-20">
-        <Blog />
+       <h1> Comming soon...</h1>
       </div>
       
     </main>

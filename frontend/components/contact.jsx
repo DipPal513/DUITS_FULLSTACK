@@ -1,12 +1,11 @@
 "use client"
 
-import { useState } from "react"
-import { Card } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
-import { Mail, MapPin, Phone, Clock, ArrowRight } from "lucide-react"
+import { ArrowRight, Clock, Mail, MapPin, Phone } from "lucide-react"
+import { useState } from "react"
 
 export default function Contact() {
   const [formData, setFormData] = useState({
