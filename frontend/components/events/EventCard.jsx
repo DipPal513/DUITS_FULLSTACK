@@ -1,136 +1,116 @@
-'use client'
+import { Calendar, Edit, ExternalLink, MapPin, Trash2, Clock } from 'lucide-react';
 
-import { Button } from '@/components/ui/button'
-import {
-  ArrowRight,
-  Calendar,
-  MapPin,
-  Music
-} from 'lucide-react'
-import { useRouter } from 'next/navigation'
+const EventCard = ({ event, onEdit, onDelete }) => {
+  const formatDate = (dateString) => {
+    return new Date(dateString).toLocaleDateString('en-US', {
+      weekday: 'short',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: '2-digit',
+      minute: '2-digit'
+    });
+  };
 
-const convertDateToReadableFormat = (dateString) => {
-  const options = { year: 'numeric', month: 'long', day: 'numeric' }
-  const date = new Date(dateString)
-  return date.toLocaleDateString(undefined, options)
-}
-const EventCard = ({ event }) => {
-  const router = useRouter()
-
-  const handleViewDetails = () => {
-    router.push(`/events/${event.id || event._id}`)
-  }
+  // Helper to safely get date parts for the badge
+  const eventDate = new Date(event.date);
+  const day = eventDate.getDate();
+  const month = eventDate.toLocaleString('default', { month: 'short' });
 
   return (
-    <div 
-      onClick={handleViewDetails}
-      className="group cursor-pointer h-full"
-    >
-      <div className="relative h-full overflow-hidden rounded-2xl bg-card shadow-lg transition-all duration-500 hover:shadow-2xl">
+    <div className="group relative flex flex-col h-full overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:border-slate-800 dark:bg-slate-900/60 dark:backdrop-blur-sm dark:hover:border-slate-700 dark:hover:shadow-slate-950/50">
       
-        <div className="relative h-48 md:h-56 overflow-hidden bg-muted">
-          {/* Image */}
-          <img
-            src={event.image}
-            alt={event.title}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-          />
-          
-          {/* Gradient Overlay */}
-          <div className={`absolute inset-0 bg-gradient-to-t ${event.accentColor} opacity-0 group-hover:opacity-40 transition-opacity duration-500`} />
-          
-          {/* Dark Overlay Base */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-          
-          {/* Category Badge */}
-          <div className="absolute top-4 left-4 z-10">
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white/95 backdrop-blur-sm shadow-md hover:shadow-lg transition-shadow">
-              <Music className="w-4 h-4 text-purple-600" />
-              <span className="text-xs font-bold text-gray-900">
-                {event.category}
-              </span>
-            </div>
-          </div>
-
-      
-
-          {/* Floating Icon - appears on hover */}
-          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-            <div className="transform transition-transform duration-500 group-hover:scale-100 scale-75">
-              <div className="relative w-16 h-16 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/40">
-                <ArrowRight className="w-8 h-8 text-white group-hover:translate-x-1 transition-transform duration-500" />
-              </div>
-            </div>
-          </div>
+      {/* Image Section */}
+      <div className="relative h-48 sm:h-56 w-full overflow-hidden bg-slate-100 dark:bg-slate-800">
+        <img
+          src={event?.image}
+          alt={event.title}
+          className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+        />
+        
+        {/* Date Badge Overlay */}
+        <div className="absolute left-4 top-4 flex flex-col items-center justify-center rounded-xl bg-white/95 px-3 py-1.5 shadow-lg backdrop-blur-sm dark:bg-slate-950/90 border border-slate-100 dark:border-slate-800 z-10">
+          <span className="text-xs font-bold uppercase text-red-500 tracking-wider">{month}</span>
+          <span className="text-xl font-bold text-slate-900 dark:text-white leading-none mt-0.5">{day}</span>
         </div>
 
-        {/* ===============================
-            2. CONTENT SECTION
-        =============================== */}
-        <div className="relative p-5 md:p-6">
-          
-          {/* Event Title */}
-          <h3 className="text-lg md:text-xl font-bold line-clamp-2 mb-2 text-foreground group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-purple-500 group-hover:to-pink-500 group-hover:bg-clip-text transition-all duration-300">
+        {/* Gradient Overlay */}
+        <div className="absolute inset-0 bg-gradient-to-t from-slate-900/60 via-transparent to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+        
+        {/* Admin Actions */}
+        {(onEdit || onDelete) && (
+          <div className="absolute right-3 top-3 flex gap-2 translate-y-[-10px] opacity-0 transition-all duration-300 group-hover:translate-y-0 group-hover:opacity-100 z-20">
+            {onEdit && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onEdit(event);
+                }}
+                className="rounded-lg bg-white/90 p-2 text-slate-700 shadow-sm backdrop-blur-md transition-colors hover:bg-blue-50 hover:text-blue-600 dark:bg-slate-800/90 dark:text-slate-200 dark:hover:bg-blue-900/50 dark:hover:text-blue-400 border border-white/20 dark:border-slate-700"
+                title="Edit Event"
+              >
+                <Edit size={16} />
+              </button>
+            )}
+            {onDelete && (
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  onDelete(event);
+                }}
+                className="rounded-lg bg-white/90 p-2 text-slate-700 shadow-sm backdrop-blur-md transition-colors hover:bg-red-50 hover:text-red-600 dark:bg-slate-800/90 dark:text-slate-200 dark:hover:bg-red-900/50 dark:hover:text-red-400 border border-white/20 dark:border-slate-700"
+                title="Delete Event"
+              >
+                <Trash2 size={16} />
+              </button>
+            )}
+          </div>
+        )}
+      </div>
+
+      {/* Content Section */}
+      <div className="flex flex-grow flex-col p-5">
+        <div className="mb-4">
+          <h3 className="mb-2 line-clamp-1 text-lg sm:text-xl font-bold text-slate-900 transition-colors group-hover:text-blue-600 dark:text-slate-100 dark:group-hover:text-blue-400">
             {event.title}
           </h3>
-
-          {/* Description */}
-          <p className="text-sm text-muted-foreground line-clamp-2 mb-4 leading-relaxed">
+          <p className="line-clamp-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
             {event.description}
           </p>
-
-          {/* Event Details Grid */}
-          <div className="space-y-2.5 mb-5">
-            
-            {/* Date */}
-            <div className="flex items-center gap-3 text-sm text-foreground/80 group-hover:text-foreground transition-colors duration-300">
-              <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center">
-                <Calendar className="w-4 h-4 text-purple-600" />
-              </div>
-              <span className="font-medium">{convertDateToReadableFormat(event.date)}</span>
-            </div>
-
-          
-            {/* Location */}
-            <div className="flex items-center gap-3 text-sm text-foreground/80 group-hover:text-foreground transition-colors duration-300">
-              <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-blue-500/10 flex items-center justify-center">
-                <MapPin className="w-4 h-4 text-blue-600" />
-              </div>
-              <span className="font-medium truncate">{event.location}</span>
-            </div>
-
-            
-          </div>
-
-          {/* Divider */}
-          <div className="h-px bg-border/50 mb-4 group-hover:bg-gradient-to-r group-hover:from-purple-500/50 group-hover:via-transparent group-hover:to-pink-500/50 transition-all duration-500" />
-
-          {/* CTA Button */}
-          {convertDateToReadableFormat(event.date) > new Date() ?<Button
-            onClick={(e) => {
-              e.stopPropagation()
-              handleViewDetails()
-            }}
-            className=" "
-            variant="default"
-          >
-            <span>Get Tickets</span>
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
-          </Button>: <p className='text-black font-semibold'>Event Expired</p>}
         </div>
 
-        {/* ===============================
-            3. DECORATIVE ELEMENTS
-        =============================== */}
-        
-        {/* Corner Accent */}
-        <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-purple-500/10 to-transparent rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-500 pointer-events-none" />
-        
-        {/* Bottom Accent */}
-        <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-pink-500/10 to-transparent rounded-full -ml-16 -mb-16 group-hover:scale-150 transition-transform duration-500 pointer-events-none" />
+        <div className="mt-auto space-y-3">
+          {/* Metadata Row */}
+          <div className="flex flex-col gap-2.5 border-t border-slate-100 pt-4 dark:border-slate-800/50">
+            
+            <div className="flex items-center gap-2.5 text-sm text-slate-600 dark:text-slate-300">
+              <Calendar size={16} className="shrink-0 text-purple-500" />
+              <span className="truncate">{formatDate(event.date)}</span>
+            </div>
+
+            <div className="flex items-center gap-2.5 text-sm text-slate-600 dark:text-slate-300">
+              <MapPin size={16} className="shrink-0 text-pink-500" />
+              <span className="truncate">{event.location}</span>
+            </div>
+          </div>
+
+          {/* Action Button */}
+          {event.registrationLink && (
+            <a
+              href={event.registrationLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={(e) => e.stopPropagation()}
+              className="mt-2 flex w-full items-center justify-center gap-2 rounded-xl bg-slate-50 py-2.5 text-sm font-semibold text-slate-700 transition-all hover:bg-blue-50 hover:text-blue-600 hover:shadow-sm dark:bg-slate-800 dark:text-slate-200 dark:hover:bg-slate-700 dark:hover:text-white border border-transparent dark:border-slate-700"
+            >
+              <ExternalLink size={16} />
+              Register Now
+            </a>
+          )}
+        </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default EventCard
+export default EventCard;

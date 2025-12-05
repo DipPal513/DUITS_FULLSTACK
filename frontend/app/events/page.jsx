@@ -3,13 +3,10 @@ import TechBackground from "@/components/tech-background"
 
 export default function EventsPage() {
   return (
-    <main className="min-h-screen">
-      <TechBackground />
-     
+    <main className="min-h-screen">     
       <div className="pt-20">
         <Events />
       </div>
-     
     </main>
   )
 }

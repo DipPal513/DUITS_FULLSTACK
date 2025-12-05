@@ -24,11 +24,15 @@ const NoticesHeader = ({ currentPage, noticesPerPage, totalNotices, loading, onF
           <Sparkles className="w-4 h-4" />
           Notices & Programs
         </div>
-        <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text">
+        
+        {/* ADDED: 'text-transparent' so the gradient works */}
+        <h2 className="text-4xl md:text-5xl font-bold mb-4 bg-gradient-to-r from-foreground to-foreground/70 bg-clip-text text-transparent">
           Discover Our Notices
         </h2>
+        
+        {/* CHANGED: "Join our notices" -> "Stay informed about..." (Correct Grammar) */}
         <p className="text-base text-muted-foreground max-w-2xl mx-auto leading-relaxed">
-          Join our exciting notices, workshops, and programs designed to enhance your skills and expand your network
+          Stay informed about our latest announcements, workshops, and programs designed to enhance your skills and expand your network.
         </p>
       </div>
 
@@ -59,9 +63,13 @@ const NoticesHeader = ({ currentPage, noticesPerPage, totalNotices, loading, onF
         {/* Notices Count */}
         {!loading && totalNotices > 0 && (
           <div className="text-sm text-muted-foreground whitespace-nowrap">
-            <span className="font-semibold text-foreground">{(currentPage - 1) * noticesPerPage + 1}</span>
+            <span className="font-semibold text-foreground">
+              {/* Logic: Calculate start index (e.g., 1, 11, 21) */}
+              {(currentPage - 1) * noticesPerPage + 1}
+            </span>
             {" "}-{" "}
             <span className="font-semibold text-foreground">
+              {/* Logic: Calculate end index, but don't exceed total count */}
               {Math.min(currentPage * noticesPerPage, totalNotices)}
             </span>
             {" "}of{" "}
