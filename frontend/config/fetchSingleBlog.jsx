@@ -1,5 +1,5 @@
 // src/config/fetchSingleBlog.js
-const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api/v1";
+const API_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:5000/api/v1";
 
 // 1. Fetch Single Post by ID
 export async function fetchPostById(id) {
