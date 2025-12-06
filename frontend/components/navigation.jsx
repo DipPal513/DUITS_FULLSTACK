@@ -24,6 +24,7 @@ export default function Navigation() {
     { href: "/team", label: "Executives" },
     { href: "/notice", label: "Notice" },
     { href: "/gallery", label: "Gallery" },
+    { href: "/blog", label: "Blog" },
     { href: "/contact", label: "Contact" },
   ]
 

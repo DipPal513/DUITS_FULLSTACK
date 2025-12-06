@@ -5,6 +5,7 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import TurndownService from "turndown";
+import DashboardLayout from "@/components/DashboardLayout";
 
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
 
@@ -130,6 +131,7 @@ export default function CreatePost() {
   };
 
   return (
+    <DashboardLayout>
     <div className="min-h-screen bg-white text-slate-900 flex flex-col font-sans">
       
       {/* NAVBAR */}
@@ -201,7 +203,7 @@ export default function CreatePost() {
         .jodit-toolbar__box { background: transparent !important; border-bottom: 1px solid #f1f5f9 !important; margin-bottom: 20px; }
         .jodit-status-bar { display: none !important; }
       `}</style>
-    </div>
+    </div></DashboardLayout>
   );
 }
 
