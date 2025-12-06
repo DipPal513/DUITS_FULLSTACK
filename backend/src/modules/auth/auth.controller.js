@@ -50,9 +50,7 @@ export const roleChange = async (req, res, next) => {
   try {
     const { userId } = req.params;
     const { role } = req.body;
-    console.log("requested userid", userId);
-
-    // --- Database Update ---
+  
     const user = await roleChangeService(userId, role);
     if (!user) {
         return res.status(404).json({ success: false, message: 'User not found' });
@@ -61,7 +59,6 @@ export const roleChange = async (req, res, next) => {
     res.json({ 
         success: true, 
         message: `Role successfully updated to ${user.role}.`,
-       
     });
   } catch (err) {
     console.log(err)

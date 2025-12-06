@@ -11,6 +11,7 @@ import galleryRoutes from './modules/gallery/gallery.route.js';
 import eventRoutes from './modules/event/event.route.js';
 import noticeRoutes from './modules/notice/notice.route.js';
 import achievementRoute from './modules/achievement/achievement.route.js';
+import blogRoutes from './modules/blog/blog.route.js';
 // import errorHandler from './middleware/errorHandler.js';
 configDotenv();
 
@@ -41,6 +42,7 @@ app.use('/api/v1/event', eventRoutes) ;
 app.use('/api/v1/gallery', galleryRoutes) ;
 app.use('/api/v1/notice', noticeRoutes) ;
 app.use('/api/v1/achievement', achievementRoute) ;
+app.use('/api/v1/blog', blogRoutes) ;
 
 
 // Test route

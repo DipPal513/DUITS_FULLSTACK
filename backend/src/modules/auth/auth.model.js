@@ -68,7 +68,6 @@ export const checkMeService = async (userId) => {
   return result.rows[0];
 };
 
-
 export const getAllUsersService = async () => {
   const query = `
     SELECT id, name, email, role, created_at FROM users;
