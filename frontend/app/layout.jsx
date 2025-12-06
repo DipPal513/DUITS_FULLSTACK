@@ -14,90 +14,43 @@ const inter = Inter({
   variable: "--font-inter",
 })
 
-
-// 1. Viewport and Theme Color are now exported separately in Next.js 14+
+// 1. Viewport (Mobile Responsiveness)
 export const viewport = {
   width: "device-width",
   initialScale: 1,
-  maximumScale: 1,
+  maximumScale: 5,
   themeColor: [
     { media: "(prefers-color-scheme: light)", color: "#ffffff" },
-    { media: "(prefers-color-scheme: dark)", color: "#09090b" }, // Matches standard dark mode bg
+    { media: "(prefers-color-scheme: dark)", color: "#000000" },
   ],
 };
 
+// 2. SEO Metadata (Ranking Power)
 export const metadata = {
-  // 2. metadataBase is CRITICAL for social images to work. 
-  // Replace with your actual deployed domain.
-  metadataBase: new URL("https://duits.org"), 
+  metadataBase: new URL("https://duitsbd.org"), // ⚠️ Change this to your real domain
 
   title: {
-    default: "Dhaka University IT Society (DUITS)",
-    template: "%s | DUITS", // Keeps titles consistent on inner pages (e.g., "Events | DUITS")
+    default: "Dhaka University IT Society (DUITS) - Leading Tech Community",
+    template: "%s | DUITS",
   },
+  
   description:
-    "The official IT Society of Dhaka University. Fostering a community of tech enthusiasts, developers, and innovators through workshops, hackathons, and seminars.",
-  
-  applicationName: "DUITS Official",
-  authors: [{ name: "DUITS Technical Team", url: "https://duits.org" }],
-  generator: "Next.js",
-  
-  // 3. SEO Keywords (Added local context)
+    "The official IT Society of Dhaka University (DU). Fostering innovation through hackathons, workshops, and tech seminars at TSC. Join the largest student tech community in Bangladesh.",
+icons: {
+    icon: "/icons/duits-512.png", // The path to your image in 'public'
+    shortcut: "/icons/duits-512.png",
+    apple: "/icons/duits-512.png", // Important for Apple devices
+  },
   keywords: [
-    "DUITS",
-    "Dhaka University IT Society",
-    "Dhaka University",
-    "DU",
-    "IT Club BD",
-    "Technology Club",
-    "Programming Community",
-    "Hackathon Bangladesh",
-    "Tech Students",
-    "Software Engineering",
-    "Innovation",
-    "TSC",
+    "DUITS", "Dhaka University IT Society", "University of Dhaka", "DU", "TSC",
+    "IT Club Bangladesh", "Student Tech Community", "Programming Club DU",
+    "Hackathons in Dhaka", "Technology Workshops", "Software Engineering"
   ],
 
-  // 4. Open Graph (For Facebook, LinkedIn, Discord previews)
-  openGraph: {
-    title: "Dhaka University IT Society (DUITS)",
-    description: "The leading tech community of Dhaka University. Join us to shape the future of technology.",
-    url: "https://duits.org",
-    siteName: "DUITS",
-    locale: "en_US",
-    type: "website",
-    images: [
-      {
-        url: "/banner.jpg", // You need to add this image to your public folder (1200x630px)
-        width: 1200,
-        height: 630,
-        alt: "DUITS Community Banner",
-      },
-    ],
-  },
+  authors: [{ name: "DUITS Technical Team", url: "https://duitsbd.org" }],
+  creator: "Dhaka University IT Society",
+  publisher: "Dhaka University IT Society",
 
-  // 5. Twitter Card (For X/Twitter previews)
-  twitter: {
-    card: "summary_large_image",
-    title: "Dhaka University IT Society (DUITS)",
-    description: "Fostering innovation and technology at Dhaka University.",
-    creator: "@duits_official", // Replace with actual handle if you have one
-    images: ["/banner.jpg"],
-  },
-
-  icons: {
-    icon: "/icons/duits-512.png",
-    shortcut: "/icons/duits-512.png",
-    apple: "/icons/duits-512.png",
-    other: {
-      rel: "apple-touch-icon-precomposed",
-      url: "/icons/duits-512.png",
-    },
-  },
-
-  manifest: "/manifest.json",
-  
-  // 6. Robots (Tells Google it's okay to index this site)
   robots: {
     index: true,
     follow: true,
@@ -109,10 +62,68 @@ export const metadata = {
       "max-snippet": -1,
     },
   },
+
+  alternates: {
+    canonical: "/",
+  },
+
+  openGraph: {
+    title: "Dhaka University IT Society (DUITS)",
+    description: "Join the largest student tech community at Dhaka University.",
+    url: "https://duitsbd.org",
+    siteName: "DUITS",
+    locale: "en_US",
+    type: "website",
+    images: [{
+      url: "/icons/duits-512.png", // Make sure this file exists in /public (1200x630px)
+      width: 1200,
+      height: 630,
+      alt: "DUITS Community Banner",
+    }],
+  },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "DUITS - Dhaka University IT Society",
+    description: "Fostering innovation and technology at Dhaka University.",
+    site: "@duits_official",
+    creator: "@duits_official",
+    images: ["/icons/duits-512.png"],
+  },
+
+  verification: {
+    google: "YOUR_GOOGLE_VERIFICATION_CODE", // ⚠️ Get this from Google Search Console
+    other: {
+      "facebook-domain-verification": "YOUR_FB_CODE",
+    },
+  },
 };
 
 
+
 export default function RootLayout({ children }) {
+   const jsonLd = {
+    "@context": "https://schema.org",
+    "@type": "CollegeOrUniversity", // or "Organization"
+    "name": "Dhaka University IT Society",
+    "alternateName": "DUITS",
+    "url": "https://duitsbd.org",
+    "logo": "/icons/duits-512.png",
+    "foundingDate": "2011", // Update if needed
+    "address": {
+      "@type": "PostalAddress",
+      "streetAddress": "TSC",
+      "addressLocality": "Dhaka University",
+      "addressRegion": "Dhaka",
+      "postalCode": "1000",
+      "addressCountry": "BD"
+    },
+    "sameAs": [
+      "https://www.facebook.com/duits.official",
+      "https://www.linkedin.com/company/duits",
+      "https://twitter.com/duits_official"
+    ]
+  };
   return (
     <html lang="en" suppressHydrationWarning>
     <head>
@@ -122,6 +133,10 @@ export default function RootLayout({ children }) {
       <link rel="apple-touch-icon" href="icons/duits-512.png" />
     </head>
       <body className={`font-sans ${inter.variable} ${GeistSans.variable} ${GeistMono.variable} antialiased`}>
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+        />
         <Toaster />
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
           <Suspense fallback={ 
