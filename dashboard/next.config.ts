@@ -1,6 +1,7 @@
-import type { NextConfig } from "next";
 
-const nextConfig: NextConfig = {
+
+const nextConfig = {
+    turbopack: {},
   /* config options here */ eslint: {
     ignoreDuringBuilds: true,
   },
