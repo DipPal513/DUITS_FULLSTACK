@@ -1,107 +1,107 @@
 "use client"
-import { X } from "lucide-react"
 
-const TeamHeader = ({ 
-  totalTeams, 
-  loading, 
-  onYearChange, 
-  onBatchChange,
-  onClearFilters,
-  selectedYear = "",
-  selectedBatch = "",
-  availableYears = [],
-  availableBatches = []
-}) => {
-  const hasActiveFilters = selectedYear || selectedBatch;
+import { useRouter, usePathname, useSearchParams } from "next/navigation"
+import { Filter, X, ChevronDown } from "lucide-react"
+
+export default function TeamHeader({
+  totalTeams = 0,
+  selectedYear,
+  selectedBatch,
+  availableYears,
+  availableBatches,
+}) {
+  const router = useRouter()
+  const pathname = usePathname()
+  const searchParams = useSearchParams()
+
+  // Function to handle URL updates
+  const updateFilter = (key, value) => {
+    const current = new URLSearchParams(Array.from(searchParams.entries()))
+
+    if (!value) {
+      current.delete(key)
+    } else {
+      current.set(key, value)
+    }
+
+    const search = current.toString()
+    const query = search ? `?${search}` : ""
+
+    router.push(`${pathname}${query}`)
+  }
+
+  // Clear all filters
+  const clearFilters = () => {
+    router.push(pathname)
+  }
+
+  const hasActiveFilters = selectedYear || selectedBatch
 
   return (
-    <div className="mb-12">
-      <div className="mb-8 mt-20">
-        <h2 className="text-4xl font-bold text-gray-900 dark:text-white mb-1">
-          Executive Panel
-        </h2>
-        {!loading && totalTeams > 0 && (
-          <p className="text-sm text-gray-500 dark:text-gray-400">
-            {totalTeams} member{totalTeams !== 1 ? 's' : ''}
-          </p>
-        )}
+    <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8 pb-4 border-b border-gray-100 dark:border-gray-800">
+      {/* Left Side: Title and Count */}
+      <div className="flex items-center gap-3">
+        <h1 className="text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
+          Executive Team
+        </h1>
+        <span className="px-2.5 py-0.5 rounded-full bg-blue-50 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400 text-sm font-medium border border-blue-100 dark:border-blue-800">
+          {totalTeams}
+        </span>
       </div>
 
-      <div className="space-y-6">
-        {/* Year Filter */}
-        <div>
-          <label className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3 block">
-            Year
-          </label>
-          <div className="flex flex-wrap gap-2">
+      {/* Right Side: Filters */}
+      <div className="flex items-center gap-2">
+        {/* Filter Icon Label (Mobile hidden) */}
+        <div className="hidden md:flex items-center gap-2 text-sm text-gray-500 mr-2">
+          <Filter className="w-4 h-4" />
+          <span>Filters:</span>
+        </div>
+
+        {/* Year Select */}
+        <div className="relative">
+          <select
+            value={selectedYear}
+            onChange={(e) => updateFilter("year", e.target.value)}
+            className="appearance-none pl-3 pr-8 py-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-shadow cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800"
+          >
+            <option value="">All Years</option>
             {availableYears.map((year) => (
-              <button
-                key={year}
-                onClick={() => onYearChange(year)}
-                className={`px-3 py-1.5 text-sm rounded transition-colors ${
-                  selectedYear === year
-                    ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900'
-                    : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
-                }`}
-              >
+              <option key={year} value={year}>
                 {year}
-              </button>
+              </option>
             ))}
-          </div>
+          </select>
+          <ChevronDown className="w-4 h-4 text-gray-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
         </div>
 
-        {/* Batch Filter */}
-        <div>
-          <label className="text-xs font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-3 block">
-            Batch
-          </label>
-          <div className="flex flex-wrap gap-2">
+        {/* Batch Select */}
+        <div className="relative">
+          <select
+            value={selectedBatch}
+            onChange={(e) => updateFilter("batch", e.target.value)}
+            className="appearance-none pl-3 pr-8 py-2 bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-800 rounded-lg text-sm font-medium text-gray-700 dark:text-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500/20 focus:border-blue-500 transition-shadow cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800"
+          >
+            <option value="">All Batches</option>
             {availableBatches.map((batch) => (
-              <button
-                key={batch}
-                onClick={() => onBatchChange(batch)}
-                className={`px-3 py-1.5 text-sm rounded transition-colors ${
-                  selectedBatch === batch
-                    ? 'bg-gray-900 dark:bg-white text-white dark:text-gray-900'
-                    : 'bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-200 dark:hover:bg-gray-700'
-                }`}
-              >
-                {batch}
-              </button>
+              <option key={batch} value={batch}>
+                Batch {batch}
+              </option>
             ))}
-          </div>
+          </select>
+          <ChevronDown className="w-4 h-4 text-gray-400 absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none" />
         </div>
 
-        {/* Active Filters */}
+        {/* Clear Button (Only shows if filtered) */}
         {hasActiveFilters && (
-          <div className="flex items-center gap-2 pt-2">
-            {selectedYear && (
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded text-xs">
-                {selectedYear}
-                <button onClick={() => onYearChange(selectedYear)} className="hover:text-gray-900 dark:hover:text-white">
-                  <X className="w-3 h-3" />
-                </button>
-              </span>
-            )}
-            {selectedBatch && (
-              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-gray-100 dark:bg-gray-800 text-gray-700 dark:text-gray-300 rounded text-xs">
-                Batch {selectedBatch}
-                <button onClick={() => onBatchChange(selectedBatch)} className="hover:text-gray-900 dark:hover:text-white">
-                  <X className="w-3 h-3" />
-                </button>
-              </span>
-            )}
-            <button
-              onClick={onClearFilters}
-              className="ml-auto text-xs text-gray-500 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white"
-            >
-              Clear all
-            </button>
-          </div>
+          <button
+            onClick={clearFilters}
+            className="p-2 text-gray-400 hover:text-red-500 hover:bg-red-50 dark:hover:bg-red-900/20 rounded-lg transition-colors"
+            title="Clear Filters"
+          >
+            <X className="w-4 h-4" />
+          </button>
         )}
       </div>
     </div>
   )
 }
-
-export default TeamHeader

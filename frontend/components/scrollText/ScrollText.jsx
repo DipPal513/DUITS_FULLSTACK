@@ -3,7 +3,7 @@ import ScrollVelocity from "@/components/ScrollVelocity"
 
 export default function ScrollText() {
   return (
-   <section className="py-24  bg-gray-200 dark:bg-black overflow-hidden">
+   <section className="py-24  bg-gray-50 dark:bg-black overflow-hidden">
     <ScrollVelocity
       texts={[
           'DUITS • Innovation & Technology Code • Create • Collaborate Build The Future Together Join Our Tech Community Workshops • Hackathons • Projects',

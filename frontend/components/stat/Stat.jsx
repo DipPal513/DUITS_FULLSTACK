@@ -19,7 +19,7 @@ export default function Stat() {
   ];
 
   return (
-    <div className="min-h-screen bg-gradient-to-br dark:from-gray-950 dark:via-black  dark:to-gray-900 bg-gray-200 flex items-center justify-center p-4 md:p-8 relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-br dark:from-gray-950 dark:via-black  dark:to-gray-900 bg-gray-50 flex items-center justify-center p-4 md:p-8 relative overflow-hidden">
       {/* Animated background elements */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute top-20 left-20 w-72 h-72 bg-blue-500 rounded-full mix-blend-multiply filter blur-3xl opacity-10 animate-pulse"></div>

@@ -61,7 +61,7 @@ function ScrollStack({ children, className = "" }) {
 
 export default function WhatWeDo() {
   return (
-    <div className="min-h-screen bg-gradient-to-br dark:from-gray-950 dark:via-black dark:to-gray-900 bg-gray-200">
+    <div className="min-h-screen bg-gradient-to-br dark:from-gray-950 dark:via-black dark:to-gray-900 bg-gray-50">
       <div className="max-w-6xl mx-auto px-3 sm:px-6 py-20">
         <div className="mb-20">
           <div className="inline-flex items-center gap-2 mb-6 px-4 py-2 rounded-full bg-blue-500/10 border border-blue-500/20">

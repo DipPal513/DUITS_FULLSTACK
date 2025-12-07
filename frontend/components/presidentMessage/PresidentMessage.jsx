@@ -4,7 +4,7 @@ export default function PresidentMessage() {
 
  
   return (
-    <div className=" bg-gray-200 dark:bg-black text-gray-900 dark:text-white py-32 px-2 sm:px-4 md:px-8 transition-colors">
+    <div className=" bg-gray-50 dark:bg-black text-gray-900 dark:text-white py-32 px-2 sm:px-4 md:px-8 transition-colors">
       <div className="max-w-4xl mx-auto">
         {/* Header */}
         <div className="text-center mb-16">

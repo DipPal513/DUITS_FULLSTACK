@@ -144,7 +144,7 @@ export default function AchievementsGrid({ achievements }) {
   }, [])
 
   return (
-    <section className="py-24 dark:bg-black bg-gray-200 transition-colors">
+    <section className="py-24 dark:bg-black bg-gray-50 transition-colors">
       <div className="container mx-auto px-4 lg:px-8">
         <div ref={headerRef} className="max-w-4xl mx-auto text-center mb-20">
           <h2 className="text-2xl sm:text-5xl md:text-6xl font-bold mb-6">Our Achievements</h2>
