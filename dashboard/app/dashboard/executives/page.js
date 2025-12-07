@@ -249,9 +249,9 @@ const convertToBase64 = (file) =>
     setShowModal(true)
   }
 
-  const positions = ["President", "Vice President", "General Secretary", "Joint Secretary", "Treasurer", "Organizing Secretary", "Event Coordinator", "Design Lead","Junior Executive","Member"]
+  const positions = ["President", "Vice President", "General Secretary", "Joint General Secretary", "Treasurer","Office Secretary","Publicity and Publication Secretary","External Communication Secretary","Skill Development Secretary","Information and Research Secretary","Event Secretary", "Organizing Secretary", "Design Lead","Junior Executive","General Member"]
  
-  const positionOrder = ["President", "Vice President", "General Secretary", "Joint Secretary", "Treasurer", "Organizing Secretary", "Event Coordinator", "Design Lead","Junior Executive","Member"]
+  const positionOrder = ["President", "Vice President", "General Secretary", "Joint General Secretary", "Treasurer","Office Secretary", "Publicity and Publication Secretary","External Communication Secretary","Skill Development Secretary","Information and Research Secretary","Event Secretary", "Organizing Secretary", "Design Lead","Junior Executive","General Member"]
   const sortedExecutives = [...filteredExecutives].sort((a, b) => {
     const aIndex = positionOrder.indexOf(a.position)
     const bIndex = positionOrder.indexOf(b.position)

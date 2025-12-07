@@ -1,4 +1,5 @@
 import { Calendar, Edit, ExternalLink, MapPin, Trash2, Clock } from 'lucide-react';
+import Link from 'next/link';
 
 const EventCard = ({ event, onEdit, onDelete }) => {
   const formatDate = (dateString) => {
@@ -70,14 +71,14 @@ const EventCard = ({ event, onEdit, onDelete }) => {
 
       {/* Content Section */}
       <div className="flex flex-grow flex-col p-5">
-        <div className="mb-4">
+        <Link href={`/event/${event.id}`} className="block mb-4">
           <h3 className="mb-2 line-clamp-1 text-lg sm:text-xl font-bold text-slate-900 transition-colors group-hover:text-blue-600 dark:text-slate-100 dark:group-hover:text-blue-400">
             {event.title}
           </h3>
           <p className="line-clamp-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
             {event.description}
           </p>
-        </div>
+        </Link>
 
         <div className="mt-auto space-y-3">
           {/* Metadata Row */}
