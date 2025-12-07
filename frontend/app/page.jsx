@@ -4,6 +4,7 @@ import PresidentMessage from "@/components/presidentMessage/PresidentMessage"
 import ScrollText from "@/components/scrollText/ScrollText"
 import Stat from "@/components/stat/Stat"
 import WhatWeDo from "@/components/whatWeDo/WhatWeDo"
+import MessageFromOurAdvisor from "@/components/MessageFromAdvisor/MessageFromAdvisor";
 export default function Home() {
   return (
     <main className="min-h-screen">
@@ -12,6 +13,7 @@ export default function Home() {
       <Hero />
       <Stat />
       <ScrollText />
+      <MessageFromOurAdvisor />
       <PresidentMessage />
       <WhatWeDo />
      
