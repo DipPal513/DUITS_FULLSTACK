@@ -1,266 +1,207 @@
 "use client";
 
-import React, { useState, useRef, useMemo, useEffect } from "react";
-import dynamic from "next/dynamic";
-import Link from "next/link";
-import { useRouter } from "next/navigation";
-import TurndownService from "turndown";
-import DashboardLayout from "@/components/DashboardLayout";
+import DashboardLayout from '@/components/DashboardLayout';
+import DeleteModal from "@/components/event/DeleteModal"; 
+import BlogCard from "@/components/blog/BlogCard"; 
 
-const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
+import { usePagination, PaginationControls } from '@/hook/usePagination';
+import axios from 'axios';
+import { Loader, Plus, BookOpen } from 'lucide-react'; 
+import { useEffect, useState, useCallback } from 'react';
+import toast from 'react-hot-toast';
+import { useRouter } from 'next/navigation'; // 1. Import Router
 
-export default function CreatePost() {
-  const router = useRouter();
-  const fileInputRef = useRef(null);
-  const editor = useRef(null);
+const API_URL = process.env.NEXT_PUBLIC_BASE_URL;
+const ITEMS_PER_PAGE = 10;
 
-  // --- STATE ---
-  const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
-  const [coverImage, setCoverImage] = useState(""); // Can be Base64 OR URL
-  const [status, setStatus] = useState("draft"); 
-  const [saveStatus, setSaveStatus] = useState("Saved"); // For auto-save UI
+export default function BlogsDashboard() {
+  const router = useRouter(); // 2. Initialize Router
+  const [blogs, setBlogs] = useState([]);
+  
+  // Modal state only needed for DELETE now
+  const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+  const [blogToDelete, setBlogToDelete] = useState(null);
+  
+  const [loading, setLoading] = useState(false);
+  const [totalBlogs, setTotalBlogs] = useState(0);
 
-  // --- 1. LOAD DRAFT FROM LOCAL STORAGE (On Mount) ---
-  useEffect(() => {
-    const savedData = localStorage.getItem("blog-draft");
-    if (savedData) {
-      const parsed = JSON.parse(savedData);
-      setTitle(parsed.title || "");
-      setContent(parsed.content || "");
-      setCoverImage(parsed.coverImage || "");
+  const pagination = usePagination(totalBlogs, ITEMS_PER_PAGE);
+
+  // Fetch blogs with pagination
+  const fetchBlogs = useCallback(async (page = 1, limit = ITEMS_PER_PAGE) => {
+    try {
+      setLoading(true);
+      const url = `${API_URL}/blog?page=${page}&limit=${limit}`;
+      const response = await axios.get(url, { withCredentials: true });
+    
+      setBlogs(response?.data?.data?.blogs || []);
+      setTotalBlogs(response?.data?.data?.totalCount || response?.data?.data?.blogs?.length || 0);
+      
+    } catch (error) {
+      console.error('Error fetching blogs:', error);
+      toast.error('Failed to fetch blogs');
+    } finally {
+      setLoading(false);
     }
   }, []);
 
-  // --- 2. AUTO-SAVE TO LOCAL STORAGE (Debounced) ---
   useEffect(() => {
-    const timeoutId = setTimeout(() => {
-      if (title || content || coverImage) {
-        setSaveStatus("Saving...");
-        localStorage.setItem("blog-draft", JSON.stringify({ title, content, coverImage }));
-        setTimeout(() => setSaveStatus("Saved to device"), 800);
-      }
-    }, 1000); // Wait 1 second after typing stops
+    fetchBlogs(pagination.currentPage, ITEMS_PER_PAGE);
+  }, [pagination.currentPage, fetchBlogs]);
 
-    return () => clearTimeout(timeoutId);
-  }, [title, content, coverImage]);
 
-  // --- EDITOR CONFIG (Keep images local as Base64) ---
-  const config = useMemo(() => ({
-    readonly: false,
-    placeholder: "Start writing...",
-    height: "calc(100vh - 400px)",
-    width: "100%",
-    enableDragAndDropFileToEditor: true,
-    uploader: { 
-      insertImageAsBase64URI: true // ⚠️ CRITICAL: Keeps images local until publish
-    },
-    style: { border: "none", fontSize: "18px", color: "#1e293b" }
-  }), []);
-
-  // --- HANDLER: Local Cover Image Selection ---
-  const handleImageSelect = (e) => {
-    const file = e.target.files?.[0];
-    if (file) {
-      // Convert file to Base64 immediately for preview/storage
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setCoverImage(reader.result); // Save Base64 string
-      };
-      reader.readAsDataURL(file);
-    }
+  // 3. Handle Create Navigation
+  const handleCreateBlog = () => {
+    // Navigate to empty form
+    router.push('/createblog');
   };
 
-  // --- 3. THE MASTER PUBLISH FUNCTION ---
-  const handlePublish = async () => {
-    if (!title.trim()) return alert("Title required");
-    if (!content.trim()) return alert("Content required");
-    
-    setStatus("uploading_images"); // New status to show user what's happening
+  // 4. Handle Edit Navigation
+  const handleEditBlog = (blog) => {
+    // Navigate to form with ID in query params
+    // Example URL: /createblog?id=654321
+    router.push(`/createblog?id=${blog.id || blog._id}`);
+  };
 
+  // Delete Logic (Remains the same)
+  const handleDeleteClick = (blog) => {
+    setBlogToDelete(blog);
+    setIsDeleteModalOpen(true);
+  };
+
+  const closeDeleteModal = () => {
+    setIsDeleteModalOpen(false);
+    setBlogToDelete(null);
+  };
+
+  const handleConfirmDelete = async () => {
     try {
-      // A. Process Cover Image
-      let finalCoverUrl = coverImage;
-      if (coverImage.startsWith("data:image")) {
-        console.log("Uploading Cover Image...");
-        finalCoverUrl = await uploadBase64ToCloudinary(coverImage);
+      setLoading(true);
+      const response = await axios.delete(`${API_URL}/blog/${blogToDelete.id}`, {
+        withCredentials: true,
+      });
+
+      if (response.status !== 200) {
+        toast.error(response.data.message || 'Failed to delete blog');
+        return;
       }
 
-      // B. Process Content Images
-      console.log("Scanning content for images...");
-      const finalHtmlContent = await processContentImages(content);
-
-      // C. Convert to Markdown
-      setStatus("saving");
-      const turndownService = new TurndownService();
-      turndownService.addRule('codeBlock', {
-        filter: ['pre'],
-        replacement: (c) => '```\n' + c + '\n```'
-      });
-      const markdownContent = turndownService.turndown(finalHtmlContent);
-
-      // D. Send Payload to DB
-      const payload = {
-        title,
-        slug: title.toLowerCase().replace(/ /g, "-").replace(/[^\w-]+/g, ""),
-        content: markdownContent,
-        image: finalCoverUrl,
-        description: markdownContent.substring(0, 160).replace(/\n/g, " ") + "...",
-        date: new Date().toISOString()
-      };
-
-      const res = await fetch(process.env.NEXT_PUBLIC_BASE_URL + "/blog", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      if (!res.ok) throw new Error("Failed to save post");
-
-      // E. Cleanup
-      localStorage.removeItem("blog-draft"); // Clear draft
-      setStatus("published");
-      alert("Published successfully!");
-      router.push("/blog");
-
+      toast.success('Blog deleted successfully!');
+      closeDeleteModal();
+      
+      if (blogs.length === 1 && pagination.currentPage > 1) {
+        pagination.goToPrevious();
+      } else {
+        fetchBlogs(pagination.currentPage, ITEMS_PER_PAGE);
+      }
     } catch (error) {
-      console.error(error);
-      alert("Error: " + error.message);
-      setStatus("draft");
+      console.error('Error deleting blog:', error);
+      toast.error(error.message || 'Failed to delete blog');
+    } finally {
+      setLoading(false);
     }
   };
 
   return (
     <DashboardLayout>
-    <div className="min-h-screen bg-white text-slate-900 flex flex-col font-sans">
-      
-      {/* NAVBAR */}
-      <nav className="sticky top-0 z-50 flex items-center justify-between px-6 py-4 bg-white/80 backdrop-blur-md border-b border-slate-100">
-        <div className="flex items-center gap-4">
-          <Link href="/dashboard" className="text-slate-400 hover:text-slate-900 transition-colors">← Back</Link>
-          <div className="flex flex-col">
-             <span className="text-xs font-bold uppercase tracking-wide text-slate-400">
-               {status === "uploading_images" ? "Uploading Images..." : status}
-             </span>
-             <span className="text-[10px] text-slate-300">{saveStatus}</span>
+      <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 p-4 md:p-8">
+        <div className="max-w-7xl mx-auto">
+          {/* Header */}
+          <div className="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-8">
+            <div>
+              <h1 className="text-3xl md:text-4xl font-bold text-slate-800 mb-2">
+                Blog Management
+              </h1>
+              <p className="text-slate-600">
+                Create and manage your articles
+                {totalBlogs > 0 && (
+                  <span className="ml-2 text-sm font-medium text-blue-600">
+                    ({totalBlogs} total)
+                  </span>
+                )}
+              </p>
+            </div>
+            <button
+              onClick={handleCreateBlog}
+              className="flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-200"
+            >
+              <Plus size={20} />
+              Create Article
+            </button>
           </div>
-        </div>
-        <button
-          onClick={handlePublish}
-          disabled={status !== "draft"}
-          className="bg-green-600 hover:bg-green-700 disabled:opacity-50 text-white px-6 py-2 rounded-full font-medium text-sm transition-all shadow-sm"
-        >
-          {status === "draft" ? "Publish" : "Processing..."}
-        </button>
-      </nav>
 
-      {/* MAIN CONTENT */}
-      <main className="flex-1 max-w-4xl mx-auto w-full px-6 py-10 flex flex-col gap-8">
-        
-        <input
-          type="text"
-          placeholder="Title"
-          value={title}
-          onChange={(e) => setTitle(e.target.value)}
-          className="text-4xl md:text-5xl font-extrabold text-slate-900 placeholder-slate-300 border-none outline-none bg-transparent w-full"
-        />
+          {/* Loading & Grid Section */}
+          {loading && blogs.length === 0 ? (
+            <div className="flex justify-center items-center py-20">
+              <div className="text-center">
+                <Loader className="animate-spin text-blue-600 mx-auto mb-4" size={48} />
+                <p className="text-slate-600">Loading articles...</p>
+              </div>
+            </div>
+          ) : blogs.length > 0 ? (
+            <>
+              {/* Blogs Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                {blogs.map((blog) => (
+                  <BlogCard
+                    key={blog.id || blog._id}
+                    blog={blog}
+                    onEdit={() => handleEditBlog(blog)} 
+                    onDelete={() => handleDeleteClick(blog)}
+                  />
+                ))}
+              </div>
 
-        {/* IMAGE UPLOAD AREA (Preview shows Base64) */}
-        <div 
-          className="group relative w-full h-48 bg-slate-50 border-2 border-dashed border-slate-200 rounded-xl hover:bg-slate-100 transition-all overflow-hidden flex flex-col items-center justify-center cursor-pointer"
-          onClick={() => fileInputRef.current?.click()}
-        >
-          <input 
-            type="file" 
-            ref={fileInputRef} 
-            onChange={handleImageSelect} 
-            accept="image/*" 
-            className="hidden" 
-          />
-          {coverImage ? (
-            <img src={coverImage} alt="Cover" className="absolute inset-0 w-full h-full object-cover" />
+              {/* Pagination */}
+              {totalBlogs > 0 && (
+                <PaginationControls
+                  currentPage={pagination.currentPage}
+                  totalPages={pagination.totalPages}
+                  startIndex={pagination.startIndex}
+                  endIndex={pagination.endIndex}
+                  totalItems={totalBlogs}
+                  onPageChange={pagination.goToPage}
+                  canGoPrevious={pagination.canGoPrevious}
+                  canGoNext={pagination.canGoNext}
+                  onPrevious={pagination.goToPrevious}
+                  onNext={pagination.goToNext}
+                  onFirst={pagination.goToFirst}
+                  onLast={pagination.goToLast}
+                  showFirstLast={true}
+                  showInfo={true}
+                />
+              )}
+            </>
           ) : (
-            <div className="text-center text-slate-400">
-              <span className="text-3xl block mb-2">📷</span>
-              <p className="text-sm">Click to upload cover image</p>
+            /* Empty State */
+            <div className="text-center py-20">
+              <div className="inline-flex items-center justify-center w-20 h-20 rounded-full bg-gradient-to-br from-blue-100 to-indigo-100 mb-6">
+                <BookOpen size={40} className="text-blue-600" />
+              </div>
+              <h3 className="text-2xl font-bold text-slate-800 mb-2">No blogs yet</h3>
+              <p className="text-slate-600 mb-6">Write your first article to get started</p>
+              <button
+                onClick={handleCreateBlog}
+                className="cursor-pointer inline-flex items-center gap-2 bg-gradient-to-r from-blue-600 to-indigo-600 text-white px-6 py-3 rounded-xl font-semibold shadow-lg hover:shadow-xl hover:scale-[1.02] transition-all duration-200"
+              >
+                <Plus size={20} />
+                Create Article
+              </button>
             </div>
           )}
         </div>
 
-        {/* EDITOR */}
-        <div className="flex-1 -ml-4"> 
-          <JoditEditor
-            ref={editor}
-            value={content}
-            config={config}
-            onBlur={(newContent) => setContent(newContent)}
-          />
-        </div>
-      </main>
-
-      <style jsx global>{`
-        .jodit-container { border: none !important; }
-        .jodit-toolbar__box { background: transparent !important; border-bottom: 1px solid #f1f5f9 !important; margin-bottom: 20px; }
-        .jodit-status-bar { display: none !important; }
-      `}</style>
-    </div></DashboardLayout>
+        {/* Delete Modal (Still needed) */}
+        <DeleteModal
+          isOpen={isDeleteModalOpen}
+          item={blogToDelete}
+          onClose={closeDeleteModal}
+          onConfirm={handleConfirmDelete}
+          loading={loading}
+          title="Delete Blog Post"
+          message="Are you sure you want to delete this blog post? This action cannot be undone."
+        />
+      </div>
+    </DashboardLayout>
   );
-}
-
-// ==========================================
-// 🛠️ HELPER FUNCTIONS (The Magic Logic)
-// ==========================================
-
-/**
- * 1. Process Content Images
- * Scans HTML string, finds Base64 images, uploads them, replaces src with URL.
- */
-async function processContentImages(htmlContent) {
-  // Create a fake DOM to parse HTML easily
-  const parser = new DOMParser();
-  const doc = parser.parseFromString(htmlContent, "text/html");
-  const images = doc.querySelectorAll('img');
-
-  // Loop through all images in the content
-  const uploadPromises = Array.from(images).map(async (img) => {
-    const src = img.getAttribute('src');
-    
-    // Check if it's a Base64 string
-    if (src && src.startsWith('data:image')) {
-      try {
-        // Upload and get URL
-        const newUrl = await uploadBase64ToCloudinary(src);
-        img.setAttribute('src', newUrl); // Replace src
-      } catch (err) {
-        console.error("Failed to upload an inline image", err);
-      }
-    }
-  });
-
-  // Wait for all images to upload
-  await Promise.all(uploadPromises);
-
-  return doc.body.innerHTML; // Return clean HTML
-}
-
-/**
- * 2. Upload Base64 to Cloudinary
- * Converts Base64 -> Blob -> FormData -> API
- */
-async function uploadBase64ToCloudinary(base64String) {
-  // Convert Base64 to Blob
-  const blob = await (await fetch(base64String)).blob();
-  const file = new File([blob], "image.png", { type: blob.type });
-
-  const formData = new FormData();
-  formData.append("file", file);
-
-  const res = await fetch("/api/upload", {
-    method: "POST",
-    body: formData,
-  });
-
-  if (!res.ok) throw new Error("Image upload failed");
-  const data = await res.json();
-  return data.url;
 }

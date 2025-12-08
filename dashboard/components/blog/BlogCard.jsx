@@ -1,7 +1,6 @@
-import { Calendar, Edit, ExternalLink, MapPin, Trash2, Clock } from 'lucide-react';
-import Link from 'next/link';
+import { Calendar, Edit, ExternalLink, MapPin, Trash2 } from 'lucide-react';
 
-const EventCard = ({ event, onEdit, onDelete }) => {
+const BlogCard = ({ blog, onEdit, onDelete }) => {
   const formatDate = (dateString) => {
     return new Date(dateString).toLocaleDateString('en-US', {
       weekday: 'short',
@@ -14,9 +13,9 @@ const EventCard = ({ event, onEdit, onDelete }) => {
   };
 
   // Helper to safely get date parts for the badge
-  const eventDate = new Date(event.date);
-  const day = eventDate.getDate();
-  const month = eventDate.toLocaleString('default', { month: 'short' });
+  const blogDate = new Date(blog.date);
+  const day = blogDate.getDate();
+  const month = blogDate.toLocaleString('default', { month: 'short' });
 
   return (
     <div className="group relative flex flex-col h-full overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-xl dark:border-slate-800 dark:bg-slate-900/60 dark:backdrop-blur-sm dark:hover:border-slate-700 dark:hover:shadow-slate-950/50">
@@ -24,8 +23,8 @@ const EventCard = ({ event, onEdit, onDelete }) => {
       {/* Image Section */}
       <div className="relative h-48 sm:h-56 w-full overflow-hidden bg-slate-100 dark:bg-slate-800">
         <img
-          src={event?.image}
-          alt={event.title}
+          src={blog?.image}
+          alt={blog.title}
           className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
         />
         
@@ -45,10 +44,10 @@ const EventCard = ({ event, onEdit, onDelete }) => {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  onEdit(event);
+                  onEdit(blog);
                 }}
                 className="rounded-lg bg-white/90 p-2 text-slate-700 shadow-sm backdrop-blur-md transition-colors hover:bg-blue-50 hover:text-blue-600 dark:bg-slate-800/90 dark:text-slate-200 dark:hover:bg-blue-900/50 dark:hover:text-blue-400 border border-white/20 dark:border-slate-700"
-                title="Edit Event"
+                title="Edit Blog"
               >
                 <Edit size={16} />
               </button>
@@ -57,10 +56,10 @@ const EventCard = ({ event, onEdit, onDelete }) => {
               <button
                 onClick={(e) => {
                   e.stopPropagation();
-                  onDelete(event);
+                  onDelete(blog);
                 }}
                 className="rounded-lg bg-white/90 p-2 text-slate-700 shadow-sm backdrop-blur-md transition-colors hover:bg-red-50 hover:text-red-600 dark:bg-slate-800/90 dark:text-slate-200 dark:hover:bg-red-900/50 dark:hover:text-red-400 border border-white/20 dark:border-slate-700"
-                title="Delete Event"
+                title="Delete Blog"
               >
                 <Trash2 size={16} />
               </button>
@@ -71,14 +70,14 @@ const EventCard = ({ event, onEdit, onDelete }) => {
 
       {/* Content Section */}
       <div className="flex flex-grow flex-col p-5">
-        <Link href={`/events/${event.id}`} className="block mb-4">
+        <div className="mb-4">
           <h3 className="mb-2 line-clamp-1 text-lg sm:text-xl font-bold text-slate-900 transition-colors group-hover:text-blue-600 dark:text-slate-100 dark:group-hover:text-blue-400">
-            {event.title}
+            {blog.title}
           </h3>
           <p className="line-clamp-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
-            {event.description}
+            {blog.description}
           </p>
-        </Link>
+        </div>
 
         <div className="mt-auto space-y-3">
           {/* Metadata Row */}
@@ -86,19 +85,19 @@ const EventCard = ({ event, onEdit, onDelete }) => {
             
             <div className="flex items-center gap-2.5 text-sm text-slate-600 dark:text-slate-300">
               <Calendar size={16} className="shrink-0 text-purple-500" />
-              <span className="truncate">{formatDate(event.date)}</span>
+              <span className="truncate">{formatDate(blog.date)}</span>
             </div>
 
             <div className="flex items-center gap-2.5 text-sm text-slate-600 dark:text-slate-300">
               <MapPin size={16} className="shrink-0 text-pink-500" />
-              <span className="truncate">{event.location}</span>
+              <span className="truncate">{blog.location}</span>
             </div>
           </div>
 
           {/* Action Button */}
-          {event.registrationLink && (
+          {blog.registrationLink && (
             <a
-              href={event.registrationLink}
+              href={blog.registrationLink}
               target="_blank"
               rel="noopener noreferrer"
               onClick={(e) => e.stopPropagation()}
@@ -114,4 +113,4 @@ const EventCard = ({ event, onEdit, onDelete }) => {
   );
 };
 
-export default EventCard;
+export default BlogCard;

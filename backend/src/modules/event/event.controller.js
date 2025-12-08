@@ -1,3 +1,4 @@
+import cloudinary from '../../config/cloudinary.js';
 import { createEventService,
   getEventsService,
   getEventByIdService,

@@ -28,9 +28,7 @@ const NoticeCard = ({ notice }) => {
     >
       <div className="relative h-full overflow-hidden rounded-2xl bg-card shadow-lg transition-all duration-500 hover:shadow-2xl">
         
-        {/* ===============================
-            1. IMAGE SECTION WITH OVERLAY
-        =============================== */}
+     
         <div className="relative h-48 md:h-56 overflow-hidden bg-muted">
           {/* Image */}
           <img
