@@ -1,5 +1,5 @@
 import { createExecutiveService, getExecutivesService, getExecutiveByIdService, deleteExecutiveService, updateExecutiveService } from './executive.model.js';
-
+import cloudinary from '../../config/cloudinary.js';
 export const getExecutives = async (req, res, next) => {
   try {
     const { year, batch } = req.query;
@@ -44,7 +44,22 @@ export const getExecutiveById = async (req, res, next) => {
 
 export const createExecutive = async (req, res, next) => {
   try {
-    const result = await createExecutiveService(req.body);
+     // Upload Base64 image to Cloudinary
+    let imageUrl = "";
+    const{image, ...rest} = req.body;
+    if (image) {
+      const result = await cloudinary.uploader.upload(image, {
+        folder: "executives",
+      });
+      imageUrl = result.secure_url;
+    }
+
+    const executiveData = {
+      ...rest,
+      image: imageUrl,
+    };
+
+    const result = await createExecutiveService(executiveData);
     res.status(201).json({ success: true, data: result });
   } catch (err) {
     next(err);

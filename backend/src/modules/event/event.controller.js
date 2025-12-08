@@ -8,7 +8,19 @@ import { createEventService,
 // Create new event
 export const createEvent = async (req, res, next) => {
   try {
-    const event = await createEventService(req.body);
+    const { image, ...rest } = req.body;
+    let imageUrl = "";
+    if (image) {
+      const result = await cloudinary.uploader.upload(image, {
+        folder: "events",
+      });
+      imageUrl = result.secure_url;
+    }
+    const eventData = {
+      ...rest,
+      image: imageUrl,
+    };
+    const event = await createEventService(eventData);
     res.status(201).json({ success: true, event });
   } catch (err) {
     next(err);
