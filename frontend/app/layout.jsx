@@ -8,7 +8,7 @@ import { Toaster } from "react-hot-toast"
 import "./globals.css"
 import Footer from "@/components/footer"
 import Navigation from "@/components/navigation"
-
+import ChatWidget from "@/components/chatWidget/ChatWidget"
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",
@@ -164,8 +164,10 @@ export default function RootLayout({ children }) {
         <Navigation />
         {children}
         <Footer />
+        <ChatWidget />
         </Suspense>
         </ThemeProvider>
+
         <Analytics />
       </body>
     </html>

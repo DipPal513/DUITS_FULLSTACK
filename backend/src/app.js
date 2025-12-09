@@ -12,6 +12,7 @@ import eventRoutes from './modules/event/event.route.js';
 import noticeRoutes from './modules/notice/notice.route.js';
 import achievementRoute from './modules/achievement/achievement.route.js';
 import blogRoutes from './modules/blog/blog.route.js';
+import { apiLimiter, authLimiter } from './middleware/rateLimiters.js';
 // import errorHandler from './middleware/errorHandler.js';
 configDotenv();
 
@@ -35,14 +36,15 @@ app.use(morgan('dev'));
 
 app.use(cookieParser());
 
-app.use('/api/v1/auth', authRoutes);
-app.use('/api/v1/member', memberRoutes);
-app.use('/api/v1/executive', executiveRoutes);
-app.use('/api/v1/event', eventRoutes) ;
-app.use('/api/v1/gallery', galleryRoutes) ;
-app.use('/api/v1/notice', noticeRoutes) ;
-app.use('/api/v1/achievement', achievementRoute) ;
-app.use('/api/v1/blog', blogRoutes) ;
+app.use('/api/v1/auth',authLimiter, authRoutes);
+
+app.use('/api/v1/member', apiLimiter, memberRoutes);
+app.use('/api/v1/executive', apiLimiter, executiveRoutes);
+app.use('/api/v1/event', apiLimiter, eventRoutes) ;
+app.use('/api/v1/gallery', apiLimiter, galleryRoutes) ;
+app.use('/api/v1/notice', apiLimiter, noticeRoutes) ;
+app.use('/api/v1/achievement', apiLimiter, achievementRoute) ;
+app.use('/api/v1/blog', apiLimiter, blogRoutes) ;
 
 
 // Test route
