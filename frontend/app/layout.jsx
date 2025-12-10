@@ -140,26 +140,45 @@ export default function RootLayout({ children }) {
         <Toaster />
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
           <Suspense fallback={ 
-            <div className="flex items-center justify-center min-h-screen bg-black">
-          <div className="relative">
-            <div className="relative w-24 h-24">
-              <div className="absolute w-full h-full border-2 border-transparent border-t-cyan-400 rounded-full animate-spin" style={{ animationDuration: '1.5s' }}></div>
-              <div className="absolute w-full h-full border-2 border-transparent border-r-blue-500 rounded-full animate-spin" style={{ animationDuration: '2s', animationDirection: 'reverse' }}></div>
-              <div className="absolute w-full h-full border-2 border-transparent border-b-purple-500 rounded-full animate-spin" style={{ animationDuration: '2.5s' }}></div>
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="w-3 h-3 bg-cyan-400 rounded-full animate-pulse"></div>
-              </div>
-            </div>
-            <div className="mt-8 text-center">
-              <p className="text-cyan-400 text-sm tracking-widest font-mono animate-pulse">LOADING</p>
-              <div className="flex justify-center gap-1 mt-2">
-                <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: '0s' }}></span>
-                <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: '0.2s' }}></span>
-                <span className="w-1.5 h-1.5 bg-cyan-400 rounded-full animate-bounce" style={{ animationDelay: '0.4s' }}></span>
-              </div>
-            </div>
-          </div>
-        </div>
+            <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50 dark:bg-[#020617] transition-colors duration-500">
+  
+  <div className="relative w-32 h-32">
+    
+    {/* 1. Ambient Glow (Dark Mode Only) */}
+    <div className="absolute inset-0 bg-blue-500/20 dark:bg-blue-600/20 blur-2xl rounded-full scale-0 animate-[ping_3s_ease-in-out_infinite]"></div>
+
+    {/* 2. Static Outer Ring (Structure) */}
+    <div className="absolute inset-0 border-2 border-slate-200 dark:border-slate-800 rounded-full"></div>
+
+    {/* 3. Primary Orbit (Blue - Fast) */}
+    <div className="absolute inset-0 border-[3px] border-transparent border-t-blue-600 dark:border-t-blue-500 rounded-full animate-[spin_1s_linear_infinite]"></div>
+
+    {/* 4. Secondary Orbit (Red - Slow Reverse) */}
+    <div className="absolute inset-2 border-[3px] border-transparent border-b-red-600 dark:border-b-red-500 rounded-full animate-[spin_2s_linear_infinite_reverse]"></div>
+
+    {/* 5. Inner Core (Pulse) */}
+    <div className="absolute inset-0 m-auto w-12 h-12 flex items-center justify-center bg-white dark:bg-[#020617] rounded-full border border-slate-100 dark:border-slate-800 shadow-lg z-10">
+      <div className="w-3 h-3 bg-slate-900 dark:bg-white rounded-full animate-ping"></div>
+    </div>
+    
+  </div>
+
+  {/* Text Area */}
+  <div className="mt-8 text-center space-y-2 relative z-10">
+    <h2 className="text-2xl font-black tracking-tighter text-slate-900 dark:text-white">
+      DUITS
+    </h2>
+    
+    <div className="flex items-center justify-center gap-1">
+      <div className="h-px w-8 bg-gradient-to-r from-transparent to-slate-400 dark:to-slate-600"></div>
+      <p className="text-[10px] font-bold tracking-[0.3em] text-slate-500 dark:text-slate-400 uppercase">
+        System Loading
+      </p>
+      <div className="h-px w-8 bg-gradient-to-l from-transparent to-slate-400 dark:to-slate-600"></div>
+    </div>
+  </div>
+
+</div>
       }>
         <Navigation />
         {children}

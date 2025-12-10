@@ -1,5 +1,5 @@
 "use client"
-
+import Image from "next/image"
 export default function PresidentMessage() {
 
  
@@ -40,7 +40,7 @@ export default function PresidentMessage() {
                 background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
               }}
             >
-              <img src="/arean.jpeg" alt="Abdullah Al Hanif Arean" className="w-full h-full object-cover" />
+              <Image src="/arean.jpeg" alt="Abdullah Al Hanif Arean" className="w-full h-full object-cover" width={140} height={140} />
             </div>
 
             <div>

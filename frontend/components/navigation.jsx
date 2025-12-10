@@ -4,7 +4,7 @@ import { ThemeToggle } from "@/components/theme-toggle"
 import { Menu, X } from "lucide-react"
 import Link from "next/link"
 import { useEffect, useState } from "react"
-
+import Image from "next/image"
 export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
@@ -35,7 +35,7 @@ export default function Navigation() {
       <div className={`mx-auto px-4 lg:px-8 rounded-full bg-white/10 dark:bg-black/30 dark:border-white/20 backdrop-blur-xl py-4 lg:py-4 ${isScrolled ? "w-full rounded-none border-b-1" : "border container"}`}>
         <div className="flex items-center overflow-hidden justify-between h-16 lg:h-20">
           <Link href="/" className="flex items-center gap-2 overflow-hidden group">
-           <img src="/icons/duits-512.png" alt="IT Club Logo" className="md:h-20 md:w-20 h-12 w-20 rounded-2xl object-contain md:rounded-4xl" />
+           <Image src="/icons/duits-512.png" alt="IT Club Logo" height={84} width={84} className=" rounded-2xl object-contain md:rounded-4xl" fetchPriority="true"/>
           </Link>
 
           {/* Desktop Navigation */}
