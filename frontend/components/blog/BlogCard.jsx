@@ -32,9 +32,9 @@ export default function BlogCard({ post }) {
             </span>
           </div>
 
-          <h2 className="mb-2 text-xl font-bold text-slate-900 group-hover:text-indigo-600 dark:text-white dark:group-hover:text-indigo-400 line-clamp-2">
+          <h1 className="mb-2 text-xl font-bold text-slate-900 group-hover:text-indigo-600 dark:text-white dark:group-hover:text-indigo-400 line-clamp-2">
             {post.title}
-          </h2>
+          </h1>
 
           <div className="mb-6 flex-1 text-sm leading-relaxed text-slate-600 dark:text-slate-400 line-clamp-3 prose prose-sm dark:prose-invert">
             <ReactMarkdown

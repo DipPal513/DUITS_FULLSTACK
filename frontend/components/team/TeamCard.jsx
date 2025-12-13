@@ -57,9 +57,9 @@ const TeamCard = ({ member, loading = false }) => {
 
         {/* 3. TEXT CONTENT (Slides up on hover) */}
         <div className="flex-1 min-w-0 flex flex-col justify-center z-20 transition-all duration-500 group-hover:-translate-y-3">
-          <h3 className="text-lg font-bold text-gray-900 dark:text-white truncate">
+          <h1 className="text-lg font-bold text-gray-900 dark:text-white truncate">
             {member.name}
-          </h3>
+          </h1>
           
           <p className="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide truncate mt-1 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text transition-all duration-500 group-hover:text-transparent">
             {member.designation || member.position}

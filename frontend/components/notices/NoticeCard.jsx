@@ -61,9 +61,9 @@ const NoticeCard = ({ notice }) => {
         <div className="relative p-5 md:p-6">
           
           {/* notice Title */}
-          <h3 className="text-lg md:text-xl font-bold line-clamp-2 mb-2 text-foreground group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-purple-500 group-hover:to-pink-500 group-hover:bg-clip-text transition-all duration-300">
+          <h1 className="text-lg md:text-xl font-bold line-clamp-2 mb-2 text-foreground group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-purple-500 group-hover:to-pink-500 group-hover:bg-clip-text transition-all duration-300">
             {notice.title}
-          </h3>
+          </h1>
 
           {/* Description */}
           <p className="text-sm text-muted-foreground line-clamp-2 mb-4 leading-relaxed">

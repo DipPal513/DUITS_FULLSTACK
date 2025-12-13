@@ -72,9 +72,9 @@ const EventCard = ({ event, onEdit, onDelete }) => {
       {/* Content Section */}
       <div className="flex flex-grow flex-col p-5">
         <Link href={`/events/${event.id}`} className="block mb-4">
-          <h3 className="mb-2 line-clamp-1 text-lg sm:text-xl font-bold text-slate-900 transition-colors group-hover:text-blue-600 dark:text-slate-100 dark:group-hover:text-blue-400">
+          <h1 className="mb-2 line-clamp-1 text-lg sm:text-xl font-bold text-slate-900 transition-colors group-hover:text-blue-600 dark:text-slate-100 dark:group-hover:text-blue-400">
             {event.title}
-          </h3>
+          </h1>
           <p className="line-clamp-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
             {event.description}
           </p>
@@ -97,7 +97,7 @@ const EventCard = ({ event, onEdit, onDelete }) => {
 
           {/* Action Button */}
           {event.registrationLink && (
-            <a
+            <Link
               href={event.registrationLink}
               target="_blank"
               rel="noopener noreferrer"
@@ -106,7 +106,7 @@ const EventCard = ({ event, onEdit, onDelete }) => {
             >
               <ExternalLink size={16} />
               Register Now
-            </a>
+            </Link>
           )}
         </div>
       </div>
