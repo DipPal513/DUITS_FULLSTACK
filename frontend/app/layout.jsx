@@ -1,3 +1,6 @@
+import ChatWidget from "@/components/chatWidget/ChatWidget"
+import Footer from "@/components/footer"
+import Navigation from "@/components/navigation"
 import { ThemeProvider } from "@/components/theme-provider"
 import { Analytics } from "@vercel/analytics/next"
 import { GeistMono } from "geist/font/mono"
@@ -6,9 +9,6 @@ import { Inter } from "next/font/google"
 import { Suspense } from "react"
 import { Toaster } from "react-hot-toast"
 import "./globals.css"
-import Footer from "@/components/footer"
-import Navigation from "@/components/navigation"
-import ChatWidget from "@/components/chatWidget/ChatWidget"
 const inter = Inter({
   subsets: ["latin"],
   variable: "--font-inter",

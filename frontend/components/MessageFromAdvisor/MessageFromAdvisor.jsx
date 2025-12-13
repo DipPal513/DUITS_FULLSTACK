@@ -2,6 +2,7 @@
 
 import React from 'react'
 import { Quote, ArrowRight } from 'lucide-react'
+import Link from 'next/link'
 
 const MessageFromOurAdvisor = () => {
   return (
@@ -62,12 +63,12 @@ const MessageFromOurAdvisor = () => {
               </div>
 
               {/* Action Button */}
-              <a 
+              <Link
                 href="/about" 
                 className="group flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white transition-all duration-300 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600"
               >
                 <ArrowRight size={20} className="transition-transform duration-300 group-hover:-rotate-45" />
-              </a>
+              </Link>
               
             </div>
           </div>

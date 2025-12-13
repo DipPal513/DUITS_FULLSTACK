@@ -1,6 +1,7 @@
 // pages/about.js (Next.js + Tailwind CSS)
 
 import Image from 'next/image'
+import Link from 'next/link'
 
 export default function About() {
   return (
@@ -94,12 +95,12 @@ export default function About() {
       <section className="bg-blue-600 text-white rounded-xl p-10 text-center max-w-4xl mx-auto shadow-lg">
         <h2 className="text-3xl font-bold mb-4">Join Us</h2>
         <p className="mb-6 text-lg">Whether you’re a beginner, a seasoned coder, or a future tech leader, Dhaka University IT Society welcomes you! Be part of a vibrant community shaping tomorrow’s technology landscape.</p>
-        <a 
+        <Link 
           href="/join"
           className="inline-block bg-white text-blue-600 font-semibold rounded-lg px-6 py-3 hover:bg-gray-100 transition"
         >
           Become a Member
-        </a>
+        </Link>
       </section>
     </main>
   )

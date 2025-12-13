@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button"
 import { ExternalLink, Github, Award, Code2 } from "lucide-react"
-
+import Link from "next/link"
 export default function Projects() {
   const projects = [
     {
@@ -112,16 +112,16 @@ export default function Projects() {
 
                 <div className="flex gap-2">
                   <Button size="sm" variant="outline" className="flex-1 tech-card bg-transparent" asChild>
-                    <a href={project.github}>
+                    <Link href={project.github}>
                       <Github className="w-4 h-4 mr-2" />
                       Code
-                    </a>
+                    </Link>
                   </Button>
                   <Button size="sm" className="flex-1" asChild>
-                    <a href={project.demo}>
+                    <Link href={project.demo}>
                       <ExternalLink className="w-4 h-4 mr-2" />
                       Demo
-                    </a>
+                    </Link>
                   </Button>
                 </div>
               </div>

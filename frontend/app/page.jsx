@@ -1,5 +1,5 @@
 import Achievements from "@/components/achievement/Achievement"
-import Hero from "@/components/hero"
+import Hero from "@/components/hero/hero"
 import MessageFromOurAdvisor from "@/components/MessageFromAdvisor/MessageFromAdvisor"
 import PresidentMessage from "@/components/presidentMessage/PresidentMessage"
 import ScrollText from "@/components/scrollText/ScrollText"

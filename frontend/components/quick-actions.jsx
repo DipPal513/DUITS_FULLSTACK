@@ -1,4 +1,5 @@
 import { Calendar, Users, BookOpen, Trophy } from "lucide-react"
+import Link from "next/link"
 
 export default function QuickActions() {
   const actions = [
@@ -33,7 +34,7 @@ export default function QuickActions() {
       <div className="container mx-auto px-4 lg:px-8">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {actions.map((action, index) => (
-            <a key={index} href={action.href} className="group">
+            <Link key={index} href={action.href} className="group">
               <div className="tech-card p-6 h-full backdrop-blur-sm relative">
                 <div className="corner-accent top-left" />
                 <div className="corner-accent bottom-right" />
@@ -44,7 +45,7 @@ export default function QuickActions() {
                 <h3 className="font-semibold text-lg mb-2 uppercase tracking-wide">{action.title}</h3>
                 <p className="text-sm text-muted-foreground">{action.description}</p>
               </div>
-            </a>
+            </Link>
           ))}
         </div>
       </div>

@@ -2,6 +2,7 @@
 
 import React, { useState } from "react"
 import { ArrowRight, Clock, Mail, MapPin, Phone } from "lucide-react"
+import Link from "next/link"
 
 // --- UI Components (Simulating @/components/ui) ---
 
@@ -109,12 +110,12 @@ export default function Contact() {
                         {/* Label: Added dark:text-slate-400 */}
                         <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Email</p>
                         {/* Value: Added dark:text-slate-200, dark:hover:text-white */}
-                        <a 
+                        <Link 
                           href="mailto:duits.official@gmail.com" 
                           className="text-slate-900 dark:text-slate-200 hover:text-slate-600 dark:hover:text-white transition-colors"
                         >
                           duits.official@gmail.com
-                        </a>
+                        </Link>
                       </div>
                     </div>
                   </div>
@@ -127,12 +128,12 @@ export default function Contact() {
                       </div>
                       <div>
                         <p className="text-sm font-medium text-slate-500 dark:text-slate-400 mb-1">Phone</p>
-                        <a 
+                        <Link 
                           href="tel:+8801519201101" 
                           className="text-slate-900 dark:text-slate-200 hover:text-slate-600 dark:hover:text-white transition-colors"
                         >
                           01519-201101
-                        </a>
+                        </Link>
                       </div>
                     </div>
                   </div>
