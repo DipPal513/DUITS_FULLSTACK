@@ -11,21 +11,26 @@ import {
 } from "@/components/ui/pagination";
 
 export default async function BlogContent({ page, category }) {
-  // 1. The fetch happens here now
   const { posts, totalPages } = await fetchBlogs(page, category);
 
   if (!posts || posts.length === 0) {
     return (
-      <div className="py-20 text-center text-slate-500 border border-dashed rounded-xl">
-        No posts found.
+      <div className="flex h-64 w-full flex-col items-center justify-center rounded-lg border border-dashed border-slate-300 bg-slate-50 text-slate-500 dark:border-slate-700 dark:bg-slate-900">
+        <p>No posts found for this category.</p>
+        <Link href="/blog" className="mt-2 text-sm font-medium text-indigo-600 hover:underline">
+          Clear filters
+        </Link>
       </div>
     );
   }
 
   return (
     <>
-      {/* Blog Grid */}
-      <div className="grid gap-8 sm:grid-cols-2 lg:grid-cols-2">
+      {/* MEDIUM STYLE CHANGE: 
+         Changed from 'grid sm:grid-cols-2' to 'flex flex-col'.
+         The BlogCard component we created handles the spacing (py-8) and the bottom border.
+      */}
+      <div className="flex flex-col">
         {posts.map((post) => (
           <BlogCard key={post.id || post._id || post.slug} post={post} />
         ))}
@@ -33,7 +38,7 @@ export default async function BlogContent({ page, category }) {
 
       {/* Pagination */}
       {totalPages > 1 && (
-        <div className="mt-12 flex justify-center">
+        <div className="mt-16 flex justify-center border-t border-slate-100 pt-8 dark:border-slate-800">
           <Pagination>
             <PaginationContent>
               <PaginationItem>

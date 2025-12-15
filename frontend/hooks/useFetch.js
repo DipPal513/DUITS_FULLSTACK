@@ -11,7 +11,7 @@ const useFetch = (url) => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}${url}`);
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}${url}`,{withCredentials:true});
         setData(response.data);
       } catch (error) {
         setError(error);
