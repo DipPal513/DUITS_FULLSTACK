@@ -39,6 +39,12 @@ export default function Sidebar() {
       icon: (
        <FaUserFriends />
       ),
+    },{
+      name: "Membership",
+      href: "/dashboard/membership",
+      icon: (
+       <FaUserFriends />
+      ),
     },
     {
       name: "Notice",

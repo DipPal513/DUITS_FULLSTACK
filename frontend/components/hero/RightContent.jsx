@@ -15,8 +15,8 @@ export default function RightContent({rightVisualRef}) {
                 <div className="h-2 w-1/2 bg-blue-900/40 rounded-full"></div>
              </div>
              <div>
-                <h1 className="text-xl font-bold text-white">Software Wing</h1>
-                <p className="text-sm text-gray-400">Full Stack & AI Research</p>
+               <h3 className="text-xl font-bold text-gray-900 dark:text-white">Software Wing</h3>
+                <p className="text-sm text-gray-500 dark:text-gray-400">Fullstack and AI</p>
              </div>
           </div>
 

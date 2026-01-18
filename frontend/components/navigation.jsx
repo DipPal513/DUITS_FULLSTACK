@@ -25,6 +25,7 @@ export default function Navigation() {
     { href: "/notice", label: "Notice" },
     { href: "/gallery", label: "Gallery" },
     { href: "/blog", label: "Blog" },
+    { href: "/membership", label: "Membership" },
     { href: "/contact", label: "Contact" },
   ]
 

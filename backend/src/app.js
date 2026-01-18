@@ -5,7 +5,7 @@ import helmet from 'helmet';
 import morgan from 'morgan';
 import cookieParser from 'cookie-parser';
 import authRoutes from './modules/auth/auth.route.js';
-import memberRoutes from './modules/member/member.route.js';
+import memberRoutes from './modules/membership/member.route.js';
 import executiveRoutes from './modules/executive/executive.route.js';
 import galleryRoutes from './modules/gallery/gallery.route.js';
 import eventRoutes from './modules/event/event.route.js';
@@ -38,7 +38,7 @@ app.use(cookieParser());
 
 app.use('/api/v1/auth',authLimiter, authRoutes);
 
-app.use('/api/v1/member', apiLimiter, memberRoutes);
+app.use('/api/v1/membership', apiLimiter, memberRoutes);
 app.use('/api/v1/executive', apiLimiter, executiveRoutes);
 app.use('/api/v1/event', apiLimiter, eventRoutes) ;
 app.use('/api/v1/gallery', apiLimiter, galleryRoutes) ;
