@@ -5,8 +5,8 @@ export async function POST(req) {
   const body = await req.json();
 
   const formData = {
-    store_id: "aamarpaytest", // Sandbox Store ID
-    signature_key: "dbb74894e82415a2f7ff0ec3a97e4183", // Sandbox Key
+    store_id: "duitsociety", // Sandbox Store ID
+    signature_key: "99b5a2a1c373f021372c39d5ab043cc2", // Sandbox Key
     tran_id: `DUITS-${Date.now()}`, // Unique ID
     amount: "100", // Your membership fee
     currency: "BDT",
@@ -21,7 +21,7 @@ export async function POST(req) {
   };
 
   try {
-    const response = await fetch("https://sandbox.aamarpay.com/jsonpost.php", {
+    const response = await fetch("https://secure.aamarpay.com/jsonpost.php", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(formData),
