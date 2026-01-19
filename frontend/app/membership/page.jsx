@@ -216,7 +216,7 @@ function MembershipForm() {
     return (
       <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 py-16 px-4 sm:px-6 lg:px-8">
         <div className="max-w-xl mx-auto mt-32">
-          <div className="bg-white rounded-2xl shadow-xl p-12 text-center border border-slate-200">
+          <div className="bg-white rounded-2xl shadow-xl p-6 sm:p-12 text-center border border-slate-200">
             <div className="w-24 h-24 bg-gradient-to-br from-green-400 to-emerald-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg">
               <CheckCircle className="w-14 h-14 text-white" strokeWidth={2.5} />
             </div>
@@ -244,7 +244,7 @@ function MembershipForm() {
     <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 py-12 px-4 sm:px-6 lg:px-8">
       <div className="max-w-6xl mt-32 mx-auto">
         {/* Header */}
-        <div className="bg-white rounded-2xl shadow-lg p-10 mb-8 border border-slate-200">
+        <div className="bg-white rounded-2xl shadow-lg p-5 sm:p-10 mb-8 border border-slate-200">
           <div className="text-center mb-8">
             <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl mb-4 shadow-lg">
               <Building2 className="w-9 h-9 text-white" strokeWidth={2} />
@@ -451,7 +451,7 @@ function MembershipForm() {
                     <p className="text-sm text-slate-700 mb-4 leading-relaxed">
                       Complete the payment to unlock the submission button. Your application will only be processed after successful payment verification.
                     </p>
-                    <div className="bg-white p-5 rounded-xl border border-slate-200 shadow-sm">
+                    <div className="bg-white p-2 sm:p-5 rounded-xl border border-slate-200 shadow-sm">
                       <div className="flex justify-between items-center mb-3">
                         <span className="text-slate-600 font-medium">Membership Fee</span>
                         <span className="text-3xl font-bold text-slate-900">৳100</span>
@@ -548,7 +548,7 @@ function MembershipForm() {
 
 function Section({ icon: Icon, title, iconColor, children }) {
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-8 border border-slate-200">
+    <div className="bg-white rounded-2xl shadow-lg p-2 sm:p-8 border border-slate-200">
       <div className="flex items-center gap-4 mb-7 pb-5 border-b border-slate-200">
         <div className={`w-12 h-12 bg-gradient-to-br ${iconColor} rounded-xl flex items-center justify-center shadow-lg`}>
           <Icon className="w-6 h-6 text-white" strokeWidth={2.5} />
