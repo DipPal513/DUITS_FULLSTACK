@@ -256,7 +256,7 @@ function MembershipForm() {
           </div>
           <div className="flex flex-wrap justify-center gap-3">
             <span className="px-5 py-2.5 bg-blue-50 text-blue-700 rounded-lg text-sm font-semibold border border-blue-200">
-              Academic Year 2025-2026
+              Academic Year 2024-2025
             </span>
             <span className="px-5 py-2.5 bg-emerald-50 text-emerald-700 rounded-lg text-sm font-semibold border border-emerald-200">
               Fee: ৳100
