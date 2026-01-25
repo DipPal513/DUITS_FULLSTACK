@@ -443,7 +443,7 @@ function MembershipForm() {
             <div className="space-y-5">
               <div className="bg-gradient-to-br from-blue-50 to-indigo-50 p-6 rounded-xl border-2 border-blue-200">
                 <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center flex-shrink-0 shadow-md">
+                  <div className="hidden sm:flex w-12 h-12 bg-white rounded-xl items-center justify-center flex-shrink-0 shadow-md">
                     <AlertCircle className="w-6 h-6 text-blue-600" />
                   </div>
                   <div className="flex-1">
