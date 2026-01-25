@@ -249,7 +249,7 @@ function MembershipForm() {
             <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl mb-4 shadow-lg">
               <Building2 className="w-9 h-9 text-white" strokeWidth={2} />
             </div>
-            <h1 className="text-5xl font-bold text-slate-900 mb-3">
+            <h1 className=" text-3xl sm:text-5xl font-bold text-slate-900 mb-3">
               DUITS Membership
             </h1>
             <p className="text-xl text-slate-600">Dhaka University IT Society</p>
