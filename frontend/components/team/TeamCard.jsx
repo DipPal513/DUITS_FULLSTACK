@@ -3,7 +3,7 @@
 import React, { useState } from 'react'
 import { Linkedin, Twitter, Mail } from 'lucide-react'
 
-const TeamCard = ({ member, loading = false }) => {
+const TeamCard = ({ member, loading = false, isLatest = false }) => {
   const [imageLoaded, setImageLoaded] = useState(false)
 
   // 1. The Loading Skeleton (Matches new shape)
@@ -62,7 +62,7 @@ const TeamCard = ({ member, loading = false }) => {
           </h1>
           
           <p className="text-sm font-medium text-gray-500 dark:text-gray-400 uppercase tracking-wide truncate mt-1 bg-gradient-to-r from-indigo-600 to-purple-600 bg-clip-text transition-all duration-500 group-hover:text-transparent">
-            {member.designation || member.position}
+            {!isLatest && "ex "}{member.designation || member.position}
           </p>
         </div>
 

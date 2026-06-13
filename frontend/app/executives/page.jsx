@@ -54,7 +54,8 @@ function ExecutiveSkeleton() {
 export default async function ExecutivePage({ searchParams }) {
   const params = await searchParams;
   const year = params?.year || "";
-  const batch = params?.batch || "";
+  // Auto-select highest batch (12) if no batch is specified
+  const batch = params?.batch || "12";
 
   return (
     <section

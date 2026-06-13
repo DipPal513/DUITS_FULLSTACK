@@ -59,6 +59,11 @@ export default async function TeamContent({ year, batch }) {
   })
 
   // 3. Render
+  // Determine the latest batch from executives data
+  const latestBatch = sortedExecutives.length > 0 
+    ? Math.max(...sortedExecutives.map(e => parseInt(e.batch) || 0))
+    : null
+
   return (
     <>
       <TeamHeader
@@ -76,13 +81,15 @@ export default async function TeamContent({ year, batch }) {
           {sortedExecutives.map((member, index) => {
              // Handle unique presidents spanning columns
              const isPresident = member.position === "President"
+             const memberBatch = parseInt(member.batch) || 0
+             const isLatest = memberBatch === latestBatch
              
              return (
               <div 
                 key={member._id || index} 
                 className={ "col-span-1"}
               >
-                <TeamCard member={member} />
+                <TeamCard member={member} isLatest={isLatest} />
               </div>
             )
           })}
