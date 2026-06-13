@@ -54,7 +54,7 @@ function ExecutiveSkeleton() {
 export default async function ExecutivePage({ searchParams }) {
   const params = await searchParams;
   const year = params?.year || "";
-  // Auto-select highest batch (12) if no batch is specified
+ 
   const batch = params?.batch || "12";
 
   return (
@@ -63,7 +63,6 @@ export default async function ExecutivePage({ searchParams }) {
       className="py-20 lg:py-32 bg-gray-50 dark:bg-gray-950 min-h-screen"
     >
       <div className="container mx-auto px-4 pt-32 lg:px-8 max-w-7xl">
-        {/* The Suspense Boundary isolates the slow part */}
         <Suspense key={`${year}-${batch}`} fallback={<ExecutiveSkeleton />}>
           <TeamContent year={year} batch={batch} />
         </Suspense>

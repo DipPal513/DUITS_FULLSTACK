@@ -12,8 +12,8 @@ const POSITION_ORDER = [
   "Organizing Secretary", "Design Lead", "Junior Executive", "General Member"
 ]
 
-const AVAILABLE_YEARS = [2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018]
-const AVAILABLE_BATCHES = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"]
+const AVAILABLE_YEARS = [2027,2026,2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018]
+const AVAILABLE_BATCHES = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12","13"]
 
 // --- Helper Functions ---
 const cleanStr = (str) => str?.toLowerCase().trim() || ""

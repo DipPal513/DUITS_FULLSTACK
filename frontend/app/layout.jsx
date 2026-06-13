@@ -33,6 +33,7 @@ export const metadata = {
     default: "Dhaka University IT Society (DUITS) - Leading Tech Community",
     template: "%s | DUITS",
   },
+
   
   description:
     "The official IT Society of Dhaka University (DU). Fostering innovation through hackathons, workshops, and tech seminars at TSC. Join the largest student tech community in Bangladesh.",
@@ -76,8 +77,8 @@ icons: {
     type: "website",
     images: [{
       url: "/icons/duits-512.png", // Make sure this file exists in /public (1200x630px)
-      width: 1200,
-      height: 630,
+     width: 1200,
+    height: 630,
       alt: "DUITS Community Banner",
     }],
   },
