@@ -12,8 +12,8 @@ const POSITION_ORDER = [
   "Organizing Secretary", "Design Lead", "Junior Executive", "General Member"
 ]
 
-const AVAILABLE_YEARS = [2027,2026,2025, 2024, 2023, 2022, 2021, 2020, 2019, 2018]
-const AVAILABLE_BATCHES = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12","13"]
+const AVAILABLE_YEARS =[ 2020, 2019, 2018]
+const AVAILABLE_BATCHES = [ "8", "9", "10"]
 
 // --- Helper Functions ---
 const cleanStr = (str) => str?.toLowerCase().trim() || ""
@@ -50,13 +50,23 @@ export default async function TeamContent({ year, batch }) {
     ? Math.max(...executives.map((e) => parseInt(e.batch) || 0))
     : null
 
+  const availableBatches = Array.from(
+    new Set(
+      executives.map((exec) => String(exec.batch || "")).filter(Boolean)
+    )
+  ).sort((a, b) => Number(a) - Number(b))
+
   const activeBatch = batch || (latestBatch ? String(latestBatch) : "")
-  const filteredExecutives = activeBatch
+  const filteredExecutives = batch
     ? executives.filter((exec) => String(exec.batch) === String(activeBatch))
     : executives
 
   // 3. Sort only the displayed executives
   const sortedExecutives = [...filteredExecutives].sort((a, b) => {
+    const batchA = parseInt(a.batch || "0") || 0
+    const batchB = parseInt(b.batch || "0") || 0
+    if (batchA !== batchB) return batchB - batchA
+
     const roleA = cleanStr(a.position || a.designation)
     const roleB = cleanStr(b.position || b.designation)
     const indexA = POSITION_ORDER.findIndex(p => cleanStr(p) === roleA)
@@ -76,11 +86,11 @@ export default async function TeamContent({ year, batch }) {
         selectedYear={year}
         selectedBatch={activeBatch}
         availableYears={AVAILABLE_YEARS}
-        availableBatches={AVAILABLE_BATCHES}
+        availableBatches={availableBatches.length ? availableBatches : AVAILABLE_BATCHES}
       />
 
       {sortedExecutives.length === 0 ? (
-        <EmptyTeamState hasFilters={!!(year || batch)} selectedYear={year} selectedBatch={batch} />
+        <EmptyTeamState hasFilters={!!(year || batch)} selectedYear={year} selectedBatch={activeBatch} />
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {sortedExecutives.map((member, index) => {
