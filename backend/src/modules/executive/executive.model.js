@@ -80,15 +80,15 @@ export const updateExecutiveService = async (id, data) => {
   }
   console.log("this is the id",id);
 
-  const { name, position, session, department, email, year, phone, image } = data;
+  const { name, position, session, department, email, year, phone, image, duits_batch } = data;
 
   const query = `
     UPDATE executives
-    SET name = $1, position = $2, session = $3, department = $4, email = $5, year = $6, phone = $7, image = $8
-    WHERE id = $9
+    SET name = $1, position = $2, session = $3, department = $4, email = $5, year = $6, phone = $7, image = $8, duits_batch = $9
+    WHERE id = $10
     RETURNING *;
   `;
-  const values = [name, position, session, department, email, year, phone, image, intid];
+  const values = [name, position, session, department, email, year, phone, image, duits_batch, intid];
 
   const result = await pool.query(query, values);
 

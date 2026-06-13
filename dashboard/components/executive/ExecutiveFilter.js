@@ -1,6 +1,19 @@
 import { Search } from "lucide-react"
 
-export default function ExecutiveFilter({ searchTerm, setSearchTerm, filterPosition, positions, setFilterPosition, executives, sortedExecutives, setFilterDepartment }) {
+export default function ExecutiveFilter({
+  searchTerm,
+  setSearchTerm,
+  filterPosition,
+  positions,
+  setFilterPosition,
+  filterBatch,
+  setFilterBatch,
+  batchOptions,
+  currentBatch,
+  executives,
+  sortedExecutives,
+  setFilterDepartment
+}) {
   return (
         <div className="bg-white rounded-lg border border-slate-200 p-4 transition-all duration-200">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
@@ -24,9 +37,20 @@ export default function ExecutiveFilter({ searchTerm, setSearchTerm, filterPosit
                 <option key={pos} value={pos}>{pos}</option>
               ))}
             </select>
-           
+            <select
+              value={filterBatch}
+              onChange={(e) => setFilterBatch(e.target.value)}
+              className="px-3 py-2 border border-slate-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent transition-all duration-200"
+            >
+              <option value="">{currentBatch ? `All Batches / Current: ${currentBatch}` : "All Batches"}</option>
+              {batchOptions?.map(batch => (
+                <option key={batch} value={batch}>
+                  {batch === currentBatch ? `${batch} (Current)` : batch}
+                </option>
+              ))}
+            </select>
           </div>
-          {(searchTerm || filterPosition ) && (
+          {(searchTerm || filterPosition || filterBatch) && (
             <div className="mt-3 pt-3 border-t border-slate-100 flex items-center justify-between text-xs animate-in fade-in duration-200">
               <span className="text-slate-600">
                 Showing {sortedExecutives.length} of {executives.length} executives
@@ -35,6 +59,7 @@ export default function ExecutiveFilter({ searchTerm, setSearchTerm, filterPosit
                 onClick={() => {
                   setSearchTerm("")
                   setFilterPosition("")
+                  setFilterBatch(currentBatch)
                   setFilterDepartment("")
                 }}
                 className="text-indigo-600 hover:text-indigo-700 font-medium transition-colors duration-200"

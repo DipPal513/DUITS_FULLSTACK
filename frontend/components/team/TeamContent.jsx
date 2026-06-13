@@ -42,11 +42,21 @@ async function getExecutives(year, batch) {
 
 // --- Main Component ---
 export default async function TeamContent({ year, batch }) {
-  // 1. Fetch
-  const { executives, totalCount } = await getExecutives(year, batch)
+  // 1. Fetch all executives for the selected year so we can determine the latest batch dynamically
+  const { executives } = await getExecutives(year, "")
 
-  // 2. Sort
-  const sortedExecutives = [...executives].sort((a, b) => {
+  // 2. Determine the latest batch across fetched executives
+  const latestBatch = executives.length > 0
+    ? Math.max(...executives.map((e) => parseInt(e.batch) || 0))
+    : null
+
+  const activeBatch = batch || (latestBatch ? String(latestBatch) : "")
+  const filteredExecutives = activeBatch
+    ? executives.filter((exec) => String(exec.batch) === String(activeBatch))
+    : executives
+
+  // 3. Sort only the displayed executives
+  const sortedExecutives = [...filteredExecutives].sort((a, b) => {
     const roleA = cleanStr(a.position || a.designation)
     const roleB = cleanStr(b.position || b.designation)
     const indexA = POSITION_ORDER.findIndex(p => cleanStr(p) === roleA)
@@ -58,18 +68,13 @@ export default async function TeamContent({ year, batch }) {
     return indexA - indexB
   })
 
-  // 3. Render
-  // Determine the latest batch from executives data
-  const latestBatch = sortedExecutives.length > 0 
-    ? Math.max(...sortedExecutives.map(e => parseInt(e.batch) || 0))
-    : null
-
+  // 4. Render
   return (
     <>
       <TeamHeader
-        totalTeams={totalCount}
+        totalTeams={filteredExecutives.length}
         selectedYear={year}
-        selectedBatch={batch}
+        selectedBatch={activeBatch}
         availableYears={AVAILABLE_YEARS}
         availableBatches={AVAILABLE_BATCHES}
       />

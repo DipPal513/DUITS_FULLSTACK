@@ -33,6 +33,8 @@ const convertToBase64 = (file) =>
   const [searchTerm, setSearchTerm] = useState("")
   const [filterPosition, setFilterPosition] = useState("")
   const [filterDepartment, setFilterDepartment] = useState("")
+  const [filterBatch, setFilterBatch] = useState("")
+  const [currentBatch, setCurrentBatch] = useState("")
   const { token } = useAuth()
   
   const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
@@ -48,13 +50,49 @@ const convertToBase64 = (file) =>
     duits_batch:""
   })
 
+  const getDefaultBatch = (list = []) => {
+    const numericBatches = list
+      .map(exec => exec.duits_batch)
+      .filter(Boolean)
+      .map(batch => Number(batch))
+      .filter(batch => !Number.isNaN(batch))
+
+    if (numericBatches.length === 0) return ""
+    return Math.max(...numericBatches).toString()
+  }
+
+  const applyFilters = (list, searchValue, positionValue, departmentValue, batchValue) => {
+    let filtered = [...list]
+
+    if (searchValue) {
+      filtered = filtered.filter(exec =>
+        exec.name.toLowerCase().includes(searchValue.toLowerCase()) ||
+        exec.email.toLowerCase().includes(searchValue.toLowerCase())
+      )
+    }
+
+    if (positionValue) {
+      filtered = filtered.filter(exec => exec.position === positionValue)
+    }
+
+    if (departmentValue) {
+      filtered = filtered.filter(exec => exec.department === departmentValue)
+    }
+
+    if (batchValue) {
+      filtered = filtered.filter(exec => String(exec.duits_batch) === String(batchValue))
+    }
+
+    return filtered
+  }
+
   useEffect(() => {
     loadExecutives()
   }, [])
 
   useEffect(() => {
     filterExecutives()
-  }, [searchTerm, filterPosition, filterDepartment, executives])
+  }, [searchTerm, filterPosition, filterDepartment, filterBatch, executives])
 
   const loadExecutives = async () => {
     setLoading(true)
@@ -62,8 +100,13 @@ const convertToBase64 = (file) =>
       const res = await axios.get(`${baseURL}/executive`, {
         withCredentials:true
       })
-      setExecutives(res.data.data?.executives)
-      setFilteredExecutives(res.data.data?.executives)
+      const fetchedExecutives = res.data.data?.executives || []
+      const defaultBatch = getDefaultBatch(fetchedExecutives)
+
+      setExecutives(fetchedExecutives)
+      setCurrentBatch(defaultBatch)
+      setFilterBatch(defaultBatch)
+      setFilteredExecutives(applyFilters(fetchedExecutives, searchTerm, filterPosition, filterDepartment, defaultBatch))
     } catch (error) {
       console.error("Error loading executives:", error)
       toast.error("Failed to load executives")
@@ -73,23 +116,7 @@ const convertToBase64 = (file) =>
   }
 
   const filterExecutives = () => {
-    let filtered = [...executives]
-
-    if (searchTerm) {
-      filtered = filtered.filter(exec =>
-        exec.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        exec.email.toLowerCase().includes(searchTerm.toLowerCase())
-      )
-    }
-
-    if (filterPosition) {
-      filtered = filtered.filter(exec => exec.position === filterPosition)
-    }
-
-    if (filterDepartment) {
-      filtered = filtered.filter(exec => exec.department === filterDepartment)
-    }
-
+    const filtered = applyFilters(executives, searchTerm, filterPosition, filterDepartment, filterBatch)
     setFilteredExecutives(filtered)
   }
 
@@ -283,7 +310,20 @@ const convertToBase64 = (file) =>
         </div>
 
         {/* Filters Bar */}
-       <ExecutiveFilter searchTerm={searchTerm} setSearchTerm={setSearchTerm} filterPosition={filterPosition} positions={positions} setFilterPosition={setFilterPosition} executives={executives} sortedExecutives={sortedExecutives} setFilterDepartment={setFilterDepartment} />
+       <ExecutiveFilter
+         searchTerm={searchTerm}
+         setSearchTerm={setSearchTerm}
+         filterPosition={filterPosition}
+         positions={positions}
+         setFilterPosition={setFilterPosition}
+         filterBatch={filterBatch}
+         setFilterBatch={setFilterBatch}
+         batchOptions={Array.from(new Set(["11", "12", "13", currentBatch].filter(Boolean)))}
+         currentBatch={currentBatch}
+         executives={executives}
+         sortedExecutives={sortedExecutives}
+         setFilterDepartment={setFilterDepartment}
+       />
         
         {loading && !showModal && !showDeleteModal ? (
           <div className="flex items-center justify-center py-12 bg-white rounded-lg border border-slate-200">

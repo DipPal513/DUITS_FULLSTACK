@@ -55,7 +55,7 @@ export default async function ExecutivePage({ searchParams }) {
   const params = await searchParams;
   const year = params?.year || "";
  
-  const batch = params?.batch || "12";
+  const batch = params?.batch || "";
 
   return (
     <section
