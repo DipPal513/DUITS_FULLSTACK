@@ -47,24 +47,24 @@ export default async function TeamContent({ year, batch }) {
 
   // 2. Determine the latest batch across fetched executives
   const latestBatch = executives.length > 0
-    ? Math.max(...executives.map((e) => parseInt(e.batch) || 0))
+    ? Math.max(...executives.map((e) => parseInt(e.duits_batch) || 0))
     : null
 
   const availableBatches = Array.from(
     new Set(
-      executives.map((exec) => String(exec.batch || "")).filter(Boolean)
+      executives.map((exec) => String(exec.duits_batch || "")).filter(Boolean)
     )
   ).sort((a, b) => Number(a) - Number(b))
 
   const activeBatch = batch || (latestBatch ? String(latestBatch) : "")
-  const filteredExecutives = batch
-    ? executives.filter((exec) => String(exec.batch) === String(activeBatch))
+  const filteredExecutives = activeBatch
+    ? executives.filter((exec) => String(exec.duits_batch) === String(activeBatch))
     : executives
 
   // 3. Sort only the displayed executives
   const sortedExecutives = [...filteredExecutives].sort((a, b) => {
-    const batchA = parseInt(a.batch || "0") || 0
-    const batchB = parseInt(b.batch || "0") || 0
+    const batchA = parseInt(a.duits_batch || "0") || 0
+    const batchB = parseInt(b.duits_batch || "0") || 0
     if (batchA !== batchB) return batchB - batchA
 
     const roleA = cleanStr(a.position || a.designation)
@@ -96,7 +96,7 @@ export default async function TeamContent({ year, batch }) {
           {sortedExecutives.map((member, index) => {
              // Handle unique presidents spanning columns
              const isPresident = member.position === "President"
-             const memberBatch = parseInt(member.batch) || 0
+const memberBatch = parseInt(member.duits_batch) || 0
              const isLatest = memberBatch === latestBatch
              
              return (

@@ -280,6 +280,8 @@ const convertToBase64 = (file) =>
  
   const positionOrder = ["President", "Vice President", "General Secretary", "Joint General Secretary", "Treasurer","Office Secretary", "Publicity and Publication Secretary","External Communication Secretary","Skill Development Secretary","Information and Research Secretary","Finance Secretary","Event Secretary", "Organizing Secretary", "Design Lead","Junior Executive","General Member"]
   
+  const batchOptions = Array.from(new Set(executives.map(exec => String(exec.duits_batch || "")).filter(Boolean))).sort((a, b) => Number(a) - Number(b))
+  
   const sortedExecutives = [...filteredExecutives].sort((a, b) => {
     const aIndex = positionOrder.indexOf(a.position)
     const bIndex = positionOrder.indexOf(b.position)
@@ -318,7 +320,7 @@ const convertToBase64 = (file) =>
          setFilterPosition={setFilterPosition}
          filterBatch={filterBatch}
          setFilterBatch={setFilterBatch}
-         batchOptions={Array.from(new Set(["11", "12", "13", currentBatch].filter(Boolean)))}
+         batchOptions={batchOptions}
          currentBatch={currentBatch}
          executives={executives}
          sortedExecutives={sortedExecutives}
