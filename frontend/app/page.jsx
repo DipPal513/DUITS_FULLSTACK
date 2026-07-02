@@ -14,7 +14,7 @@ export default function Home() {
       <Stat />
       <ScrollText />
       <MessageFromOurAdvisor />
-      <PresidentMessage />
+      {/* <PresidentMessage /> */}
       <WhatWeDo />
      
       <Achievements />
