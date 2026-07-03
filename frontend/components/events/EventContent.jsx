@@ -8,7 +8,9 @@ import EmptyState from "@/components/events/EmptyState"
 async function getEvents(page, filter) {
   try {
     const res = await api.get(`/event?page=${page}&limit=10&filter=${filter}`)
-    return res.data
+    console.log("events: ",res)
+    return res?.data;
+
   } catch (error) {
     console.error("Error fetching events:", error)
     // Return safe default to prevent crash
