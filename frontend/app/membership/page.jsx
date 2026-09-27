@@ -3,6 +3,7 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { User, GraduationCap, Users, FileText, CreditCard, CheckCircle, AlertCircle, Lock, Unlock, Building2 } from 'lucide-react';
 import toast from 'react-hot-toast';
 import Link from 'next/link';
+import { supabase } from '@/lib/supabase';
 
 function MembershipForm() {
   const [loading, setLoading] = useState(false);
@@ -143,10 +144,9 @@ function MembershipForm() {
     setLoading(true);
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/membership/register`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
+      const { data, error } = await supabase
+        .from('duits_members')
+        .insert([{
           full_name: formData.name,
           department: formData.department,
           hall: formData.hall,
@@ -165,22 +165,25 @@ function MembershipForm() {
           transaction_id: transactionId,
           payment_amount: 100.00,
           payment_status: 'Successful'
-        }),
-      });
+        }])
+        .select()
+        .single();
 
-      const data = await response.json();
-
-      if (response.ok) {
+      if (error) {
+        console.error("Supabase Error:", error);
         setLoading(false);
-        setSubmitted(true);
-        // Clear stored data after successful submission
-        localStorage.removeItem('membershipFormData');
-        localStorage.removeItem('membershipPaymentStatus');
-        localStorage.removeItem('membershipTransactionId');
-      } else {
-        setLoading(false);
-        toast.error(data.message || 'Submission failed. Please try again.');
+        toast.error(error.message || 'Submission failed. Please try again.');
+        return;
       }
+
+      setLoading(false);
+      setSubmitted(true);
+      // Clear stored data after successful submission
+      localStorage.removeItem('membershipFormData');
+      localStorage.removeItem('membershipPaymentStatus');
+      localStorage.removeItem('membershipTransactionId');
+      
+      toast.success('Application submitted successfully!');
     } catch (error) {
       console.error("Submission Error:", error);
       setLoading(false);

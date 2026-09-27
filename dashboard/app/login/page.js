@@ -18,7 +18,6 @@ useEffect(() => {
     }
   }, [isAuthenticated, router]);  
 
-  console.log("isauthenticated: from login page", isAuthenticated);
   const handleSubmit = async (e) => {
     e.preventDefault()
     setError("")
@@ -126,11 +125,9 @@ useEffect(() => {
             </p>
           </div>
 
-          {/* Demo credentials hint */}
           <div className="mt-6 p-4 rounded-lg bg-accent/10 border border-accent/20">
-            <p className="text-xs cursor-pointer text-muted-foreground text-center">
-              <span className="font-medium text-foreground">Demo:</span> Use any email/password to login. Use email with
-              "admin" for admin access.
+            <p className="text-xs text-muted-foreground text-center">
+              Only accounts with the <span className="font-medium text-foreground">ADMIN</span> role can sign in.
             </p>
           </div>
         </div>

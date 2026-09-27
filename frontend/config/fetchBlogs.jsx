@@ -1,36 +1,27 @@
-// src/lib/blogService.js
-
-// ⚠️ SERVER COMPONENTS NEED ABSOLUTE URLS
-const API_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL 
+import { supabase } from '@/lib/supabase';
 
 export async function fetchBlogs(page = 1, category = "All") {
   try {
-    const url = new URL(`${API_BASE_URL}/blog`);
-    url.searchParams.append("page", page.toString());
-    url.searchParams.append("limit", "10");
-    
-    if (category && category !== "All") {
-      url.searchParams.append("category", category);
-    }
+    let query = supabase
+      .from('blogs')
+      .select('*', { count: 'exact' })
+      .order('date', { ascending: false })
+      .range((page - 1) * 10, page * 10 - 1);
 
-    console.log("Fetching:", url.toString()); // Debugging log
+    // Note: Category filtering would need a category column in blogs table
+    // For now, we'll fetch all blogs and filter client-side if needed
 
-    const res = await fetch(url.toString(), {
-      next: { revalidate: 60 }, // ISR Caching
-      headers: { "Content-Type": "application/json" }
-    });
+    const { data, error, count } = await query;
 
-    if (!res.ok) {
-      console.error(`Fetch Error: ${res.status}`);
+    if (error) {
+      console.error("Supabase Error:", error);
       return { posts: [], totalPages: 0 };
     }
 
-    const json = await res.json();
-    console.log("Fetched Data:", res); // Debugging log
-    // Adapt this to match your API response exactly
+    console.log("Fetched Blogs:", data);
     return {
-      posts: json.data.blogs || [], 
-      totalPages: json?.totalPages || json.totalPages || 1, 
+      posts: data || [],
+      totalPages: Math.ceil((count || 0) / 10),
     };
 
   } catch (error) {

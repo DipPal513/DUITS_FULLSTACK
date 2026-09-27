@@ -5,12 +5,11 @@ import DeleteModal from "@/components/notice/DeleteModal";
 import NoticeCard from "@/components/notice/NoticeCard";
 import NoticeFormModal from "@/components/notice/NoticeFormModal";
 import { usePagination, PaginationControls } from '@/hook/usePagination';
-import axios from 'axios';
+import supabaseApi from '@/config/supabaseApi';
 import { Calendar, Loader, Plus } from 'lucide-react';
 import { useEffect, useState, useCallback } from 'react';
 import toast from 'react-hot-toast';
 
-const API_URL = process.env.NEXT_PUBLIC_BASE_URL;
 const ITEMS_PER_PAGE = 10;
 
 // Utility function to convert file to base64
@@ -38,13 +37,10 @@ export default function NoticesDashboard() {
   const fetchNotices = useCallback(async (page = 1, limit = ITEMS_PER_PAGE) => {
     try {
       setLoading(true);
-      const url = `${API_URL}/notice?page=${page}&limit=${limit}`;
-      const response = await axios.get(url, { withCredentials: true });
-      
-      const data = response?.data?.data;
-      setNotices(data?.notices || []);
-      setTotalNotices(data?.totalCount || 0);
-      console.log('API Response:', { notices: data?.notices?.length, total: data?.total, totalPages: data?.totalPages });
+      const response = await supabaseApi.getNotices(page, limit);
+
+      setNotices(response.notices || []);
+      setTotalNotices(response.totalCount || 0);
     } catch (error) {
       console.error('Error fetching notices:', error);
       toast.error('Failed to fetch notices');
@@ -89,20 +85,11 @@ export default function NoticesDashboard() {
         registrationLink: formData.registrationLink,
       };
 
-      const url = editingNotice 
-        ? `${API_URL}/notice/${editingNotice.id}` 
-        : `${API_URL}/notice`;
-      
-      const method = editingNotice ? 'PUT' : 'POST';
-
-      const response = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-        credentials: "include",
-      });
-
-      if (!response.ok) throw new Error('Failed to save notice');
+      if (editingNotice) {
+        await supabaseApi.updateNotice(editingNotice.id, payload);
+      } else {
+        await supabaseApi.createNotice(payload);
+      }
 
       toast.success(editingNotice ? 'Notice updated successfully!' : 'Notice created successfully!');
       closeModal();
@@ -129,14 +116,7 @@ export default function NoticesDashboard() {
   const handleConfirmDelete = async () => {
     try {
       setLoading(true);
-      const response = await axios.delete(`${API_URL}/notice/${noticeToDelete.id}`, {
-        withCredentials: true,
-      });
-
-      if (response.status !== 200) {
-        toast.error(response.data.message || 'Failed to delete notice');
-        return;
-      }
+      await supabaseApi.deleteNotice(noticeToDelete.id);
 
       toast.success('Notice deleted successfully!');
       closeDeleteModal();

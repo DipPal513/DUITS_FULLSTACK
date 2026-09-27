@@ -1,4 +1,4 @@
-import api from "@/config/index"
+import supabaseApi from "@/config/supabaseApi"
 import TeamHeader from "@/components/team/TeamHeader"
 import TeamCard from "@/components/team/TeamCard"
 import EmptyTeamState from "@/components/team/EmptyState"
@@ -20,17 +20,12 @@ const cleanStr = (str) => str?.toLowerCase().trim() || ""
 
 async function getExecutives(year, batch) {
   try {
-    const params = new URLSearchParams()
-    if (year) params.append('year', year)
-    if (batch) params.append('batch', batch)
-    
-    const queryString = params.toString() ? `?${params.toString()}` : ''
-    const response = await api.get(`/executive${queryString}`)
+    const response = await supabaseApi.getExecutives(year, batch)
   
-    if (response?.data?.executives) {
+    if (response?.executives) {
       return {
-        executives: response.data.executives || [],
-        totalCount: response.data.totalCount || 0
+        executives: response.executives || [],
+        totalCount: response.totalCount || 0
       }
     }
     return { executives: [], totalCount: 0 }

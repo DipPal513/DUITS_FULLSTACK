@@ -4,12 +4,12 @@ import DeleteModal from "@/components/access/DeleteModal"
 import RoleModal from "@/components/access/RoleModal"
 import DashboardLayout from "@/components/DashboardLayout"
 import { useAuth } from "@/contexts/AuthContext"
-import axios from "axios"
+import supabaseApi from "@/config/supabaseApi"
 import { Trash2, UserX } from "lucide-react"
 import { useEffect, useState } from "react"
 import { Toaster, toast } from "react-hot-toast"
 export default function MembersPage() {
-    const { token, user: currentUser } = useAuth()
+    const { user: currentUser } = useAuth()
     const isAdmin = true
     const [users, setUsers] = useState([])
     const [isLoading, setIsLoading] = useState(false)
@@ -29,10 +29,8 @@ export default function MembersPage() {
         setIsLoading(true)
         setError(null)
         try {
-            const response = await axios.get(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/users`, {
-               withCredentials: true,
-            })
-            setUsers(response.data.users)
+            const usersList = await supabaseApi.getUsers()
+            setUsers(usersList)
         } catch (err) {
             setError(err.response?.data?.message || 'Failed to load users')
             toast.error('Failed to load users')
@@ -54,11 +52,7 @@ export default function MembersPage() {
         const loadingToast = toast.loading('Updating role...')
         
         try {
-            await axios.patch(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/users/${selectedUser.id}/role`, {
-                role: newRole
-            }, {
-                withCredentials: true,
-            });
+            await supabaseApi.updateUserRole(selectedUser.id, newRole)
 
             const updated = users.map((user) =>
                 user.id === selectedUser.id ? { ...user, role: newRole } : user
@@ -95,9 +89,7 @@ export default function MembersPage() {
         
         try {
             // Uncomment and update when you have the delete endpoint
-            await axios.delete(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/users/${userToDelete.id}`, {
-                 withCredentials: true
-            })
+            await supabaseApi.deleteUser(userToDelete.id)
             
             const updated = users.filter((user) => user.id !== userToDelete.id)
             setUsers(updated)

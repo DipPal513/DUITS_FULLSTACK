@@ -5,12 +5,11 @@ import AchievementCard from "@/components/achievement/AchiementCard";
 import AchievementFormModal from "@/components/achievement/AchievementFormModal";
 import DeleteModal from "@/components/achievement/DeleteModal";
 import { usePagination, PaginationControls } from '@/hook/usePagination';
-import axios from 'axios';
+import supabaseApi from '@/config/supabaseApi';
 import { Calendar, Loader, Plus } from 'lucide-react';
 import { useEffect, useState, useCallback } from 'react';
 import toast from 'react-hot-toast';
 
-const API_URL = process.env.NEXT_PUBLIC_BASE_URL;
 const ITEMS_PER_PAGE = 10;
 
 // Utility function to convert file to base64
@@ -39,12 +38,9 @@ export default function AchievementsDashboard() {
   const fetchAchievements = useCallback(async (page = 1, limit = ITEMS_PER_PAGE) => {
     try {
       setLoading(true);
-      const url = `${API_URL}/achievement?page=${page}&limit=${limit}`;
-      const response = await fetch(url);
-      const data = await response.json();
-      
-      setAchievements(data?.data?.achievements || []);
-      setTotalAchievements(data?.totalCount || data?.data?.achievements?.length || 0);
+      const response = await supabaseApi.getAchievements(page, limit);
+      setAchievements(response.achievements || []);
+      setTotalAchievements(response.totalCount || 0);
       
      
     } catch (error) {
@@ -91,20 +87,11 @@ export default function AchievementsDashboard() {
 
       console.log('Payload:', payload);
 
-      const url = editingAchievement 
-        ? `${API_URL}/achievement/${editingAchievement.id}` 
-        : `${API_URL}/achievement`;
-      
-      const method = editingAchievement ? 'PUT' : 'POST';
-
-      const response = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-        credentials: "include",
-      });
-
-      if (!response.ok) throw new Error('Failed to save achievement');
+      if (editingAchievement) {
+        await supabaseApi.updateAchievement(editingAchievement.id, payload);
+      } else {
+        await supabaseApi.createAchievement(payload);
+      }
 
       toast.success(editingAchievement ? 'Achievement updated successfully!' : 'Achievement created successfully!');
       closeModal();
@@ -130,14 +117,7 @@ export default function AchievementsDashboard() {
   const handleConfirmDelete = async () => {
     try {
       setLoading(true);
-      const response = await axios.delete(`${API_URL}/achievement/${achievementToDelete.id}`, {
-        withCredentials: true,
-      });
-
-      if (response.status !== 200) {
-        toast.error(response.data.message || 'Failed to delete achievement');
-        return;
-      }
+      await supabaseApi.deleteAchievement(achievementToDelete.id);
 
       toast.success('Achievement deleted successfully!');
       closeDeleteModal();

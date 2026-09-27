@@ -1,4 +1,4 @@
-import api from "@/config/index"
+import supabaseApi from "@/config/supabaseApi"
 import NoticesHeader from "@/components/notices/NoticeHeader" // Renamed for clarity
 import NoticeCard from "@/components/notices/NoticeCard"
 import NoticePagination from "@/components/notices/NoticePagination"
@@ -16,12 +16,19 @@ export const convertDateToReadableFormat = (dateString) => {
 // Data Fetching Logic
 async function getNotices(page) {
   try {
+    const notices = await supabaseApi.getNotices()
     const limit = 10
-    const res = await api.get(`/notice?page=${page}&limit=${limit}`)
+    const totalCount = notices.length
+    const totalPages = Math.ceil(totalCount / limit)
+    
+    // Simple pagination on client side
+    const startIndex = (page - 1) * limit
+    const paginatedNotices = notices.slice(startIndex, startIndex + limit)
+    
     return {
-      notices: res?.data?.notices || [],
-      totalPages: res?.data?.totalPages || 1,
-      totalCount: res?.data?.totalCount || 0
+      notices: paginatedNotices,
+      totalPages: totalPages || 1,
+      totalCount: totalCount || 0
     }
   } catch (error) {
     console.error("Failed to fetch notices:", error)

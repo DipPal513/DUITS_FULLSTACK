@@ -4,12 +4,9 @@ import { useState } from "react"
 import { useRouter } from "next/navigation"
 import Link from "next/link"
 import { useAuth } from "@/contexts/AuthContext"
-import axios from "axios"
 import toast from "react-hot-toast"
 
 export default function RegisterPage() {
-
-  const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
   const router = useRouter()
   const { register, isAuthenticated } = useAuth()
   const [formData, setFormData] = useState({
@@ -21,7 +18,6 @@ export default function RegisterPage() {
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
 
-  // Redirect if already authenticated
   if (isAuthenticated) {
     router.push("/dashboard")
     return null
@@ -29,44 +25,28 @@ export default function RegisterPage() {
 
   const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log(formData);
-    try{
-      const res = await axios.post(baseURL + '/auth/register', {name:formData.name, email: formData.email, password: formData.password, role: "PENDING" });
-      console.log("response from register api", res);
-      if(res.status === 201){
-        toast.success("Registration successful! Please log in.");
-        router.push("/login");
-        return;
-      } else {
-        toast.error("Registration failed. Please try again.");
-      } 
-    } catch (error) {
-      console.error("Error during registration:", error);
-      toast.error("Registration failed. Please try again.");
-    }
-   
-    // Validate passwords match
+    setError("")
+
     if (formData.password !== formData.confirmPassword) {
       setError("Passwords do not match")
       return
     }
 
-    // Validate password length
     if (formData.password.length < 6) {
       setError("Password must be at least 6 characters")
       return
     }
 
     setLoading(true)
-
     const result = await register(formData.name, formData.email, formData.password)
 
     if (result.success) {
-      toast.success("Registration successful!")
+      toast.success("Registration successful! Please log in.")
       setLoading(false)
-      router.push("/dashboard")
+      router.push("/login")
     } else {
       setError(result.error || "Registration failed")
+      toast.error(result.error || "Registration failed. Please try again.")
       setLoading(false)
     }
   }

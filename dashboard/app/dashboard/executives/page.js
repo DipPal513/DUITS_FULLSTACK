@@ -4,7 +4,7 @@ import DashboardLayout from "@/components/DashboardLayout"
 import DetailsExecutiveModal from "@/components/executive/Details"
 import DeleteModal from "@/components/executive/DeleteModal"
 import { useAuth } from "@/contexts/AuthContext"
-import axios from "axios"
+import supabaseApi from "@/config/supabaseApi"
 import { AlertTriangle, Edit2, Eye, Plus, Search, Trash2, User, X } from "lucide-react"
 import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
@@ -35,9 +35,6 @@ const convertToBase64 = (file) =>
   const [filterDepartment, setFilterDepartment] = useState("")
   const [filterBatch, setFilterBatch] = useState("")
   const [currentBatch, setCurrentBatch] = useState("")
-  const { token } = useAuth()
-  
-  const baseURL = process.env.NEXT_PUBLIC_BASE_URL;
 
   const [formData, setFormData] = useState({
     name: "",
@@ -97,10 +94,8 @@ const convertToBase64 = (file) =>
   const loadExecutives = async () => {
     setLoading(true)
     try {
-      const res = await axios.get(`${baseURL}/executive`, {
-        withCredentials:true
-      })
-      const fetchedExecutives = res.data.data?.executives || []
+      const response = await supabaseApi.getExecutives()
+      const fetchedExecutives = response.executives || []
       const defaultBatch = getDefaultBatch(fetchedExecutives)
 
       setExecutives(fetchedExecutives)
@@ -145,30 +140,19 @@ const convertToBase64 = (file) =>
     try {
       if (editingExecutive) {
         // Update existing executive
-        const res = await axios.put(
-          `${baseURL}/executive/${editingExecutive?.id}`, 
-          payLoad, 
-          {withCredentials:true}
-        )
-        const updatedExecs = executives.map(exec => 
-          exec.id === editingExecutive?.id ? res.data.data : exec
-        )
+        await supabaseApi.updateExecutive(editingExecutive.id, payLoad)
         loadExecutives();
         toast.success("Executive updated successfully", { id: loadingToast })
       } else {
         // Add new executive
-        const res = await axios.post(
-          `${baseURL}/executive`, 
-          payLoad, 
-          {withCredentials:true,credentials:"include"}
-        )
-        setExecutives([res.data.data, ...executives])
+        const newExecutive = await supabaseApi.createExecutive(payLoad)
+        setExecutives([newExecutive, ...executives])
         toast.success("Executive added successfully", { id: loadingToast })
       }
       resetForm()
     } catch (error) {
       console.error("Error saving executive:", error)
-      const errorMessage = error.response?.data?.message || "Failed to save executive"
+      const errorMessage = error.message || "Failed to save executive"
       toast.error(errorMessage, { id: loadingToast })
     } finally {
       setLoading(false)
@@ -179,13 +163,8 @@ const convertToBase64 = (file) =>
     setLoading(true)
    
     try {
-      // Fetch fresh data from API
-      const res = await axios.get(
-        `${baseURL}/executive/${executive?.id}`,
-        {withCredentials:true}
-      )
-      
-      const executiveData = res.data.data
+      // Use the executive data directly from the list
+      const executiveData = executive
       
       setEditingExecutive(executiveData)
       setFormData({
@@ -200,11 +179,10 @@ const convertToBase64 = (file) =>
         duits_batch: executiveData.duits_batch || ""
       })
       
-      // toast.success("Executive loaded", { id: loadingToast })
       setShowModal(true)
     } catch (error) {
       console.error("Error loading executive:", error)
-      toast.error("Failed to load executive details", { id: loadingToast })
+      toast.error("Failed to load executive details")
     } finally {
       setLoading(false)
     }
@@ -221,12 +199,8 @@ const convertToBase64 = (file) =>
     setLoading(true)
     const loadingToast = toast.loading("Deleting executive...")
     
-    console.log("csrfToken",token);
     try {
-      await axios.delete(
-        `${baseURL}/executive/${executiveToDelete.id}`, 
-        { withCredentials:true }
-      )
+      await supabaseApi.deleteExecutive(executiveToDelete.id)
       
       const updatedExecs = executives.filter(exec => exec.id !== executiveToDelete.id)
       setExecutives(updatedExecs)
@@ -236,7 +210,7 @@ const convertToBase64 = (file) =>
       setExecutiveToDelete(null)
     } catch (error) {
       console.error("Error deleting executive:", error)
-      const errorMessage = error.response?.data?.message || "Failed to delete executive"
+      const errorMessage = error.message || "Failed to delete executive"
       toast.error(errorMessage, { id: loadingToast })
     } finally {
       setLoading(false)

@@ -3,15 +3,18 @@
 import React, { useState, useRef, useMemo, useEffect } from "react";
 import dynamic from "next/dynamic";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import TurndownService from "turndown";
 import DashboardLayout from "@/components/DashboardLayout";
 import toast from "react-hot-toast";
+import supabaseApi from "@/config/supabaseApi";
 
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
 
 export default function CreatePost() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const editingId = searchParams.get("id");
   const fileInputRef = useRef(null);
   const editor = useRef(null);
 
@@ -23,15 +26,30 @@ export default function CreatePost() {
   const [saveStatus, setSaveStatus] = useState("Saved"); // For auto-save UI
 
   // --- 1. LOAD DRAFT FROM LOCAL STORAGE (On Mount) ---
+  const [editingIdState, setEditingIdState] = useState(null);
+
   useEffect(() => {
     const savedData = localStorage.getItem("blog-draft");
-    if (savedData) {
+    if (savedData && !editingId) {
       const parsed = JSON.parse(savedData);
       setTitle(parsed.title || "");
       setContent(parsed.content || "");
       setCoverImage(parsed.coverImage || "");
     }
-  }, []);
+  }, [editingId]);
+
+  useEffect(() => {
+    const loadBlog = async () => {
+      if (!editingId) return;
+      const blog = await supabaseApi.getBlogById(editingId);
+      if (!blog) return;
+      setEditingIdState(blog.id);
+      setTitle(blog.title || "");
+      setContent(blog.content || "");
+      setCoverImage(blog.image || "");
+    };
+    loadBlog();
+  }, [editingId]);
 
   // --- 2. AUTO-SAVE TO LOCAL STORAGE (Debounced) ---
   useEffect(() => {
@@ -107,16 +125,14 @@ export default function CreatePost() {
         content: markdownContent,
         image: finalCoverUrl,
         description: markdownContent.substring(0, 160).replace(/\n/g, " ") + "...",
-        date: new Date().toISOString()
+        date: new Date().toISOString().split("T")[0]
       };
 
-      const res = await fetch(process.env.NEXT_PUBLIC_BASE_URL + "/blog", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      if (!res.ok) throw new Error("Failed to save post");
+      if (editingIdState) {
+        await supabaseApi.updateBlog(editingIdState, payload);
+      } else {
+        await supabaseApi.createBlog(payload);
+      }
 
       // E. Cleanup
       localStorage.removeItem("blog-draft"); // Clear draft

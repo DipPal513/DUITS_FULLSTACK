@@ -1,4 +1,4 @@
-import api from "@/config/index"
+import supabaseApi from "@/config/supabaseApi"
 import EventsHeader from "@/components/events/EventHeader"
 import EventCard from "@/components/events/EventCard"
 import EventPagination from "@/components/events/EventPagination"
@@ -7,9 +7,9 @@ import EmptyState from "@/components/events/EmptyState"
 // Data Fetching Logic (Moved inside module)
 async function getEvents(page, filter) {
   try {
-    const res = await api.get(`/event?page=${page}&limit=10&filter=${filter}`)
+    const res = await supabaseApi.getEvents(page, 10, filter)
     console.log("events: ",res)
-    return res?.data;
+    return res;
 
   } catch (error) {
     console.error("Error fetching events:", error)

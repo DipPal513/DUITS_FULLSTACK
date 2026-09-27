@@ -1,5 +1,5 @@
 import { Suspense } from "react"
-import api from "@/config/index" // Your existing Axios config or use fetch
+import supabaseApi from "@/config/supabaseApi"
 import AchievementsGrid from "@/components/achievement/achievementGrid"
 // 1. Define Skeleton for Loading State
 const AchievementsSkeleton = () => (
@@ -23,16 +23,8 @@ const AchievementsSkeleton = () => (
 // 2. Data Fetching Function
 async function getAchievements() {
   try {
-    // Next.js extends fetch to allow caching configuration
-    // revalidate: 3600 = cache for 1 hour
-    const res = await fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/achievement`, {
-      next: { revalidate: 3600 } 
-    })
-    
-    if (!res.ok) throw new Error("Failed to fetch")
-    
-    const data = await res.json()
-    return data?.data?.achievements || []
+    const achievements = await supabaseApi.getAchievements()
+    return achievements || []
   } catch (error) {
     console.error("Error fetching achievements:", error)
     return []

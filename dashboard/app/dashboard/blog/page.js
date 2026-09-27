@@ -5,13 +5,12 @@ import DeleteModal from "@/components/event/DeleteModal";
 import BlogCard from "@/components/blog/BlogCard"; 
 
 import { usePagination, PaginationControls } from '@/hook/usePagination';
-import axios from 'axios';
+import supabaseApi from '@/config/supabaseApi';
 import { Loader, Plus, BookOpen } from 'lucide-react'; 
 import { useEffect, useState, useCallback } from 'react';
 import toast from 'react-hot-toast';
-import { useRouter } from 'next/navigation'; // 1. Import Router
+import { useRouter } from 'next/navigation';
 
-const API_URL = process.env.NEXT_PUBLIC_BASE_URL;
 const ITEMS_PER_PAGE = 10;
 
 export default function BlogsDashboard() {
@@ -31,11 +30,9 @@ export default function BlogsDashboard() {
   const fetchBlogs = useCallback(async (page = 1, limit = ITEMS_PER_PAGE) => {
     try {
       setLoading(true);
-      const url = `${API_URL}/blog?page=${page}&limit=${limit}`;
-      const response = await axios.get(url, { withCredentials: true });
-    
-      setBlogs(response?.data?.data?.blogs || []);
-      setTotalBlogs(response?.data?.data?.totalCount || response?.data?.data?.blogs?.length || 0);
+      const response = await supabaseApi.getBlogs(page, limit);
+      setBlogs(response.blogs || []);
+      setTotalBlogs(response.totalCount || 0);
       
     } catch (error) {
       console.error('Error fetching blogs:', error);
@@ -53,14 +50,14 @@ export default function BlogsDashboard() {
   // 3. Handle Create Navigation
   const handleCreateBlog = () => {
     // Navigate to empty form
-    router.push('/createblog');
+    router.push('/dashboard/createblog');
   };
 
   // 4. Handle Edit Navigation
   const handleEditBlog = (blog) => {
     // Navigate to form with ID in query params
     // Example URL: /createblog?id=654321
-    router.push(`/createblog?id=${blog.id || blog._id}`);
+    router.push(`/dashboard/createblog?id=${blog.id || blog._id}`);
   };
 
   // Delete Logic (Remains the same)
@@ -77,14 +74,7 @@ export default function BlogsDashboard() {
   const handleConfirmDelete = async () => {
     try {
       setLoading(true);
-      const response = await axios.delete(`${API_URL}/blog/${blogToDelete.id}`, {
-        withCredentials: true,
-      });
-
-      if (response.status !== 200) {
-        toast.error(response.data.message || 'Failed to delete blog');
-        return;
-      }
+      await supabaseApi.deleteBlog(blogToDelete.id);
 
       toast.success('Blog deleted successfully!');
       closeDeleteModal();

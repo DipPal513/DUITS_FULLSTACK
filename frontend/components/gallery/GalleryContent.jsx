@@ -1,12 +1,12 @@
-import api from "@/config"; 
+import supabaseApi from "@/config/supabaseApi"; 
 import GalleryGrid from "@/components/galleryGrid";
 import { ImageIcon } from "lucide-react";
 
 // Data Fetching Logic moved here
 async function getGalleryImages() {
   try {
-    const res = await api.get('/gallery');
-    return res?.data?.galleries || [];
+    const res = await supabaseApi.getGallery();
+    return res || [];
   } catch (error) {
     console.error("Error fetching gallery:", error);
     return [];

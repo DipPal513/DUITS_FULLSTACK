@@ -1,16 +1,19 @@
-// src/config/fetchSingleBlog.js
-const API_BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:5000/api/v1";
+import { supabase } from '@/lib/supabase';
 
 // 1. Fetch Single Post by ID
 export async function fetchPostById(id) {
   try {
-    const res = await fetch(`${API_BASE_URL}/blog/${id}`, {
-      next: { revalidate: 60 }, // ISR Caching
-    });
+    const { data, error } = await supabase
+      .from('blogs')
+      .select('*')
+      .eq('id', id)
+      .single();
 
-    if (!res.ok) return null;
-    const json = await res.json();
-    return json.data || json; 
+    if (error) {
+      console.error("Error fetching post:", error);
+      return null;
+    }
+    return data; 
   } catch (error) {
     console.error("Error fetching post:", error);
     return null;
@@ -20,12 +23,21 @@ export async function fetchPostById(id) {
 // 2. Fetch ALL IDs for SSG Build Time
 export async function fetchAllIds() {
   try {
-    // Fetch only IDs to keep the build light
-    const res = await fetch(`${API_BASE_URL}/blog?limit=1000`);
-    const json = await res.json();
-    const posts = json.data.data.blogs || [];
-    return posts.map(post => ({ id: post.id.toString() })); // Next.js params must be strings
+    const { data, error } = await supabase
+      .from('blogs')
+      .select('id, slug');
+    
+    if (error) {
+      console.error("Error fetching blog IDs:", error);
+      return [];
+    }
+    
+    return data.map(post => ({ 
+      id: post.id.toString(),
+      slug: post.slug 
+    })); // Next.js params must be strings
   } catch (error) {
+    console.error("Error fetching blog IDs:", error);
     return [];
   }
 }

@@ -1,8 +1,7 @@
 "use client"
 
 import DashboardLayout from "@/components/DashboardLayout"
-import { useAuth } from "@/contexts/AuthContext"
-import axios from "axios"
+import supabaseApi from "@/config/supabaseApi"
 import { Eye, Search, Trash2, User, X, Download } from "lucide-react"
 import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
@@ -124,9 +123,6 @@ export default function MembershipPage() {
   const [filterDepartment, setFilterDepartment] = useState("")
   const [filterHall, setFilterHall] = useState("")
   const [filterBloodGroup, setFilterBloodGroup] = useState("")
-  const { token } = useAuth()
-
-  const baseURL = process.env.NEXT_PUBLIC_BASE_URL
 
   useEffect(() => { loadMembers() }, [])
 
@@ -135,9 +131,9 @@ export default function MembershipPage() {
   const loadMembers = async () => {
     setLoading(true)
     try {
-      const res = await axios.get(`${baseURL}/membership`, { withCredentials: true })
-      setMembers(res.data?.members || res.data.data || [])
-      setFilteredMembers(res.data.data?.members || res.data.data || [])
+      const list = await supabaseApi.getMembers()
+      setMembers(list)
+      setFilteredMembers(list)
     } catch (error) {
       console.error("Error loading members:", error)
       toast.error("Failed to load members")
@@ -150,10 +146,10 @@ export default function MembershipPage() {
     let filtered = [...members]
     if (searchTerm) {
       filtered = filtered.filter(m =>
-        m.full_name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        m.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        m.mobile.includes(searchTerm) ||
-        m.transaction_id.toLowerCase().includes(searchTerm.toLowerCase())
+        m.full_name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        m.email?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        m.mobile?.includes(searchTerm) ||
+        m.transaction_id?.toLowerCase().includes(searchTerm.toLowerCase())
       )
     }
     if (filterDepartment) filtered = filtered.filter(m => m.department === filterDepartment)
@@ -188,7 +184,7 @@ export default function MembershipPage() {
     setLoading(true)
     const t = toast.loading("Deleting member…")
     try {
-      await axios.delete(`${baseURL}/membership/${memberToDelete.id}`, { withCredentials: true })
+      await supabaseApi.deleteMember(memberToDelete.id)
       setMembers(prev => prev.filter(m => m.id !== memberToDelete.id))
       toast.success("Member deleted successfully", { id: t })
       setShowDeleteModal(false)

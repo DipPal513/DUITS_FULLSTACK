@@ -2,66 +2,24 @@
 
 import { useEffect, useState } from "react"
 import DashboardLayout from "@/components/DashboardLayout"
-
 import { useAuth } from "@/contexts/AuthContext"
-import { useRouter } from "next/navigation"
+import supabaseApi from "@/config/supabaseApi"
 
 export default function DashboardPage() {
-  const { user,isAuthenticated } = useAuth()
+  const { user } = useAuth()
   const [stats, setStats] = useState({
     members: 0,
     executives: 0,
     events: 0,
     gallery: 0,
   })
-  const router = useRouter();
-useEffect(() => {
-  if(isAuthenticated) {
-    router.push("/dashboard")
-  } else {
-    router.push("/login")
-  }
-}, [isAuthenticated])
-  useEffect(() => {
-    // Load stats from storage
-    const members =  [{
-      id: '1',
-      name: 'Alice Johnson',
-      email: 'alice@example.com',
-      role: 'Admin',
-      department: 'Engineering',
-      year: '2023',
-      status: 'Active',
-      joinDate: '2023-01-15',
-    }, {
-      id: '2',
-      name: 'Bob Smith',
-      email: 'bob@example.com',
-      role: 'Editor',
-      department: 'Marketing',
-      year: '2022',
-      status: 'Pending',
-      joinDate: '2022-05-10',
-    }]
-    const executives = [ 
-      {id: '1', name: 'Alice Johnson', email: 'alice@example.com', role: 'Admin', department: 'Engineering', year: '2023', status: 'Active', joinDate: '2023-01-15'},
-      {id: '2', name: 'Bob Smith', email: 'bob@example.com', role: 'Editor', department: 'Marketing', year: '2022', status: 'Pending', joinDate: '2022-05-10'},
-    ]
-    const events = [
-      {id: '1', title: 'Web Development Workshop', date: '2024-02-15', time: '10:00 AM', location: 'Room 101', description: 'Learn the basics of web development.', attendees: 50},
-      {id: '2', title: 'AI Seminar', date: '2024-03-10', time: '2:00 PM', location: 'Auditorium', description: 'An introduction to artificial intelligence.', attendees: 100},
-    ]
-    const gallery = [
-      {id: '1', title: 'Hackathon 2023', url: '/images/hackathon2023.jpg', description: 'Highlights from our annual hackathon.'},
-      {id: '2', title: 'Tech Talk', url: '/images/techtalk.jpg', description: 'Snapshots from our recent tech talk event.'},
-    ]
 
-    setStats({
-      members: members.length,
-      executives: executives.length,
-      events: events.length,
-      gallery: gallery.length,
-    })
+  useEffect(() => {
+    const loadStats = async () => {
+      const counts = await supabaseApi.getDashboardCounts()
+      setStats(counts)
+    }
+    loadStats()
   }, [])
 
   const statCards = [

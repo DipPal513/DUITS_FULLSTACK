@@ -5,12 +5,11 @@ import GalleryCard from "@/components/gallery/GalleryCard";
 import GalleryFormModal from "@/components/gallery/GalleryFormModal";
 import DeleteModal from "@/components/gallery/GalleryModal";
 import { usePagination, PaginationControls } from '@/hook/usePagination';
-import axios from 'axios';
+import supabaseApi from '@/config/supabaseApi';
 import { Calendar, Loader, Plus } from 'lucide-react';
 import { useEffect, useState, useCallback } from 'react';
 import toast from 'react-hot-toast';
 
-const API_URL = process.env.NEXT_PUBLIC_BASE_URL;
 const ITEMS_PER_PAGE = 10;
 
 // Utility function to convert file to base64
@@ -39,12 +38,9 @@ export default function GallerysDashboard() {
   const fetchGalleries = useCallback(async (page = 1, limit = ITEMS_PER_PAGE) => {
     try {
       setLoading(true);
-      const url = `${API_URL}/gallery?page=${page}&limit=${limit}`;
-      const response = await axios.get(url, { withCredentials: true });
-      const data = response?.data?.data;
-      
-      setGalleries(data?.galleries || []);
-      setTotalGalleries(data?.totalCount || data?.galleries?.length || 0);
+      const response = await supabaseApi.getGallery(page, limit);
+      setGalleries(response.galleries || []);
+      setTotalGalleries(response.totalCount || 0);
 
     } catch (error) {
       console.error('Error fetching galleries:', error);
@@ -87,20 +83,11 @@ export default function GallerysDashboard() {
         date: formData.date,
       };
 
-      const url = editingGallery 
-        ? `${API_URL}/gallery/${editingGallery.id}` 
-        : `${API_URL}/gallery`;
-      
-      const method = editingGallery ? 'PUT' : 'POST';
-
-      const response = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-        credentials: "include",
-      });
-
-      if (!response.ok) throw new Error('Failed to save gallery');
+      if (editingGallery) {
+        await supabaseApi.updateGallery(editingGallery.id, payload);
+      } else {
+        await supabaseApi.createGallery(payload);
+      }
 
       toast.success(editingGallery ? 'Gallery updated successfully!' : 'Gallery created successfully!');
       closeModal();
@@ -126,12 +113,7 @@ export default function GallerysDashboard() {
   const handleConfirmDelete = async () => {
     try {
       setLoading(true);
-      const response = await fetch(`${API_URL}/gallery/${galleryToDelete.id}`, {
-        method: 'DELETE',
-        credentials: 'include',
-      });
-
-      if (!response.ok) throw new Error('Failed to delete gallery');
+      await supabaseApi.deleteGallery(galleryToDelete.id);
 
       toast.success('Gallery deleted successfully!');
       closeDeleteModal();

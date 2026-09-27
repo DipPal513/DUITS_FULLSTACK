@@ -5,12 +5,11 @@ import DeleteModal from "@/components/event/DeleteModal";
 import EventCard from "@/components/event/EventCard";
 import EventFormModal from "@/components/event/EventFormModal";
 import { usePagination, PaginationControls } from '@/hook/usePagination';
-import axios from 'axios';
+import supabaseApi from '@/config/supabaseApi';
 import { Calendar, Loader, Plus } from 'lucide-react';
 import { useEffect, useState, useCallback } from 'react';
 import toast from 'react-hot-toast';
 
-const API_URL = process.env.NEXT_PUBLIC_BASE_URL;
 const ITEMS_PER_PAGE = 10;
 
 // Utility function to convert file to base64
@@ -39,13 +38,10 @@ export default function EventsDashboard() {
   const fetchEvents = useCallback(async (page = 1, limit = ITEMS_PER_PAGE) => {
     try {
       setLoading(true);
-      const url = `${API_URL}/event?page=${page}&limit=${limit}`;
-      const response = await axios.get(url,{withCredentials: true});
-    
+      const response = await supabaseApi.getEvents(page, limit);
       
-      setEvents(response?.data?.data?.events || []);
-      console.log(response.data?.data)
-      setTotalEvents(response?.data?.data?.totalCount || response?.data?.data?.events?.length || 0);
+      setEvents(response.events || []);
+      setTotalEvents(response.totalCount || 0);
       
     } catch (error) {
       console.error('Error fetching events:', error);
@@ -89,23 +85,14 @@ export default function EventsDashboard() {
         registrationLink: formData.registrationLink,
       };
 
-     
-      const url = editingEvent 
-        ? `${API_URL}/event/${editingEvent.id}` 
-        : `${API_URL}/event`;
-      
-      const method = editingEvent ? 'PUT' : 'POST';
+      if (editingEvent) {
+        await supabaseApi.updateEvent(editingEvent.id, payload);
+        toast.success('Event updated successfully!');
+      } else {
+        await supabaseApi.createEvent(payload);
+        toast.success('Event created successfully!');
+      }
 
-      const response = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-        credentials: "include",
-      });
-
-      if (!response.ok) throw new Error('Failed to save event');
-
-      toast.success(editingEvent ? 'Event updated successfully!' : 'Event created successfully!');
       closeModal();
       fetchEvents(pagination.currentPage, ITEMS_PER_PAGE);
     } catch (error) {
@@ -129,14 +116,7 @@ export default function EventsDashboard() {
   const handleConfirmDelete = async () => {
     try {
       setLoading(true);
-      const response = await axios.delete(`${API_URL}/event/${eventToDelete.id}`, {
-        withCredentials: true,
-      });
-
-      if (response.status !== 200) {
-        toast.error(response.data.message || 'Failed to delete event');
-        return;
-      }
+      await supabaseApi.deleteEvent(eventToDelete.id);
 
       toast.success('Event deleted successfully!');
       closeDeleteModal();
