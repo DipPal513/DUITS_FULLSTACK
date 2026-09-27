@@ -6,7 +6,7 @@ export async function fetchPostById(id) {
     const { data, error } = await supabase
       .from('blogs')
       .select('*')
-      .eq('id', id)
+      .or(`id.eq.${id},slug.eq.${id}`)
       .single();
 
     if (error) {
@@ -32,10 +32,10 @@ export async function fetchAllIds() {
       return [];
     }
     
-    return data.map(post => ({ 
-      id: post.id.toString(),
-      slug: post.slug 
-    })); // Next.js params must be strings
+    return data.flatMap(post => [
+      { id: post.id.toString() },
+      ...(post.slug ? [{ id: post.slug }] : []),
+    ]);
   } catch (error) {
     console.error("Error fetching blog IDs:", error);
     return [];

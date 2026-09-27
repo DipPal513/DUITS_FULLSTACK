@@ -1,122 +1,51 @@
 'use client'
 
-import { Button } from '@/components/ui/button'
-import {
-  ArrowRight,
-  Calendar,
-  Music
-} from 'lucide-react'
-import { useRouter } from 'next/navigation'
+import Link from 'next/link'
+import { ArrowRight, CalendarDays, FileText } from 'lucide-react'
 
-const convertDateToReadableFormat = (dateString) => {
-  const options = { year: 'numeric', month: 'long', day: 'numeric' }
-  const date = new Date(dateString)
-  return date.toLocaleDateString(undefined, options)
+const formatDeadline = (value) => {
+  if (!value) return null
+  return new Date(`${value}T00:00:00`).toLocaleDateString(undefined, {
+    day: 'numeric',
+    month: 'long',
+    year: 'numeric',
+  })
 }
 
-const NoticeCard = ({ notice }) => {
-  const router = useRouter()
-
-  const handleViewDetails = () => {
-    router.push(`/notice/${notice.id || notice._id}`)
-  }
+export default function NoticeCard({ notice }) {
+  const isClosed = notice.deadline && notice.deadline < new Date().toISOString().slice(0, 10)
 
   return (
-    <div 
-      onClick={handleViewDetails}
-      className="group cursor-pointer h-full"
+    <Link
+      href={`/notice/${notice.id}`}
+      className="group flex h-full flex-col overflow-hidden rounded-lg border border-slate-200 bg-white transition-colors hover:border-blue-300 hover:bg-blue-50/30 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-700 dark:border-slate-800 dark:bg-slate-900 dark:hover:border-blue-800"
     >
-      <div className="relative h-full overflow-hidden rounded-2xl bg-card shadow-lg transition-all duration-500 hover:shadow-2xl">
-        
-     
-        <div className="relative h-48 md:h-56 overflow-hidden bg-muted">
-          {/* Image */}
-          <img
-            src={notice.image}
-            alt={notice.title}
-            className="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
-          />
-          
-          {/* Gradient Overlay */}
-          <div className={`absolute inset-0 bg-gradient-to-t ${notice.accentColor} opacity-0 group-hover:opacity-40 transition-opacity duration-500`} />
-          
-          {/* Dark Overlay Base */}
-          <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-          
-         
-
-          {/* Floating Icon - appears on hover */}
-          <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500">
-            <div className="transform transition-transform duration-500 group-hover:scale-100 scale-75">
-              <div className="relative w-16 h-16 rounded-full bg-white/20 backdrop-blur-md flex items-center justify-center border border-white/40">
-                <ArrowRight className="w-8 h-8 text-white group-hover:translate-x-1 transition-transform duration-500" />
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* ===============================
-            2. CONTENT SECTION
-        =============================== */}
-        <div className="relative p-5 md:p-6">
-          
-          {/* notice Title */}
-          <h1 className="text-lg md:text-xl font-bold line-clamp-2 mb-2 text-foreground group-hover:text-transparent group-hover:bg-gradient-to-r group-hover:from-purple-500 group-hover:to-pink-500 group-hover:bg-clip-text transition-all duration-300">
-            {notice.title}
-          </h1>
-
-          {/* Description */}
-          <p className="text-sm text-muted-foreground line-clamp-2 mb-4 leading-relaxed">
-            {notice.description}
-          </p>
-
-          {/* notice Details Grid */}
-          <div className="space-y-2.5 mb-5">
-            
-            {/* Date */}
-            <div className="flex items-center gap-3 text-sm text-foreground/80 group-hover:text-foreground transition-colors duration-300">
-              <div className="flex-shrink-0 w-8 h-8 rounded-lg bg-purple-500/10 flex items-center justify-center">
-                <Calendar className="w-4 h-4 text-purple-600" />
-              </div>
-              <span className="font-medium">{convertDateToReadableFormat(notice.deadline)}</span>
-            </div>
-
-          
-            {/* Location */}
-            
-
-            
-          </div>
-
-          {/* Divider */}
-          <div className="h-px bg-border/50 mb-4 group-hover:bg-gradient-to-r group-hover:from-purple-500/50 group-hover:via-transparent group-hover:to-pink-500/50 transition-all duration-500" />
-
-          {/* CTA Button */}
-         {new Date(notice.deadline) > new Date() ? <Button
-            onClick={(e) => {
-              e.stopPropagation()
-              handleViewDetails()
-            }}
-            className=" "
-            variant="default"
-          >
-            <span>Get Tickets</span>
-            <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition-transform duration-300" />
-          </Button>: <p className='text-black font-semibold'>Notice Expired</p>}
-        </div>
-
-        {/* ===============================
-            3. DECORATIVE ELEMENTS
-        =============================== */}
-        
-        {/* Corner Accent */}
-        <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-to-br from-purple-500/10 to-transparent rounded-full -mr-16 -mt-16 group-hover:scale-150 transition-transform duration-500 pointer-notices-none" />
-        
-        {/* Bottom Accent */}
-        <div className="absolute bottom-0 left-0 w-32 h-32 bg-gradient-to-tr from-pink-500/10 to-transparent rounded-full -ml-16 -mb-16 group-hover:scale-150 transition-transform duration-500 pointer-notices-none" />
+      <div className="flex items-center justify-between border-b border-slate-200 bg-slate-50 px-5 py-3 dark:border-slate-800 dark:bg-slate-950">
+        <span className="inline-flex items-center gap-2 text-xs font-semibold uppercase tracking-wide text-blue-800 dark:text-blue-300">
+          <FileText size={15} /> Official notice
+        </span>
+        {isClosed && <span className="text-xs font-medium text-slate-500">Closed</span>}
       </div>
-    </div>
+      {notice.image && (
+        <img src={notice.image} alt="" className="h-44 w-full object-cover" loading="lazy" />
+      )}
+      <div className="flex flex-1 flex-col p-5">
+        <h2 className="mb-2 line-clamp-2 text-lg font-semibold leading-snug text-slate-900 group-hover:text-blue-800 dark:text-white dark:group-hover:text-blue-300">
+          {notice.title}
+        </h2>
+        <p className="mb-5 line-clamp-3 text-sm leading-6 text-slate-600 dark:text-slate-300">
+          {notice.description}
+        </p>
+        {notice.deadline && (
+          <p className="mt-auto flex items-center gap-2 border-t border-slate-200 pt-4 text-sm text-slate-600 dark:border-slate-800 dark:text-slate-300">
+            <CalendarDays size={16} className="text-blue-700 dark:text-blue-300" />
+            Deadline: {formatDeadline(notice.deadline)}
+          </p>
+        )}
+        <span className="mt-4 inline-flex items-center gap-2 text-sm font-semibold text-blue-800 dark:text-blue-300">
+          Read full notice <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+        </span>
+      </div>
+    </Link>
   )
 }
-
-export default NoticeCard

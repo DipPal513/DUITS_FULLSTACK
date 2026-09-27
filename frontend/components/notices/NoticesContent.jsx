@@ -14,16 +14,23 @@ export const convertDateToReadableFormat = (dateString) => {
   return date.toLocaleDateString('en-US', options)
 }
 // Data Fetching Logic
-async function getNotices(page) {
+async function getNotices(page, filter) {
   try {
     const notices = await supabaseApi.getNotices()
     const limit = 10
-    const totalCount = notices.length
+    const today = new Date().toISOString().slice(0, 10)
+    const filteredNotices = notices.filter((notice) => {
+      if (!notice.deadline) return filter === 'all'
+      if (filter === 'upcoming') return notice.deadline >= today
+      if (filter === 'recent') return notice.deadline < today
+      return true
+    })
+    const totalCount = filteredNotices.length
     const totalPages = Math.ceil(totalCount / limit)
     
     // Simple pagination on client side
     const startIndex = (page - 1) * limit
-    const paginatedNotices = notices.slice(startIndex, startIndex + limit)
+    const paginatedNotices = filteredNotices.slice(startIndex, startIndex + limit)
     
     return {
       notices: paginatedNotices,
@@ -38,18 +45,7 @@ async function getNotices(page) {
 
 export default async function NoticesContent({ currentPage, filter }) {
   // 1. Fetch Data
-  const { notices, totalPages, totalCount } = await getNotices(currentPage)
-
-  // 2. Server-Side Filtering 
-  // (Ideally your API should handle this via ?filter=upcoming, but logic is kept here to match your original code)
-  const filteredNotices = notices.filter(notice => {
-    const noticeDate = new Date(notice.date)
-    const today = new Date()
-    
-    if (filter === 'upcoming') return noticeDate >= today
-    if (filter === 'recent') return noticeDate < today
-    return true // 'all'
-  })
+  const { notices, totalPages, totalCount } = await getNotices(currentPage, filter)
 
   return (
     <>
@@ -61,12 +57,12 @@ export default async function NoticesContent({ currentPage, filter }) {
         activeFilter={filter}
       />
 
-      {filteredNotices.length === 0 ? (
+      {notices.length === 0 ? (
         <EmptyNoticeState />
       ) : (
         <>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-            {filteredNotices.map((notice, index) => (
+            {notices.map((notice, index) => (
               <NoticeCard 
                 key={notice.id || notice._id || `notice-${index}`} 
                 notice={notice} 

@@ -5,11 +5,13 @@ import dynamic from "next/dynamic";
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import TurndownService from "turndown";
+import Showdown from "showdown";
 import DashboardLayout from "@/components/DashboardLayout";
 import toast from "react-hot-toast";
 import supabaseApi from "@/config/supabaseApi";
 
 const JoditEditor = dynamic(() => import("jodit-react"), { ssr: false });
+const markdownConverter = new Showdown.Converter({ tables: true, simplifiedAutoLink: true });
 
 export default function CreatePost() {
   const router = useRouter();
@@ -22,6 +24,7 @@ export default function CreatePost() {
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [coverImage, setCoverImage] = useState(""); // Can be Base64 OR URL
+  const [slug, setSlug] = useState("");
   const [status, setStatus] = useState("draft"); 
   const [saveStatus, setSaveStatus] = useState("Saved"); // For auto-save UI
 
@@ -31,10 +34,15 @@ export default function CreatePost() {
   useEffect(() => {
     const savedData = localStorage.getItem("blog-draft");
     if (savedData && !editingId) {
-      const parsed = JSON.parse(savedData);
-      setTitle(parsed.title || "");
-      setContent(parsed.content || "");
-      setCoverImage(parsed.coverImage || "");
+      try {
+        const parsed = JSON.parse(savedData);
+        setTitle(parsed.title || "");
+        setContent(parsed.content || "");
+        setCoverImage(parsed.coverImage || "");
+      } catch (error) {
+        console.error("Error loading blog draft:", error);
+        localStorage.removeItem("blog-draft");
+      }
     }
   }, [editingId]);
 
@@ -45,8 +53,9 @@ export default function CreatePost() {
         const blog = await supabaseApi.getBlogById(editingId);
         if (!blog) return;
         setEditingIdState(blog.id);
+        setSlug(blog.slug || "");
         setTitle(blog.title || "");
-        setContent(blog.content || "");
+        setContent(markdownConverter.makeHtml(blog.content || ""));
         setCoverImage(blog.image || "");
       } catch (error) {
         console.error("Error loading blog:", error);
@@ -59,7 +68,7 @@ export default function CreatePost() {
   // --- 2. AUTO-SAVE TO LOCAL STORAGE (Debounced) ---
   useEffect(() => {
     const timeoutId = setTimeout(() => {
-      if (title || content || coverImage) {
+      if (!editingId && (title || content || coverImage)) {
         setSaveStatus("Saving...");
         localStorage.setItem("blog-draft", JSON.stringify({ title, content, coverImage }));
         setTimeout(() => setSaveStatus("Saved to device"), 800);
@@ -67,7 +76,7 @@ export default function CreatePost() {
     }, 1000); // Wait 1 second after typing stops
 
     return () => clearTimeout(timeoutId);
-  }, [title, content, coverImage]);
+  }, [title, content, coverImage, editingId]);
 
   // --- EDITOR CONFIG (Keep images local as Base64) ---
   const config = useMemo(() => ({
@@ -98,14 +107,14 @@ export default function CreatePost() {
   // --- 3. THE MASTER PUBLISH FUNCTION ---
   const handlePublish = async () => {
     if (!title.trim()) return toast.error("Title required");
-    if (!content.trim()) return toast.error("Content required");
+    if (!content.replace(/<[^>]*>/g, " ").trim()) return toast.error("Content required");
     
     setStatus("uploading_images"); // New status to show user what's happening
 
     try {
       // A. Process Cover Image
       let finalCoverUrl = coverImage;
-      if (coverImage.startsWith("data:image")) {
+      if (coverImage?.startsWith("data:image")) {
         console.log("Uploading Cover Image...");
         finalCoverUrl = await uploadBase64ToCloudinary(coverImage);
       }
@@ -126,7 +135,7 @@ export default function CreatePost() {
       // D. Send Payload to DB
       const payload = {
         title,
-        slug: title.toLowerCase().replace(/ /g, "-").replace(/[^\w-]+/g, ""),
+        slug: editingIdState ? slug : `${title.toLowerCase().trim().replace(/[^\w]+/g, "-").replace(/^-|-$/g, "") || "article"}-${Date.now().toString(36)}`,
         content: markdownContent,
         image: finalCoverUrl,
         description: markdownContent.substring(0, 160).replace(/\n/g, " ") + "...",
@@ -216,6 +225,7 @@ export default function CreatePost() {
             value={content}
             config={config}
             onBlur={(newContent) => setContent(newContent)}
+            onChange={(newContent) => setContent(newContent)}
           />
         </div>
       </main>
@@ -255,6 +265,7 @@ async function processContentImages(htmlContent) {
         img.setAttribute('src', newUrl); // Replace src
       } catch (err) {
         console.error("Failed to upload an inline image", err);
+        throw new Error("An image in the article could not be uploaded. Please retry or remove it.");
       }
     }
   });

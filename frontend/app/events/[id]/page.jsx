@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import api from '@/config/index';
+import supabaseApi from '@/config/supabaseApi';
 import toast from 'react-hot-toast';
 import DetailsPageSkeletonLoader from '@/components/skeleton/DetailsPageSkeleton';
 
@@ -33,10 +33,8 @@ const EventDetailsPage = () => {
   const fetchEventDetails = async () => {
     try {
       setLoading(true);
-      const data = await api.get(`/event/${params.id}`);
-      console.log(data)
-      setEvent(data?.data);
-      console.log(data?.data);
+      const data = await supabaseApi.getEventById(params.id);
+      setEvent(data);
     } catch (error) {
       console.error('Error fetching event:', error);
     } finally {
@@ -95,7 +93,7 @@ const EventDetailsPage = () => {
           <p className="text-muted-foreground mb-8">
             The event you're looking for doesn't exist or has been removed.
           </p>
-          <Link href="/notices">
+          <Link href="/events">
             <Button size="lg" className="uppercase tracking-wide">
               <ArrowLeft className="mr-2 w-4 h-4" />
               Back to Events
@@ -161,7 +159,7 @@ const EventDetailsPage = () => {
                   <div className="flex flex-wrap gap-4 text-sm">
                     <div className="flex items-center gap-2 px-3 py-1.5 bg-background/80 backdrop-blur-sm rounded-lg">
                       <Calendar className="w-4 h-4 text-primary" />
-                      <span className="font-medium">{formatShortDate(event.deadline)}</span>
+                      <span className="font-medium">{formatShortDate(event.date)}</span>
                     </div>
                   
                   </div>
@@ -208,7 +206,7 @@ const EventDetailsPage = () => {
                       Deadline
                     </p>
                     <p className="font-semibold text-sm">
-                      {formatDate(event.deadline)}
+                      {formatDate(event.date)}
                     </p>
                   </div>
                 </div>
@@ -252,7 +250,7 @@ const EventDetailsPage = () => {
             </div>
 
             {/* Registration CTA Card */}
-            {event.registrationLink && (
+            {(event.registration_link || event.registrationLink) && (
               <div className="rounded-xl border-2 border-primary/30 bg-gradient-to-br from-primary/5 to-primary/10 p-6 shadow-lg">
                 <h3 className="text-xl font-bold uppercase tracking-wide mb-2">
                   Ready to Join?
@@ -261,7 +259,7 @@ const EventDetailsPage = () => {
                   Register now to secure your spot and be part of this amazing event!
                 </p>
                 <Link
-                  href={event.registrationLink}
+                  href={event.registration_link || event.registrationLink}
                   target="_blank"
                   rel="noopener noreferrer"
                 >

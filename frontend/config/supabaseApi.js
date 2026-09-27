@@ -5,11 +5,16 @@ const supabaseApi = {
   // Events
   getEvents: async (page = 1, limit = 10, filter = 'all') => {
     try {
+      const today = new Date().toISOString().slice(0, 10);
       let query = supabase
         .from('events')
         .select('*', { count: 'exact' })
-        .order('date', { ascending: false })
-        .range((page - 1) * limit, page * limit - 1);
+        .order('date', { ascending: false });
+
+      if (filter === 'upcoming') query = query.gte('date', today);
+      if (filter === 'recent') query = query.lt('date', today);
+
+      query = query.range((page - 1) * limit, page * limit - 1);
 
       const { data, error, count } = await query;
 
@@ -53,7 +58,7 @@ const supabaseApi = {
         .order('created_at', { ascending: false });
 
       if (year) {
-        query = query.filter('created_at', 'gte', `${year}-01-01`).filter('created_at', 'lte', `${year}-12-31`);
+        query = query.eq('year', Number(year));
       }
 
       if (batch) {

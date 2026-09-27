@@ -12,8 +12,8 @@ const POSITION_ORDER = [
   "Organizing Secretary", "Design Lead", "Junior Executive", "General Member"
 ]
 
-const AVAILABLE_YEARS =[ 2020, 2019, 2018]
-const AVAILABLE_BATCHES = [ "8", "9", "10"]
+const AVAILABLE_YEARS = [2025, 2026, 2027, 2028]
+const AVAILABLE_BATCHES = ["11", "12", "13", "14"]
 
 // --- Helper Functions ---
 const cleanStr = (str) => str?.toLowerCase().trim() || ""
@@ -45,13 +45,7 @@ export default async function TeamContent({ year, batch }) {
     ? Math.max(...executives.map((e) => parseInt(e.duits_batch) || 0))
     : null
 
-  const availableBatches = Array.from(
-    new Set(
-      executives.map((exec) => String(exec.duits_batch || "")).filter(Boolean)
-    )
-  ).sort((a, b) => Number(a) - Number(b))
-
-  const activeBatch = batch || (latestBatch ? String(latestBatch) : "")
+  const activeBatch = batch || ""
   const filteredExecutives = activeBatch
     ? executives.filter((exec) => String(exec.duits_batch) === String(activeBatch))
     : executives
@@ -81,13 +75,13 @@ export default async function TeamContent({ year, batch }) {
         selectedYear={year}
         selectedBatch={activeBatch}
         availableYears={AVAILABLE_YEARS}
-        availableBatches={availableBatches.length ? availableBatches : AVAILABLE_BATCHES}
+          availableBatches={AVAILABLE_BATCHES}
       />
 
       {sortedExecutives.length === 0 ? (
         <EmptyTeamState hasFilters={!!(year || batch)} selectedYear={year} selectedBatch={activeBatch} />
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:gap-8">
           {sortedExecutives.map((member, index) => {
              // Handle unique presidents spanning columns
              const isPresident = member.position === "President"

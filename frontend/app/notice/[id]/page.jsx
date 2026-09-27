@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Link from 'next/link';
-import api from '@/config/index';
+import supabaseApi from '@/config/supabaseApi';
 import toast from 'react-hot-toast';
 import DetailsPageSkeletonLoader from '@/components/skeleton/DetailsPageSkeleton';
 
@@ -33,10 +33,8 @@ const NoticeDetailsPage = () => {
   const fetchNoticeDetails = async () => {
     try {
       setLoading(true);
-      const data = await api.get(`/notice/${params.id}`);
-      console.log(data)
-      setNotice(data?.data);
-      console.log(data?.data);
+      const data = await supabaseApi.getNoticeById(params.id);
+      setNotice(data);
     } catch (error) {
       console.error('Error fetching notice:', error);
     } finally {
@@ -95,7 +93,7 @@ const NoticeDetailsPage = () => {
           <p className="text-muted-foreground mb-8">
             The notice you're looking for doesn't exist or has been removed.
           </p>
-          <Link href="/notices">
+          <Link href="/notice">
             <Button size="lg" className="uppercase tracking-wide">
               <ArrowLeft className="mr-2 w-4 h-4" />
               Back to Notices
@@ -194,7 +192,7 @@ const NoticeDetailsPage = () => {
             {/* Event Details Card */}
             <div className="rounded-xl border border-border bg-card p-6 shadow-lg sticky top-24">
               <h3 className="text-xl font-bold uppercase tracking-wide mb-6">
-                Event Details
+                Notice Details
               </h3>
               
               <div className="space-y-5">
@@ -252,7 +250,7 @@ const NoticeDetailsPage = () => {
             </div>
 
             {/* Registration CTA Card */}
-            {notice.registrationLink && (
+            {(notice.registration_link || notice.registrationLink) && (
               <div className="rounded-xl border-2 border-primary/30 bg-gradient-to-br from-primary/5 to-primary/10 p-6 shadow-lg">
                 <h3 className="text-xl font-bold uppercase tracking-wide mb-2">
                   Ready to Join?
@@ -261,7 +259,7 @@ const NoticeDetailsPage = () => {
                   Register now to secure your spot and be part of this amazing event!
                 </p>
                 <Link
-                  href={notice.registrationLink}
+                  href={notice.registration_link || notice.registrationLink}
                   target="_blank"
                   rel="noopener noreferrer"
                 >

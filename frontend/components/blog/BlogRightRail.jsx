@@ -1,40 +1,20 @@
+import Link from "next/link";
+import { ArrowUpRight } from "lucide-react";
+
 export default function BlogRightRail() {
-  const TAGS = ["React", "Next.js", "Programming", "Technology", "Web Dev", "Life", "Culture"];
-  
   return (
-    <div className="sticky top-24 hidden lg:block pl-8 border-l border-slate-100 dark:border-slate-800">
-        
-        {/* Search */}
-        <div className="relative mb-8">
-            <input 
-                type="text" 
-                placeholder="Search" 
-                className="w-full rounded-full bg-slate-50 px-4 py-2 text-sm outline-none border border-transparent focus:bg-white focus:border-indigo-500 transition-all dark:bg-slate-900 dark:focus:bg-slate-950"
-            />
-        </div>
-
-        {/* Recommended Topics */}
-        <div className="mb-8">
-            <h4 className="mb-4 text-sm font-bold text-slate-900 dark:text-white">Recommended topics</h4>
-            <div className="flex flex-wrap gap-2">
-                {TAGS.map(tag => (
-                    <span key={tag} className="cursor-pointer rounded-full bg-slate-100 px-3 py-2 text-xs text-slate-600 transition hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700">
-                        {tag}
-                    </span>
-                ))}
-            </div>
-        </div>
-
-        {/* Newsletter Box */}
-        <div className="rounded-lg bg-indigo-50 p-5 dark:bg-slate-900">
-            <h4 className="mb-2 text-sm font-bold text-indigo-900 dark:text-indigo-100">Subscribe to DUITS</h4>
-            <p className="mb-4 text-xs text-indigo-700/80 dark:text-indigo-300/70">
-                Get the latest engineering posts delivered right to your inbox.
-            </p>
-            <button className="w-full rounded-full bg-indigo-600 px-4 py-2 text-sm font-medium text-white transition hover:bg-indigo-700">
-                Subscribe
-            </button>
-        </div>
-    </div>
+    <aside className="space-y-6 border-t border-slate-200 pt-6 lg:sticky lg:top-24 lg:border-l lg:border-t-0 lg:pl-6 lg:pt-0 dark:border-slate-800">
+      <section>
+        <h2 className="text-sm font-semibold text-slate-950 dark:text-white">Explore DUITS</h2>
+        <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-300">Read about the projects, events and people shaping technology at the University of Dhaka.</p>
+      </section>
+      <nav className="space-y-1" aria-label="Related pages">
+        {[["Events", "/events"], ["Projects", "/projects"], ["Executive team", "/executives"], ["Gallery", "/gallery"]].map(([label, href]) => (
+          <Link key={href} href={href} className="flex items-center justify-between border-b border-slate-200 py-3 text-sm font-medium text-slate-700 hover:text-blue-800 dark:border-slate-800 dark:text-slate-200 dark:hover:text-blue-300">
+            {label}<ArrowUpRight size={15} />
+          </Link>
+        ))}
+      </nav>
+    </aside>
   );
 }
