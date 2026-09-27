@@ -76,10 +76,10 @@ icons: {
     locale: "en_US",
     type: "website",
     images: [{
-      url: "/icons/duits-512.png", // Make sure this file exists in /public (1200x630px)
-     width: 1200,
-    height: 630,
-      alt: "DUITS Community Banner",
+      url: "/icons/duits-512.png",
+      width: 512,
+      height: 512,
+      alt: "Dhaka University IT Society logo",
     }],
   },
 

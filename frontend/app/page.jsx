@@ -4,7 +4,6 @@ import MessageFromOurAdvisor from "@/components/MessageFromAdvisor/MessageFromAd
 import PresidentMessage from "@/components/presidentMessage/PresidentMessage"
 import ScrollText from "@/components/scrollText/ScrollText"
 import Stat from "@/components/stat/Stat"
-import UnderConstructionModal from "@/components/UnderConstructionModal"
 import WhatWeDo from "@/components/whatWeDo/WhatWeDo"
 export default function Home() {
   return (

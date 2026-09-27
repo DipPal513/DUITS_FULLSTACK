@@ -25,10 +25,10 @@ export async function generateMetadata({ searchParams }) {
       siteName: "Dhaka University IT Society",
       images: [
         {
-          url: "https://i.ibb.co.com/tPBj742j/gallery-duits.jpg", // Replace with a group photo of the EC
-          width: 1200,
-          height: 630,
-          alt: "DUITS Executive Committee",
+          url: "/icons/duits-512.png",
+          width: 512,
+          height: 512,
+          alt: "Dhaka University IT Society logo",
         },
       ],
       locale: "en_US",

@@ -1,4 +1,3 @@
-
 import Contact from "@/components/contact";
 
 export const metadata = {
@@ -13,10 +12,10 @@ export const metadata = {
     siteName: "Dhaka University IT Society",
     images: [
       {
-        url: "https://i.ibb.co.com/9H9NcXxW/duits-512.jpg", 
-        width: 1200,
-        height: 630,
-        alt: "DUITS Contact Page",
+        url: "/icons/duits-512.png",
+        width: 512,
+        height: 512,
+        alt: "Dhaka University IT Society logo",
       },
     ],
     locale: "en_US",

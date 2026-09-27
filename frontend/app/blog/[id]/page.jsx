@@ -1,4 +1,3 @@
-
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import ReactMarkdown from "react-markdown";
@@ -24,7 +23,12 @@ export async function generateMetadata({ params }) {
     title: post.title,
     description: post.description || post.title,
     openGraph: {
-      images: [post.image],
+      images: [{
+        url: "/icons/duits-512.png",
+        width: 512,
+        height: 512,
+        alt: "Dhaka University IT Society logo",
+      }],
     },
   };
 }
