@@ -11,7 +11,7 @@ export const auth = {
     try {
       const response = await api.post('/auth/login', { email, password });
       const { user, token } = response.data;
-      if (user.role !== 'ADMIN') {
+      if (!['ADMIN', 'EDITOR'].includes(user.role)) {
         await api.post('/auth/logout');
         return { success: false, error: 'Unauthorized Access' };
       }

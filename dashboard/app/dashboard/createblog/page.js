@@ -41,12 +41,17 @@ export default function CreatePost() {
   useEffect(() => {
     const loadBlog = async () => {
       if (!editingId) return;
-      const blog = await supabaseApi.getBlogById(editingId);
-      if (!blog) return;
-      setEditingIdState(blog.id);
-      setTitle(blog.title || "");
-      setContent(blog.content || "");
-      setCoverImage(blog.image || "");
+      try {
+        const blog = await supabaseApi.getBlogById(editingId);
+        if (!blog) return;
+        setEditingIdState(blog.id);
+        setTitle(blog.title || "");
+        setContent(blog.content || "");
+        setCoverImage(blog.image || "");
+      } catch (error) {
+        console.error("Error loading blog:", error);
+        toast.error(error.message || "Failed to load blog post");
+      }
     };
     loadBlog();
   }, [editingId]);

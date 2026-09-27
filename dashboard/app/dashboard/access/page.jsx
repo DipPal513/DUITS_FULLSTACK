@@ -7,10 +7,11 @@ import { useAuth } from "@/contexts/AuthContext"
 import supabaseApi from "@/config/supabaseApi"
 import { Trash2, UserX } from "lucide-react"
 import { useEffect, useState } from "react"
+import { useRouter } from "next/navigation"
 import { Toaster, toast } from "react-hot-toast"
 export default function MembersPage() {
-    const { user: currentUser } = useAuth()
-    const isAdmin = true
+    const router = useRouter()
+    const { user: currentUser, isAdmin } = useAuth()
     const [users, setUsers] = useState([])
     const [isLoading, setIsLoading] = useState(false)
     const [error, setError] = useState(null)
@@ -22,8 +23,9 @@ export default function MembersPage() {
     const [userToDelete, setUserToDelete] = useState(null)
 
     useEffect(() => {
-        loadUsers()
-    }, [])
+        if (isAdmin) loadUsers()
+        else router.replace("/dashboard")
+    }, [isAdmin, router])
 
     const loadUsers = async () => {
         setIsLoading(true)
@@ -115,6 +117,8 @@ export default function MembersPage() {
     const isCurrentUser = (userId) => {
         return currentUser?.id === userId || currentUser?.id === userId
     }
+
+    if (!isAdmin) return null
 
     return (
         <DashboardLayout>

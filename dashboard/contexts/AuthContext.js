@@ -14,7 +14,7 @@ export function AuthProvider({ children }) {
     const fetchUser = async () => {
       setLoading(true)
       const result = await auth.checkMe()
-      if (result.success && result.user?.role === "ADMIN") {
+      if (result.success && ["ADMIN", "EDITOR"].includes(result.user?.role)) {
         setUser(result.user)
         setIsAuthenticated(true)
       } else {

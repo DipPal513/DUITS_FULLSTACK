@@ -14,7 +14,7 @@ const supabaseApi = {
       return data || [];
     } catch (error) {
       console.error('Error fetching users:', error);
-      return [];
+      throw error;
     }
   },
 
@@ -70,7 +70,7 @@ const supabaseApi = {
       };
     } catch (error) {
       console.error('Error fetching events:', error);
-      return { events: [], totalPages: 1, totalCount: 0 };
+      throw error;
     }
   },
 
@@ -163,7 +163,7 @@ const supabaseApi = {
       };
     } catch (error) {
       console.error('Error fetching executives:', error);
-      return { executives: [], totalCount: 0 };
+      throw error;
     }
   },
 
@@ -255,7 +255,7 @@ const supabaseApi = {
       };
     } catch (error) {
       console.error('Error fetching gallery:', error);
-      return { galleries: [], totalPages: 1, totalCount: 0 };
+      throw error;
     }
   },
 
@@ -339,7 +339,7 @@ const supabaseApi = {
       };
     } catch (error) {
       console.error('Error fetching notices:', error);
-      return { notices: [], totalPages: 1, totalCount: 0 };
+      throw error;
     }
   },
 
@@ -423,7 +423,7 @@ const supabaseApi = {
       };
     } catch (error) {
       console.error('Error fetching blogs:', error);
-      return { blogs: [], totalPages: 1, totalCount: 0 };
+      throw error;
     }
   },
 
@@ -439,7 +439,7 @@ const supabaseApi = {
       return data;
     } catch (error) {
       console.error('Error fetching blog:', error);
-      return null;
+      throw error;
     }
   },
 
@@ -525,7 +525,7 @@ const supabaseApi = {
       };
     } catch (error) {
       console.error('Error fetching achievements:', error);
-      return { achievements: [], totalPages: 1, totalCount: 0 };
+      throw error;
     }
   },
 
@@ -599,7 +599,7 @@ const supabaseApi = {
       return data || [];
     } catch (error) {
       console.error('Error fetching members:', error);
-      return [];
+      throw error;
     }
   },
 
@@ -660,6 +660,9 @@ const supabaseApi = {
         supabase.from('events').select('*', { count: 'exact', head: true }),
         supabase.from('gallery').select('*', { count: 'exact', head: true }),
       ]);
+      const error = members.error || executives.error || events.error || gallery.error;
+      if (error) throw error;
+
       return {
         members: members.count || 0,
         executives: executives.count || 0,
@@ -668,7 +671,7 @@ const supabaseApi = {
       };
     } catch (error) {
       console.error('Error fetching dashboard counts:', error);
-      return { members: 0, executives: 0, events: 0, gallery: 0 };
+      throw error;
     }
   },
 };

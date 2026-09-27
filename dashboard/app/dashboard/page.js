@@ -1,9 +1,11 @@
 "use client"
 
 import { useEffect, useState } from "react"
+import Link from "next/link"
 import DashboardLayout from "@/components/DashboardLayout"
 import { useAuth } from "@/contexts/AuthContext"
 import supabaseApi from "@/config/supabaseApi"
+import toast from "react-hot-toast"
 
 export default function DashboardPage() {
   const { user } = useAuth()
@@ -16,8 +18,13 @@ export default function DashboardPage() {
 
   useEffect(() => {
     const loadStats = async () => {
-      const counts = await supabaseApi.getDashboardCounts()
-      setStats(counts)
+      try {
+        const counts = await supabaseApi.getDashboardCounts()
+        setStats(counts)
+      } catch (error) {
+        console.error("Error loading dashboard counts:", error)
+        toast.error("Failed to load dashboard statistics")
+      }
     }
     loadStats()
   }, [])
@@ -113,7 +120,7 @@ export default function DashboardPage() {
         <div className="bg-card border border-border rounded-xl p-6">
           <h2 className="text-xl font-bold text-foreground mb-4">Quick Actions</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-            <button className="p-4 rounded-lg bg-primary/10 hover:bg-primary/20 border border-primary/20 text-left transition-colors group">
+            <Link href="/dashboard/membership" className="p-4 rounded-lg bg-primary/10 hover:bg-primary/20 border border-primary/20 text-left transition-colors group">
               <div className="flex items-center gap-3">
                 <div className="p-2 rounded-lg bg-primary/20 group-hover:bg-primary/30 transition-colors">
                   <svg className="w-5 h-5 text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -122,9 +129,9 @@ export default function DashboardPage() {
                 </div>
                 <span className="font-medium text-foreground">Add Member</span>
               </div>
-            </button>
+            </Link>
 
-            <button className="p-4 rounded-lg bg-accent/10 hover:bg-accent/20 border border-accent/20 text-left transition-colors group">
+            <Link href="/dashboard/events" className="p-4 rounded-lg bg-accent/10 hover:bg-accent/20 border border-accent/20 text-left transition-colors group">
               <div className="flex items-center gap-3">
                 <div className="p-2 rounded-lg bg-accent/20 group-hover:bg-accent/30 transition-colors">
                   <svg className="w-5 h-5 text-accent" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -133,9 +140,9 @@ export default function DashboardPage() {
                 </div>
                 <span className="font-medium text-foreground">Create Event</span>
               </div>
-            </button>
+            </Link>
 
-            <button className="p-4 rounded-lg bg-secondary/10 hover:bg-secondary/20 border border-secondary/20 text-left transition-colors group">
+            <Link href="/dashboard/gallery" className="p-4 rounded-lg bg-secondary/10 hover:bg-secondary/20 border border-secondary/20 text-left transition-colors group">
               <div className="flex items-center gap-3">
                 <div className="p-2 rounded-lg bg-secondary/20 group-hover:bg-secondary/30 transition-colors">
                   <svg className="w-5 h-5 text-secondary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -144,9 +151,9 @@ export default function DashboardPage() {
                 </div>
                 <span className="font-medium text-foreground">Upload Photo</span>
               </div>
-            </button>
+            </Link>
 
-            <button className="p-4 rounded-lg bg-muted hover:bg-muted/80 border border-border text-left transition-colors group">
+            <Link href="/dashboard/membership" className="p-4 rounded-lg bg-muted hover:bg-muted/80 border border-border text-left transition-colors group">
               <div className="flex items-center gap-3">
                 <div className="p-2 rounded-lg bg-muted-foreground/10 group-hover:bg-muted-foreground/20 transition-colors">
                   <svg className="w-5 h-5 text-muted-foreground" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -160,7 +167,7 @@ export default function DashboardPage() {
                 </div>
                 <span className="font-medium text-foreground">View Reports</span>
               </div>
-            </button>
+            </Link>
           </div>
         </div>
 

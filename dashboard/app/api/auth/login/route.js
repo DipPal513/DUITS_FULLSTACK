@@ -31,6 +31,10 @@ export async function POST(request) {
       return NextResponse.json({ success: false, message: 'Invalid credentials' }, { status: 400 });
     }
 
+    if (!['ADMIN', 'EDITOR'].includes(user.role)) {
+      return NextResponse.json({ success: false, message: 'Unauthorized access' }, { status: 403 });
+    }
+
     const token = signAuthToken({ id: user.id, role: user.role });
     const cookieStore = await cookies();
     cookieStore.set(TOKEN_NAME, token, cookieOptions());

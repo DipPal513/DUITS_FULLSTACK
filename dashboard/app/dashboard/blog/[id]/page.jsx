@@ -1,7 +1,6 @@
-import React from 'react'
+import { redirect } from 'next/navigation'
 
-export default function page() {
-  return (
-    <div>page</div>
-  )
+export default async function BlogPage({ params }) {
+  const { id } = await params
+  redirect(`/dashboard/createblog?id=${encodeURIComponent(id)}`)
 }

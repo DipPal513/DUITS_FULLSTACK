@@ -5,6 +5,7 @@ import supabaseApi from "@/config/supabaseApi"
 import { Eye, Search, Trash2, User, X, Download } from "lucide-react"
 import { useEffect, useState } from "react"
 import toast from "react-hot-toast"
+import { useAuth } from "@/contexts/AuthContext"
 
 // ─── PDF Export Utility ──────────────────────────────────────────────────────
 
@@ -110,7 +111,7 @@ async function exportMembersPDF(members) {
 // ─── Main Component ──────────────────────────────────────────────────────────
 
 export default function MembershipPage() {
-  const isAdmin = true
+  const { isAdmin } = useAuth()
   const [members, setMembers] = useState([])
   const [filteredMembers, setFilteredMembers] = useState([])
   const [showDetailsModal, setShowDetailsModal] = useState(false)

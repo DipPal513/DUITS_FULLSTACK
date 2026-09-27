@@ -5,7 +5,7 @@ import { publicUser } from '@/lib/authServer';
 
 export async function POST(request) {
   try {
-    const { name, email, password, role } = await request.json();
+    const { name, email, password } = await request.json();
     if (!name || !email || !password) {
       return NextResponse.json({ success: false, message: 'Name, email and password are required' }, { status: 400 });
     }
@@ -35,7 +35,7 @@ export async function POST(request) {
         name,
         email,
         password: hashedPassword,
-        role: role === 'ADMIN' || role === 'EDITOR' ? 'PENDING' : (role || 'PENDING'),
+        role: 'PENDING',
       }])
       .select('id, name, email, role, created_at')
       .single();

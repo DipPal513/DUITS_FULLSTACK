@@ -127,7 +127,7 @@ useEffect(() => {
 
           <div className="mt-6 p-4 rounded-lg bg-accent/10 border border-accent/20">
             <p className="text-xs text-muted-foreground text-center">
-              Only accounts with the <span className="font-medium text-foreground">ADMIN</span> role can sign in.
+              Only approved accounts can sign in.
             </p>
           </div>
         </div>

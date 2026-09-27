@@ -20,7 +20,7 @@ const convertToBase64 = (file) =>
     reader.onerror = (err) => reject(err);
   });
 
-  const isAdmin = true
+  const { isAdmin } = useAuth()
   const [executives, setExecutives] = useState([])
   const [filteredExecutives, setFilteredExecutives] = useState([])
   const [showModal, setShowModal] = useState(false)

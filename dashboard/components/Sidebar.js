@@ -134,7 +134,7 @@ export default function Sidebar() {
 
       {/* Navigation */}
       <nav className="flex-1 p-4 space-y-1 overflow-y-auto">
-        {navigation.map((item) => {
+        {navigation.filter((item) => isAdmin || item.href !== "/dashboard/access").map((item) => {
           const isActive = pathname === item.href
           return (
             <Link
