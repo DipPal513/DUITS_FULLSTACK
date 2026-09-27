@@ -41,17 +41,17 @@ export default function Navigation() {
   ]
 
   return (
-    <nav className={`absolute left-0 top-0 z-50 w-full transition-colors duration-300 ${isScrolled ? "fixed bg-background/95 shadow-sm backdrop-blur-xl" : "bg-transparent"}`}>
-      <div className={`mx-auto border-b border-border/50 px-4 sm:px-6 lg:px-8 ${isScrolled ? "" : "bg-background/50 backdrop-blur-xl lg:mt-8 lg:max-w-[calc(100%-4rem)] lg:rounded-full lg:border"}`}>
+    <nav className="fixed left-0 top-0 z-50 w-full border-b border-border bg-background/95 shadow-sm backdrop-blur-xl">
+      <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between lg:h-[76px]">
           <Link href="/" aria-label="Dhaka University IT Society home" className="flex min-w-0 items-center gap-3">
-            <Image src="/icons/duits-512.png" alt="DUITS logo" height={56} width={56} priority className="h-12 w-12 shrink-0 object-contain sm:h-14 sm:w-14" />
+            <Image src="/icons/duits-512.png" alt="DUITS logo" height={44} width={44} priority className="h-10 w-10 shrink-0 object-contain" />
             <span className="truncate text-sm font-semibold text-foreground sm:text-base">Dhaka University IT Society</span>
           </Link>
 
-          <div className="hidden items-center gap-5 xl:flex">
+          <div className="hidden items-center gap-6 xl:flex">
             {navLinks.map((link) => (
-              <Link key={link.href} href={link.href} className="whitespace-nowrap text-sm font-medium text-foreground/85 transition-colors hover:text-primary">
+              <Link key={link.href} href={link.href} className="whitespace-nowrap text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
                 {link.label}
               </Link>
             ))}

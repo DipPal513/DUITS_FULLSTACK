@@ -49,12 +49,14 @@ export default function ChatWidget() {
   };
 
   return (
-    <div className="fixed bottom-6 right-6 z-[9999] font-sans">
+    <div className="fixed bottom-4 right-4 z-[9999] font-sans sm:bottom-6 sm:right-6">
       
       {/* --- 1. The Launcher (Modern Pill) --- */}
       <button
         onClick={toggleChat}
-        className={`group relative flex items-center gap-3 pl-4 pr-6 py-4 rounded-full shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] transition-all duration-500 ease-out
+        aria-label={isOpen ? "Close DUITS assistant" : "Open DUITS assistant"}
+        aria-expanded={isOpen}
+        className={`group relative flex items-center gap-3 p-3 sm:pl-4 sm:pr-6 sm:py-4 rounded-full shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] transition-all duration-500 ease-out
           ${isOpen 
             ? 'bg-red-600 rotate-90 scale-0 opacity-0 absolute bottom-0 right-0' 
             : 'bg-white dark:bg-slate-900 scale-100 opacity-100'
@@ -77,7 +79,7 @@ export default function ChatWidget() {
         <div className="bg-gradient-to-br from-blue-600 to-indigo-600 p-2 rounded-full text-white shadow-lg group-hover:scale-110 transition-transform duration-300">
            <Bot size={20} />
         </div>
-        <div className="text-left">
+        <div className="hidden text-left sm:block">
            <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">DUITS AI</p>
            <p className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">Ask Help</p>
         </div>

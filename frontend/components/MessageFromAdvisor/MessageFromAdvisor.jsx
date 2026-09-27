@@ -6,43 +6,43 @@ import Link from 'next/link'
 
 const MessageFromOurAdvisor = () => {
   return (
-    <section className="py-20 bg-gray-50 dark:bg-black transition-colors duration-300">
-      <div className="container mx-auto px-4 lg:px-8 max-w-6xl">
+    <section className="bg-background py-16 sm:py-20">
+      <div className="mx-auto max-w-screen-2xl px-5 sm:px-8 lg:px-12">
         
         {/* Section Header */}
-        <div className="mb-10 flex items-center gap-3">
-          <div className="h-2 w-2 rounded-full bg-blue-600 dark:bg-blue-500 animate-pulse" />
-          <h2 className="text-sm font-bold tracking-widest text-gray-500 dark:text-gray-400 uppercase">
+        <div className="mb-6 flex items-center gap-3">
+          <div className="h-px w-8 bg-primary" />
+          <h2 className="text-xs font-semibold uppercase text-muted-foreground">
             Leadership Insight
           </h2>
         </div>
 
         {/* The Grid Layout (Bento Style) */}
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6">
+        <div className="grid grid-cols-1 gap-6 lg:grid-cols-12 lg:gap-8">
           
           {/* BLOCK 1: THE IMAGE (Occupies 5 columns) */}
-          <div className="lg:col-span-5 h-[400px] lg:h-auto relative group overflow-hidden rounded-3xl">
+          <div className="relative aspect-[4/3] overflow-hidden rounded-md border border-border bg-muted lg:col-span-5 lg:aspect-auto">
             <img
               src="/advisor.jpg"
               alt="Advisor"
-              className="absolute inset-0 w-full h-full object-cover transition-transform duration-700 group-hover:scale-105"
+              className="absolute inset-0 h-full w-full object-cover"
             />
             {/* Dark Mode Gradient Overlay at bottom for name legibility if needed */}
             <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent opacity-0 dark:opacity-40 transition-opacity" />
           </div>
 
           {/* BLOCK 2: THE MESSAGE (Occupies 7 columns) */}
-          <div className="lg:col-span-7 bg-white dark:bg-gray-900 rounded-3xl p-8 md:p-12 border border-gray-100 dark:border-gray-800 flex flex-col justify-between shadow-sm dark:shadow-none">
+          <div className="flex flex-col justify-between rounded-md border border-border bg-card p-6 sm:p-8 lg:col-span-7 lg:p-10">
             
             {/* Content Top */}
             <div>
-              <Quote className="text-blue-600 dark:text-blue-500 mb-6 w-10 h-10" />
+              <Quote className="mb-6 h-8 w-8 text-primary" />
               
-              <h3 className="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white leading-snug mb-6">
-                "Our mission isn't just to build technology, but to build <span className="text-blue-600 dark:text-blue-400">trust</span>."
+              <h3 className="mb-5 text-2xl font-semibold leading-snug text-foreground sm:text-3xl">
+                "Our mission isn't just to build technology, but to build <span className="text-primary">trust</span>."
               </h3>
               
-              <div className="prose dark:prose-invert text-gray-600 dark:text-gray-300 leading-relaxed">
+              <div className="max-w-2xl leading-7 text-muted-foreground">
                 <p>
                   In a world obsessed with speed, we choose to prioritize stability and integrity. The decisions we make today are the foundation for the community we are building for tomorrow.
                 </p>
@@ -50,14 +50,14 @@ const MessageFromOurAdvisor = () => {
             </div>
 
             {/* Content Bottom: Info & Action */}
-            <div className="mt-10 pt-8 border-t border-gray-100 dark:border-gray-800 flex items-center justify-between">
+            <div className="mt-8 flex items-center justify-between gap-4 border-t border-border pt-6">
               
               {/* Profile Details */}
               <div>
-                <div className="font-bold text-lg text-gray-900 dark:text-white">
+                <div className="font-semibold text-foreground">
                   	Dr. Kazi Muheymin-Us-Sakib (Professor)
                 </div>
-                <div className="text-sm text-gray-500 dark:text-gray-400 font-medium">
+                <div className="mt-1 text-sm text-muted-foreground">
                   Chief Advisor
                 </div>
               </div>
@@ -65,9 +65,10 @@ const MessageFromOurAdvisor = () => {
               {/* Action Button */}
               <Link
                 href="/about" 
-                className="group flex h-12 w-12 items-center justify-center rounded-full bg-gray-100 dark:bg-gray-800 text-gray-900 dark:text-white transition-all duration-300 hover:bg-blue-600 hover:text-white dark:hover:bg-blue-600"
+                aria-label="Learn more about DUITS"
+                className="group flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-border text-foreground transition-colors hover:border-primary hover:bg-primary hover:text-primary-foreground"
               >
-                <ArrowRight size={20} className="transition-transform duration-300 group-hover:-rotate-45" />
+                <ArrowRight size={18} className="transition-transform group-hover:translate-x-0.5" />
               </Link>
               
             </div>

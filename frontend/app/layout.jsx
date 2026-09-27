@@ -5,15 +5,9 @@ import { ThemeProvider } from "@/components/theme-provider"
 import { Analytics } from "@vercel/analytics/next"
 import { GeistMono } from "geist/font/mono"
 import { GeistSans } from "geist/font/sans"
-import { Inter } from "next/font/google"
 import { Suspense } from "react"
 import { Toaster } from "react-hot-toast"
 import "./globals.css"
-const inter = Inter({
-  subsets: ["latin"],
-  variable: "--font-inter",
-})
-
 // 1. Viewport (Mobile Responsiveness)
 export const viewport = {
   width: "device-width",
@@ -84,7 +78,7 @@ icons: {
   },
 
   twitter: {
-    card: "summary_large_image",
+    card: "summary",
     title: "DUITS - Dhaka University IT Society",
     description: "Fostering innovation and technology at Dhaka University.",
     site: "@duits_official",
@@ -133,13 +127,13 @@ export default function RootLayout({ children }) {
       <link rel="icon" href="icons/duits-512.png" />
       <link rel="apple-touch-icon" href="icons/duits-512.png" />
     </head>
-      <body className={`font-sans ${inter.variable} ${GeistSans.variable} ${GeistMono.variable} antialiased`}>
+      <body className={`font-sans ${GeistSans.variable} ${GeistMono.variable} antialiased`}>
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
         />
         <Toaster />
-        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem disableTransitionOnChange>
           <Suspense fallback={ 
             <div className="flex flex-col items-center justify-center min-h-screen bg-slate-50 dark:bg-[#020617] transition-colors duration-500">
   
