@@ -4,11 +4,13 @@ import { ThemeToggle } from "@/components/theme-toggle"
 import { Menu, X } from "lucide-react"
 import Link from "next/link"
 import { useEffect, useState } from "react"
+import { usePathname } from "next/navigation"
 import Image from "next/image"
 
 export default function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false)
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
+  const pathname = usePathname()
 
   useEffect(() => {
     const handleScroll = () => setIsScrolled(window.scrollY > 50)
@@ -30,18 +32,16 @@ export default function Navigation() {
   }, [isMobileMenuOpen])
 
   const navLinks = [
-    { href: "/", label: "Home" },
     { href: "/events", label: "Events" },
+    { href: "/notice", label: "Notices" },
     { href: "/executives", label: "Executives" },
-    { href: "/notice", label: "Notice" },
     { href: "/gallery", label: "Gallery" },
-    { href: "/blog", label: "Blog" },
-    { href: "/membership", label: "Membership" },
+    { href: "/blog", label: "Journal" },
     { href: "/contact", label: "Contact" },
   ]
 
   return (
-    <nav className="fixed left-0 top-0 z-50 w-full border-b border-border bg-background/95 shadow-sm backdrop-blur-xl">
+    <nav className={`fixed left-0 top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur-xl transition-shadow duration-200 ${isScrolled ? "shadow-sm" : ""}`}>
       <div className="mx-auto max-w-screen-2xl px-4 sm:px-6 lg:px-8">
         <div className="flex h-16 items-center justify-between lg:h-[76px]">
           <Link href="/" aria-label="Dhaka University IT Society home" className="flex min-w-0 items-center gap-3">
@@ -49,13 +49,14 @@ export default function Navigation() {
             <span className="truncate text-sm font-semibold text-foreground sm:text-base">Dhaka University IT Society</span>
           </Link>
 
-          <div className="hidden items-center gap-6 xl:flex">
+          <div className="hidden items-center gap-4 xl:flex xl:gap-5">
             {navLinks.map((link) => (
-              <Link key={link.href} href={link.href} className="whitespace-nowrap text-sm font-medium text-muted-foreground transition-colors hover:text-primary">
+              <Link key={link.href} href={link.href} aria-current={pathname === link.href ? "page" : undefined} className={`whitespace-nowrap text-sm font-medium transition-colors hover:text-primary ${pathname === link.href ? "text-primary" : "text-muted-foreground"}`}>
                 {link.label}
               </Link>
             ))}
             <ThemeToggle />
+            <Link href="/membership" className="inline-flex min-h-10 items-center rounded-md bg-primary px-4 text-sm font-semibold text-primary-foreground transition-colors hover:bg-primary/90">Join DUITS</Link>
           </div>
 
           <div className="flex shrink-0 items-center gap-2 xl:hidden">
@@ -86,18 +87,21 @@ export default function Navigation() {
             </button>
           </div>
           <div className="flex flex-1 flex-col overflow-y-auto px-5 py-8 sm:px-8">
-            <div className="mx-auto flex w-full max-w-lg flex-col gap-1">
+              <div className="mx-auto flex w-full max-w-lg flex-col gap-1">
               {navLinks.map((link, index) => (
                 <Link
                   key={link.href}
                   href={link.href}
                   onClick={() => setIsMobileMenuOpen(false)}
-                  className="flex min-h-12 items-center justify-between border-b border-border/70 py-3 text-lg font-medium transition-colors hover:text-primary"
+                    aria-current={pathname === link.href ? "page" : undefined}
+                    className={`editorial-enter flex min-h-12 items-center justify-between border-b border-border/70 py-3 text-lg font-medium transition-colors hover:text-primary ${pathname === link.href ? "text-primary" : "text-foreground"}`}
+                    style={{ animationDelay: `${index * 45}ms` }}
                 >
                   <span>{link.label}</span>
                   <span className="text-xs text-muted-foreground">{String(index + 1).padStart(2, "0")}</span>
                 </Link>
               ))}
+              <Link href="/membership" onClick={() => setIsMobileMenuOpen(false)} className="mt-6 inline-flex min-h-12 items-center justify-center rounded-md bg-primary px-5 text-sm font-semibold text-primary-foreground">Join DUITS</Link>
             </div>
             <div className="mx-auto mt-auto w-full max-w-lg pt-8 text-sm text-muted-foreground">University of Dhaka · TSC</div>
           </div>

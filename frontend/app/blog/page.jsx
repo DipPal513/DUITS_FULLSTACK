@@ -15,17 +15,17 @@ export default async function BlogListingPage({ searchParams }) {
   const category = params?.category || "All";
 
   return (
-    <div className="min-h-screen pt-42 bg-white text-slate-900 dark:bg-slate-950 dark:text-slate-50">
+    <div className="min-h-screen bg-slate-50 pt-24 text-slate-900 dark:bg-slate-950 dark:text-slate-50">
       
       {/* 1. Sticky Filter Bar */}
       <BlogFilter currentCategory={category} />
 
       {/* 2. Main Grid Layout */}
-      <div className="mx-auto max-w-screen-xl px-4 py-8 md:px-6 lg:py-10">
-        <div className="grid grid-cols-1 gap-12 lg:grid-cols-12">
+      <div className="mx-auto max-w-screen-2xl px-5 py-10 sm:px-8 lg:py-14 lg:px-12">
+        <div className="grid grid-cols-1 gap-10 lg:grid-cols-[minmax(0,1.5fr)_minmax(16rem,0.65fr)]">
           
           {/* Left Column: Blog Feed (Span 8) */}
-          <main className="lg:col-span-8">
+          <main>
             <Suspense key={`${page}-${category}`} fallback={<BlogSkeleton />}>
                {/* NOTE: Your BlogContent component should map over your posts 
                  and render <BlogCard post={post} /> for each one.
@@ -35,7 +35,7 @@ export default async function BlogListingPage({ searchParams }) {
           </main>
 
           {/* Right Column: Sidebar (Span 4) */}
-          <aside className="lg:col-span-4">
+          <aside>
              <BlogRightRail />
           </aside>
           

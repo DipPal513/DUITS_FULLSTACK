@@ -64,7 +64,7 @@ const MessageFromOurAdvisor = () => {
 
               {/* Action Button */}
               <Link
-                href="/about" 
+                href="/#about"
                 aria-label="Learn more about DUITS"
                 className="group flex h-10 w-10 shrink-0 items-center justify-center rounded-md border border-border text-foreground transition-colors hover:border-primary hover:bg-primary hover:text-primary-foreground"
               >

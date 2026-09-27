@@ -3,11 +3,15 @@ import { supabase } from '@/lib/supabase';
 // 1. Fetch Single Post by ID
 export async function fetchPostById(id) {
   try {
-    const { data, error } = await supabase
+    let query = supabase
       .from('blogs')
-      .select('*')
-      .or(`id.eq.${id},slug.eq.${id}`)
-      .single();
+      .select('*');
+
+    query = /^\d+$/.test(String(id))
+      ? query.eq('id', Number(id))
+      : query.eq('slug', id);
+
+    const { data, error } = await query.single();
 
     if (error) {
       console.error("Error fetching post:", error);

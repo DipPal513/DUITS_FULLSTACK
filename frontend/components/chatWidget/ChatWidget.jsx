@@ -1,12 +1,12 @@
 'use client'; 
 
 import { useState, useRef, useEffect } from 'react';
-import { Send, X, MessageSquare, Bot, Sparkles, ChevronDown } from 'lucide-react';
+import { Send, X, Bot, ChevronDown } from 'lucide-react';
 
 export default function ChatWidget() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([
-    { role: 'bot', content: 'Welcome to DUITS! 🚀 I am your virtual assistant. Ask me about membership, wings, or upcoming events.' }
+    { role: 'bot', content: 'Hello. I can help with DUITS membership, events, and society information.' }
   ]);
   const [input, setInput] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -56,78 +56,51 @@ export default function ChatWidget() {
         onClick={toggleChat}
         aria-label={isOpen ? "Close DUITS assistant" : "Open DUITS assistant"}
         aria-expanded={isOpen}
-        className={`group relative flex items-center gap-3 p-3 sm:pl-4 sm:pr-6 sm:py-4 rounded-full shadow-[0_10px_40px_-10px_rgba(0,0,0,0.2)] transition-all duration-500 ease-out
+        className={`group relative flex items-center gap-3 rounded-md border border-slate-300 bg-white p-2.5 shadow-lg transition-all duration-200 hover:border-blue-700 dark:border-slate-700 dark:bg-slate-900
           ${isOpen 
-            ? 'bg-red-600 rotate-90 scale-0 opacity-0 absolute bottom-0 right-0' 
-            : 'bg-white dark:bg-slate-900 scale-100 opacity-100'
+            ? 'pointer-events-none scale-95 opacity-0'
+            : 'scale-100 opacity-100'
           }`}
       >
-        {/* Animated Border Gradient */}
-        <div className="absolute inset-0 rounded-full p-[1px] bg-gradient-to-r from-blue-500 via-purple-500 to-red-500 opacity-70 -z-10 group-hover:opacity-100 transition-opacity">
-           <div className="w-full h-full bg-white dark:bg-slate-900 rounded-full"></div>
-        </div>
-
-        {/* Status Dot */}
-        <div className="absolute top-0 right-0 -mt-1 -mr-1">
-          <span className="relative flex h-3 w-3">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-            <span className="relative inline-flex rounded-full h-3 w-3 bg-green-500 border-2 border-white dark:border-slate-900"></span>
-          </span>
-        </div>
-
-        {/* Icon & Text */}
-        <div className="bg-gradient-to-br from-blue-600 to-indigo-600 p-2 rounded-full text-white shadow-lg group-hover:scale-110 transition-transform duration-300">
-           <Bot size={20} />
-        </div>
+          <div className="flex h-9 w-9 items-center justify-center rounded-sm bg-blue-800 text-white"><Bot size={19} /></div>
         <div className="hidden text-left sm:block">
-           <p className="text-xs font-bold text-slate-500 dark:text-slate-400 uppercase tracking-wider">DUITS AI</p>
-           <p className="text-sm font-bold text-slate-900 dark:text-white group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">Ask Help</p>
+            <p className="text-xs font-semibold text-slate-900 dark:text-white">DUITS assistant</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400">Ask a question</p>
         </div>
       </button>
 
       {/* --- 2. The Chat Window (Glassmorphism) --- */}
       <div
-        className={`fixed bottom-6 right-6 w-[90vw] sm:w-[380px] h-[600px] max-h-[80vh] flex flex-col rounded-3xl overflow-hidden shadow-2xl transition-all duration-500 cubic-bezier(0.16, 1, 0.3, 1) origin-bottom-right border border-white/20 dark:border-slate-700
+        className={`fixed bottom-4 right-4 flex h-[min(36rem,calc(100dvh-2rem))] w-[min(24rem,calc(100vw-2rem))] origin-bottom-right flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-xl transition-all duration-200 dark:border-slate-700 dark:bg-slate-900 sm:bottom-6 sm:right-6
           ${isOpen 
             ? 'opacity-100 scale-100 translate-y-0 visible' 
             : 'opacity-0 scale-75 translate-y-10 invisible pointer-events-none'
-          }
-          bg-white/80 dark:bg-slate-900/80 backdrop-blur-xl
-        `}
+          }`}
       >
         
         {/* Header */}
-        <div className="relative bg-slate-50 dark:bg-slate-900/50 p-6 border-b border-slate-100 dark:border-slate-800 flex justify-between items-start shrink-0">
+          <div className="flex shrink-0 items-center justify-between border-b border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
           <div className="flex items-center gap-4">
-             {/* Avatar with Glow */}
-             <div className="relative">
-                <div className="absolute inset-0 bg-blue-500 blur-md opacity-40"></div>
-                <div className="relative w-10 h-10 bg-gradient-to-br from-blue-600 to-indigo-700 rounded-xl flex items-center justify-center text-white shadow-inner">
-                   <Bot size={24} />
-                </div>
-                <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-500 border-2 border-white dark:border-slate-900 rounded-full"></div>
-             </div>
+             <div className="flex h-9 w-9 items-center justify-center rounded-sm bg-blue-800 text-white"><Bot size={19} /></div>
              <div>
-                <h3 className="font-bold text-slate-900 dark:text-white text-lg">DUITS Assistant</h3>
-                <div className="flex items-center gap-1.5">
-                   <Sparkles size={12} className="text-blue-500 animate-pulse" />
-                   <span className="text-xs font-medium text-slate-500 dark:text-slate-400">Always active</span>
-                </div>
+               <h3 className="text-sm font-semibold text-slate-900 dark:text-white">DUITS assistant</h3>
+               <p className="text-xs text-slate-500 dark:text-slate-400">Membership · events · society</p>
              </div>
           </div>
           
           <button 
             onClick={toggleChat}
-            className="p-2 text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-200 dark:hover:bg-slate-800 rounded-full transition-colors"
+            aria-label="Minimize assistant"
+            className="rounded-md p-2 text-slate-500 transition-colors hover:bg-slate-100 hover:text-slate-900 dark:hover:bg-slate-800 dark:hover:text-white"
           >
             <ChevronDown size={20} />
           </button>
         </div>
 
         {/* Messages Body */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-6 scrollbar-hide">
+           <div className="flex-1 space-y-4 overflow-y-auto bg-slate-50 p-4 dark:bg-slate-950">
           <div className="text-center text-xs text-slate-400 dark:text-slate-500 my-4">
-             <span className="bg-slate-100 dark:bg-slate-800 px-3 py-1 rounded-full">Today</span>
+             <span>DUITS information assistant</span>
           </div>
 
           {messages.map((msg, idx) => (
@@ -139,7 +112,7 @@ export default function ChatWidget() {
                  
                  {/* Tiny Avatar for Bot only */}
                  {msg.role === 'bot' && (
-                    <div className="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0 mb-1">
+                    <div className="mb-1 flex h-6 w-6 shrink-0 items-center justify-center rounded-sm bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300">
                        <Bot size={14} />
                     </div>
                  )}
@@ -148,8 +121,8 @@ export default function ChatWidget() {
                  <div
                    className={`px-5 py-3 text-sm leading-relaxed shadow-sm relative
                      ${msg.role === 'user'
-                       ? 'bg-blue-600 text-white rounded-2xl rounded-br-none'
-                       : 'bg-white dark:bg-slate-800 text-slate-700 dark:text-slate-200 rounded-2xl rounded-bl-none border border-slate-100 dark:border-slate-700'
+                       ? 'bg-blue-800 text-white rounded-md'
+                       : 'bg-white text-slate-700 dark:bg-slate-900 dark:text-slate-200 rounded-md border border-slate-200 dark:border-slate-800'
                      }`}
                  >
                    {msg.content}
@@ -162,10 +135,10 @@ export default function ChatWidget() {
           {isLoading && (
             <div className="flex justify-start w-full">
               <div className="flex items-end gap-2">
-                 <div className="w-6 h-6 rounded-full bg-blue-100 dark:bg-blue-900/30 flex items-center justify-center text-blue-600 dark:text-blue-400 shrink-0">
+                 <div className="flex h-6 w-6 shrink-0 items-center justify-center rounded-sm bg-blue-100 text-blue-800 dark:bg-blue-900/40 dark:text-blue-300">
                     <Bot size={14} />
                  </div>
-                 <div className="bg-white dark:bg-slate-800 border border-slate-100 dark:border-slate-700 px-4 py-3 rounded-2xl rounded-bl-none flex items-center gap-1.5 shadow-sm">
+                 <div className="flex items-center gap-1.5 rounded-md border border-slate-200 bg-white px-4 py-3 dark:border-slate-800 dark:bg-slate-900">
                    <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce [animation-delay:-0.3s]"></span>
                    <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce [animation-delay:-0.15s]"></span>
                    <span className="w-1.5 h-1.5 bg-slate-400 rounded-full animate-bounce"></span>
@@ -177,11 +150,11 @@ export default function ChatWidget() {
         </div>
 
         {/* Input Footer */}
-        <div className="p-4 bg-white dark:bg-slate-900/90 border-t border-slate-100 dark:border-slate-800 shrink-0">
-          <div className="relative flex items-center bg-slate-100 dark:bg-slate-800 rounded-2xl border border-transparent focus-within:border-blue-500/50 focus-within:bg-white dark:focus-within:bg-slate-800 transition-all duration-300">
+        <div className="shrink-0 border-t border-slate-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-900">
+          <div className="relative flex items-center rounded-md border border-slate-300 bg-white focus-within:border-blue-700 dark:border-slate-700 dark:bg-slate-950">
             <input
               type="text"
-              className="w-full bg-transparent text-slate-900 dark:text-white placeholder-slate-400 text-sm pl-4 pr-12 py-4 focus:outline-none"
+              className="w-full bg-transparent py-3 pl-3 pr-12 text-sm text-slate-900 placeholder-slate-400 focus:outline-none dark:text-white"
               placeholder="Type your question..."
               value={input}
               onChange={(e) => setInput(e.target.value)}
@@ -192,15 +165,16 @@ export default function ChatWidget() {
             <button
               onClick={handleSend}
               disabled={isLoading || !input.trim()}
-              className="absolute right-2 p-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 disabled:opacity-50 disabled:hover:bg-blue-600 transition-all shadow-md shadow-blue-600/20 active:scale-95"
+              aria-label="Send message"
+              className="absolute right-1.5 flex h-9 w-9 items-center justify-center rounded-sm bg-blue-800 text-white transition-colors hover:bg-blue-900 disabled:opacity-50"
             >
               <Send size={18} />
             </button>
           </div>
           
           <div className="text-center mt-3">
-            <p className="text-[10px] font-medium text-slate-400 flex items-center justify-center gap-1.5">
-               Powered by <span className="text-blue-600 dark:text-blue-400 font-bold">DUITS AI</span>
+            <p className="flex items-center justify-center gap-1.5 text-[10px] font-medium text-slate-400">
+              DUITS virtual assistant
             </p>
           </div>
         </div>

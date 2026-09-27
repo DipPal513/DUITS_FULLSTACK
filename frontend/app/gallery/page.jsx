@@ -27,29 +27,19 @@ export const metadata = {
 
 export default function GalleryPage() {
   return (
-    <main className="min-h-screen bg-white dark:bg-slate-950 transition-colors duration-300">
-      <section className="pt-20">
-        <div
-          id="gallery"
-          className="py-20 lg:py-32 bg-gradient-to-b from-transparent to-slate-50/50 dark:to-slate-900/50"
-        >
-          <div className="container mx-auto px-6 lg:px-8">
-            {/* Header Section - Loads Instantly */}
-            <div className="max-w-3xl mx-auto text-center mb-16">
-              <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-slate-900 to-slate-600 dark:from-white dark:to-slate-400 bg-clip-text text-transparent tracking-tight">
-                Event Gallery
-              </h1>
-              <p className="text-lg text-slate-600 dark:text-slate-400 leading-relaxed">
-                Relive the memorable moments from our events, workshops, and
-                community gatherings
-              </p>
-            </div>
+    <main className="min-h-screen bg-slate-50 pt-24 dark:bg-slate-950">
+      <section id="gallery" className="py-12 lg:py-16">
+        <div className="mx-auto max-w-screen-2xl px-5 sm:px-8 lg:px-12">
+            <header className="mb-8 border-b border-slate-200 pb-6 dark:border-slate-800">
+              <p className="mb-2 text-xs font-semibold uppercase text-blue-800 dark:text-blue-300">Archive</p>
+              <h1 className="text-3xl font-semibold text-slate-950 sm:text-4xl dark:text-white">DUITS gallery</h1>
+              <p className="mt-3 max-w-2xl text-sm leading-6 text-slate-600 dark:text-slate-300">A visual record of society events, workshops, and campus life.</p>
+            </header>
 
             {/* Content Area - Fetches Independently */}
             <Suspense fallback={<GlobalSkeleton />}>
               <GalleryContent />
             </Suspense>
-          </div>
         </div>
       </section>
     </main>

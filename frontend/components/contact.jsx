@@ -56,11 +56,11 @@ export default function Contact() {
     message: "",
   })
 
-  const handleSubmit = () => {
-    console.log("Contact form submitted:", formData)
-    // Handle form submission
-    // alert("Message sent successfully!") // Replaced with console log for preview safety
-    setFormData({ name: "", email: "", subject: "", message: "" })
+  const handleSubmit = (event) => {
+    event.preventDefault()
+    const subject = encodeURIComponent(formData.subject || `DUITS enquiry from ${formData.name}`)
+    const body = encodeURIComponent(`Name: ${formData.name}\nReply email: ${formData.email}\n\n${formData.message}`)
+    window.location.href = `mailto:duits.official@gmail.com?subject=${subject}&body=${body}`
   }
 
   return (
@@ -69,25 +69,26 @@ export default function Contact() {
       
       {/* Hero Section */}
       {/* Added dark gradient and border colors */}
-      <section className="relative bg-gradient-to-br pt-30 from-slate-50 via-white to-slate-50 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950 border-b border-slate-100 dark:border-slate-800">
-        <div className="container mx-auto px-6 lg:px-8 py-16 lg:py-24">
+      <section className="border-b border-slate-200 bg-[#f0f4f2] pt-24 dark:border-slate-800 dark:bg-[#16242a]">
+        <div className="mx-auto max-w-screen-2xl px-5 py-14 sm:px-8 lg:px-12 lg:py-20">
           <div className="max-w-3xl">
             {/* Added dark:text-white */}
-            <h1 className="text-5xl lg:text-6xl font-semibold tracking-tight text-slate-900 dark:text-white mb-6">
-              Let's talk
+            <p className="mb-3 text-xs font-semibold uppercase text-blue-900 dark:text-cyan-300">Stay in touch</p>
+            <h1 className="font-serif text-5xl font-medium leading-tight text-slate-900 dark:text-white sm:text-6xl">
+              Contact DUITS
             </h1>
             {/* Added dark:text-slate-400 */}
             <p className="text-xl text-slate-600 dark:text-slate-400 leading-relaxed">
-              Whether you have a question, want to collaborate, or just want to say hello, we're here to help. Reach out and we'll get back to you as soon as possible.
+              For membership questions, event partnerships, campus collaborations, or general enquiries, contact the society through the channels below.
             </p>
           </div>
         </div>
       </section>
 
       {/* Main Content */}
-      <section className="py-16 lg:py-24">
-        <div className="container mx-auto px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-5 gap-12 lg:gap-16">
+      <section className="bg-[#f0f4f2] py-12 dark:bg-[#16242a] lg:py-16">
+        <div className="mx-auto max-w-screen-2xl px-5 sm:px-8 lg:px-12">
+          <div className="grid grid-cols-1 gap-10 lg:grid-cols-[0.8fr_1.2fr] lg:gap-16">
             
             {/* Contact Information */}
             <div className="lg:col-span-2 space-y-12">
@@ -176,7 +177,7 @@ export default function Contact() {
 
               {/* Map */}
               {/* Added dark:border-slate-800 */}
-              <div className="rounded-xl overflow-hidden border border-slate-200 dark:border-slate-800 shadow-sm">
+              <div className="overflow-hidden border border-slate-200 dark:border-slate-800">
                 <iframe
                   src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3652.3947964830596!2d90.39364931543654!3d23.735001184596734!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755b8b7a55cd36f%3A0xfcc5b021faff43ea!2sTeacher-Student%20Center%20(TSC)!5e0!3m2!1sen!2sbd!4v1234567890123!5m2!1sen!2sbd"
                   width="100%"
@@ -193,7 +194,7 @@ export default function Contact() {
             {/* Contact Form */}
             <div className="lg:col-span-3">
               {/* Card: Added dark:bg-slate-900, dark:border-slate-800 */}
-              <div className="bg-white dark:bg-slate-900 rounded-2xl border border-slate-200 dark:border-slate-800 p-8 lg:p-10 shadow-sm">
+              <div className="border border-slate-200 bg-white p-6 dark:border-slate-800 dark:bg-slate-900 sm:p-9">
                 <h2 className="text-2xl font-semibold text-slate-900 dark:text-white mb-2">
                   Send us a message
                 </h2>
@@ -201,7 +202,7 @@ export default function Contact() {
                   Fill out the form below and we'll get back to you within 24 hours.
                 </p>
 
-                <div className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-6">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div className="space-y-2">
                       <Label 
@@ -215,6 +216,7 @@ export default function Contact() {
                         placeholder="John Doe"
                         value={formData.name}
                         onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                        required
                         // Note: Dark styles for inputs are handled in the component definition above
                         className="h-11 border-slate-300 focus:border-slate-900 focus:ring-slate-900 dark:focus:border-slate-100 dark:focus:ring-slate-100 transition-colors"
                       />
@@ -233,6 +235,7 @@ export default function Contact() {
                         placeholder="john@example.com"
                         value={formData.email}
                         onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                        required
                         className="h-11 border-slate-300 focus:border-slate-900 focus:ring-slate-900 dark:focus:border-slate-100 dark:focus:ring-slate-100 transition-colors"
                       />
                     </div>
@@ -250,6 +253,7 @@ export default function Contact() {
                       placeholder="How can we help you?"
                       value={formData.subject}
                       onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                      required
                       className="h-11 border-slate-300 focus:border-slate-900 focus:ring-slate-900 dark:focus:border-slate-100 dark:focus:ring-slate-100 transition-colors"
                     />
                   </div>
@@ -267,19 +271,20 @@ export default function Contact() {
                       rows={6}
                       value={formData.message}
                       onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                      required
                       className="border-slate-300 focus:border-slate-900 focus:ring-slate-900 dark:focus:border-slate-100 dark:focus:ring-slate-100 transition-colors resize-none"
                     />
                   </div>
 
                   {/* Button: Added dark mode text/bg inversion */}
                   <Button 
-                    onClick={handleSubmit}
-                    className="w-full h-11 bg-slate-900 hover:bg-slate-800 dark:bg-slate-100 dark:hover:bg-slate-200 text-white dark:text-slate-900 font-medium rounded-lg transition-colors group"
+                    type="submit"
+                    className="group h-11 w-full rounded-md bg-blue-900 font-medium text-white transition-colors hover:bg-blue-950 dark:bg-cyan-200 dark:text-slate-950 dark:hover:bg-cyan-100"
                   >
                     Send message
                     <ArrowRight className="ml-2 w-4 h-4 group-hover:translate-x-1 transition-transform" />
                   </Button>
-                </div>
+                </form>
               </div>
             </div>
           </div>

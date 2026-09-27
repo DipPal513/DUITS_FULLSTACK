@@ -1,110 +1,52 @@
-import { Instagram, Linkedin, Mail, Twitter } from "lucide-react"
 import Link from "next/link"
-import { FaFacebook, FaLocationArrow, FaPhoneAlt } from "react-icons/fa"
+import { ArrowUpRight, Mail, MapPin, Phone } from "lucide-react"
+import { FaFacebook } from "react-icons/fa"
+
+const footerGroups = [
+  {
+    title: "Discover",
+    links: [["About DUITS", "/#about"], ["Executive team", "/executives"], ["Events", "/events"]],
+  },
+  {
+    title: "Explore",
+    links: [["Journal", "/blog"], ["Gallery", "/gallery"], ["Achievements", "/#achievements"]],
+  },
+  {
+    title: "Get involved",
+    links: [["Membership", "/membership"], ["Contact", "/contact"]],
+  },
+]
 
 export default function Footer() {
-  const socialLinks = [
-    { icon: FaFacebook, href: "https://www.facebook.com/Dhaka.University.IT.Society.DUITS/", label: "Facebook" },
-    { icon: Linkedin, href: "#", label: "LinkedIn" },
-    { icon: Mail, href: "mailto:contact@itclub.com", label: "Email" },
-  ]
-
-  const footerLinks = {
-    "Quick Links": [
-      { label: "About Us", href: "/about" },
-      { label: "Events", href: "/events" },
-      { label: "Projects", href: "/projects" },
-      { label: "Team", href: "/team" },
-    ],
-    Resources: [
-      { label: "Blog", href: "/blog" },
-      { label: "Gallery", href: "/gallery" },
-      { label: "Tutorials", href: "/blog" },
-      { label: "FAQ", href: "#" },
-    ],
-    Community: [
-      { label: "Join Us", href: "/membership" },
-      { label: "Code of Conduct", href: "#" },
-      { label: "Contact", href: "/contact" },
-      { label: "Support", href: "/contact" },
-    ],
-  }
-
   return (
-    <footer className="bg-card border-t border-border relative z-10">
-      <div className="container mx-auto px-4 lg:px-8 py-12 lg:py-16">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-8 mb-12">
-          {/* Brand */}
-          <div className="lg:col-span-2">
-            <div className="sm:flex items-center">
-              <Link href="/" className="flex items-center gap-2 mb-4">
-              <img src="/icons/duits-512.png" alt="IT Club Logo" className="w-20 h-20 rounded-lg" />
+    <footer className="border-t border-slate-200 bg-slate-950 text-white">
+      <div className="mx-auto max-w-7xl px-4 py-12 sm:px-6 lg:px-8 lg:py-16">
+        <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-[2fr_1fr_1fr_1fr]">
+          <div>
+            <Link href="/" className="inline-flex items-center gap-3">
+              <img src="/icons/duits-512.png" alt="DUITS logo" className="h-12 w-12 rounded-sm" />
+              <span className="text-lg font-semibold">Dhaka University IT Society</span>
             </Link>
-            <h2 className="text-2xl font-bold mb-4 ms-2">Dhaka University IT Society</h2>
+            <p className="mt-4 max-w-sm text-sm leading-6 text-slate-300">A student-led technology community at the University of Dhaka.</p>
+            <div className="mt-6 space-y-3 text-sm text-slate-300">
+              <p className="flex items-start gap-3"><MapPin size={17} className="mt-0.5 shrink-0 text-blue-300" />1st Floor, TSC, University of Dhaka, Dhaka, Bangladesh</p>
+              <a href="tel:+8801519201101" className="flex items-center gap-3 hover:text-white"><Phone size={16} className="text-blue-300" />01519-201101</a>
+              <a href="mailto:duits.official@gmail.com" className="flex items-center gap-3 hover:text-white"><Mail size={16} className="text-blue-300" />duits.official@gmail.com</a>
             </div>
-           
-            <div className="flex flex-col gap-4 mt-4">
-              <div className="flex gap-3 items-center mb-2">
-                <FaPhoneAlt/>
-              <p>01519-201101</p>
-              </div>
-              <div className="flex gap-3 items-center mb-2">
-                <Mail/>
-              <p>duits.official@gmail.com</p> 
-              </div>
-              <div className="flex gap-3 items-center">
-                <FaLocationArrow/>
-              <p>1st Floor, TSC, University of Dhaka, Dhaka, Bangladesh</p>
-              </div>
-
-            </div>
-            <div className="flex gap-3 mt-6">
-              {socialLinks.map((social, index) => (
-                <a
-                  key={index}
-                  href={social.href}
-                  aria-label={social.label}
-                  className="w-10 h-10 flex items-center justify-center rounded-lg bg-muted hover:bg-primary hover:text-primary-foreground transition-colors"
-                >
-                  <social.icon className="w-5 h-5" />
-                </a>
-              ))}
-            </div>
+            <a href="https://www.facebook.com/Dhaka.University.IT.Society.DUITS/" target="_blank" rel="noopener noreferrer" aria-label="DUITS on Facebook" className="mt-6 inline-flex h-10 w-10 items-center justify-center rounded-md border border-slate-700 text-slate-200 transition-colors hover:border-blue-400 hover:text-white"><FaFacebook /></a>
           </div>
-
-       
-          {Object.entries(footerLinks).map(([title, links]) => (
-            <div key={title}>
-              <h3 className="font-semibold mb-4">{title}</h3>
+          {footerGroups.map((group) => (
+            <nav key={group.title} aria-label={group.title}>
+              <h2 className="mb-4 text-sm font-semibold text-white">{group.title}</h2>
               <ul className="space-y-3">
-                {links.map((link, index) => (
-                  <li key={index}>
-                    <Link
-                      href={link.href}
-                      className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-                    >
-                      {link.label}
-                    </Link>
-                  </li>
-                ))}
+                {group.links.map(([label, href]) => <li key={href}><Link href={href} className="inline-flex items-center gap-1 text-sm text-slate-300 transition-colors hover:text-white">{label}<ArrowUpRight size={13} /></Link></li>)}
               </ul>
-            </div>
+            </nav>
           ))}
         </div>
-
-        {/* Bottom Bar */}
-        <div className="pt-8 border-t border-border">
-          <div className="flex flex-col md:flex-row justify-between items-center gap-4">
-            <p className="text-sm text-muted-foreground">© {new Date().getFullYear()} IT Club. All rights reserved.</p>
-            <div className="flex gap-6">
-              <Link href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                Privacy Policy
-              </Link>
-              <Link href="#" className="text-sm text-muted-foreground hover:text-foreground transition-colors">
-                Terms of Service
-              </Link>
-            </div>
-          </div>
+        <div className="mt-10 flex flex-col gap-3 border-t border-slate-800 pt-5 text-xs text-slate-400 sm:flex-row sm:items-center sm:justify-between">
+          <p>© {new Date().getFullYear()} Dhaka University IT Society</p>
+          <p>University of Dhaka · TSC</p>
         </div>
       </div>
     </footer>

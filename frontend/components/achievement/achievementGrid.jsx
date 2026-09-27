@@ -5,7 +5,7 @@ import { ArrowUpRight, Award, CalendarDays } from "lucide-react"
 
 export default function AchievementsGrid({ achievements = [] }) {
   return (
-    <section className="bg-slate-50 py-16 sm:py-20 dark:bg-slate-950">
+    <section id="achievements" className="bg-slate-50 py-16 sm:py-20 dark:bg-slate-950">
       <div className="container mx-auto px-4 lg:px-8">
         <header className="mb-10 flex flex-col gap-3 border-b border-slate-200 pb-6 sm:flex-row sm:items-end sm:justify-between dark:border-slate-800">
           <div>

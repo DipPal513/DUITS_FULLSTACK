@@ -60,9 +60,9 @@ export default async function ExecutivePage({ searchParams }) {
   return (
     <section
       id="team"
-      className="py-20 lg:py-32 bg-gray-50 dark:bg-gray-950 min-h-screen"
+      className="min-h-screen bg-slate-50 pb-16 pt-24 dark:bg-slate-950"
     >
-      <div className="container mx-auto px-4 pt-32 lg:px-8 max-w-7xl">
+      <div className="mx-auto max-w-screen-2xl px-5 pt-10 sm:px-8 lg:px-12">
         <Suspense key={`${year}-${batch}`} fallback={<ExecutiveSkeleton />}>
           <TeamContent year={year} batch={batch} />
         </Suspense>

@@ -25,6 +25,7 @@ export default function CreatePost() {
   const [content, setContent] = useState("");
   const [coverImage, setCoverImage] = useState(""); // Can be Base64 OR URL
   const [slug, setSlug] = useState("");
+  const [publishDate, setPublishDate] = useState("");
   const [status, setStatus] = useState("draft"); 
   const [saveStatus, setSaveStatus] = useState("Saved"); // For auto-save UI
 
@@ -54,6 +55,7 @@ export default function CreatePost() {
         if (!blog) return;
         setEditingIdState(blog.id);
         setSlug(blog.slug || "");
+        setPublishDate(blog.date || "");
         setTitle(blog.title || "");
         setContent(markdownConverter.makeHtml(blog.content || ""));
         setCoverImage(blog.image || "");
@@ -94,14 +96,22 @@ export default function CreatePost() {
   // --- HANDLER: Local Cover Image Selection ---
   const handleImageSelect = (e) => {
     const file = e.target.files?.[0];
-    if (file) {
-      // Convert file to Base64 immediately for preview/storage
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setCoverImage(reader.result); // Save Base64 string
-      };
-      reader.readAsDataURL(file);
+    if (!file) return;
+    if (!file.type.startsWith("image/")) {
+      toast.error("Choose an image file");
+      e.target.value = "";
+      return;
     }
+    if (file.size > 5 * 1024 * 1024) {
+      toast.error("Cover images must be 5 MB or smaller");
+      e.target.value = "";
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onloadend = () => setCoverImage(reader.result);
+    reader.onerror = () => toast.error("Could not read this image");
+    reader.readAsDataURL(file);
   };
 
   // --- 3. THE MASTER PUBLISH FUNCTION ---
@@ -135,11 +145,11 @@ export default function CreatePost() {
       // D. Send Payload to DB
       const payload = {
         title,
-        slug: editingIdState ? slug : `${title.toLowerCase().trim().replace(/[^\w]+/g, "-").replace(/^-|-$/g, "") || "article"}-${Date.now().toString(36)}`,
+        slug: editingIdState ? (slug || title.toLowerCase().trim().replace(/[^\w]+/g, "-").replace(/^-|-$/g, "") || `article-${editingIdState}`) : `${title.toLowerCase().trim().replace(/[^\w]+/g, "-").replace(/^-|-$/g, "") || "article"}-${Date.now().toString(36)}`,
         content: markdownContent,
         image: finalCoverUrl,
-        description: markdownContent.substring(0, 160).replace(/\n/g, " ") + "...",
-        date: new Date().toISOString().split("T")[0]
+        description: markdownContent.substring(0, 160).replace(/\n/g, " ").trim() + (markdownContent.length > 160 ? "..." : ""),
+        date: publishDate || new Date().toISOString().split("T")[0]
       };
 
       if (editingIdState) {
@@ -281,19 +291,21 @@ async function processContentImages(htmlContent) {
  * Converts Base64 -> Blob -> FormData -> API
  */
 async function uploadBase64ToCloudinary(base64String) {
-  // Convert Base64 to Blob
-  const blob = await (await fetch(base64String)).blob();
-  const file = new File([blob], "image.png", { type: blob.type });
+  const imageResponse = await fetch(base64String);
+  if (!imageResponse.ok) throw new Error("Could not read an image in the article.");
+  const blob = await imageResponse.blob();
+  if (!blob.type.startsWith("image/")) throw new Error("An article image has an unsupported file type.");
 
   const formData = new FormData();
-  formData.append("file", file);
+  formData.append("file", blob, `article-image.${blob.type.split("/")[1] || "png"}`);
 
   const res = await fetch("/api/upload", {
     method: "POST",
     body: formData,
   });
 
-  if (!res.ok) throw new Error("Image upload failed");
-  const data = await res.json();
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) throw new Error(data.message || `Image upload failed (${res.status}).`);
+  if (!data.url) throw new Error("Image upload completed without returning an image URL.");
   return data.url;
 }

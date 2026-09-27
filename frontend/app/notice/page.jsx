@@ -34,9 +34,9 @@ export default async function NoticesPage({ searchParams }) {
   return (
     <section
       id="notices"
-      className="py-20 lg:py-32 relative bg-background text-foreground transition-colors duration-300"
+      className="min-h-screen bg-slate-50 pb-16 pt-24 text-foreground transition-colors duration-300 dark:bg-slate-950"
     >
-      <div className="container pt-32 mx-auto px-4 lg:px-8">
+      <div className="mx-auto max-w-screen-2xl px-5 pt-10 sm:px-8 lg:px-12">
         {/* 2. Suspense Boundary for Instant Loading */}
         <Suspense key={`${page}-${filter}`} fallback={<GlobalSkeleton />}>
           <NoticesContent currentPage={page} filter={filter} />

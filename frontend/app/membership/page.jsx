@@ -244,12 +244,12 @@ function MembershipForm() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-50 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-6xl mt-32 mx-auto">
+    <div className="min-h-screen bg-slate-50 py-12 px-4 sm:px-6 lg:px-8 dark:bg-slate-950">
+      <div className="max-w-6xl mt-28 mx-auto">
         {/* Header */}
-        <div className="bg-white rounded-2xl shadow-lg p-5 sm:p-10 mb-8 border border-slate-200">
+        <div className="bg-white rounded-lg p-5 sm:p-10 mb-6 border border-slate-200 dark:bg-slate-900 dark:border-slate-800">
           <div className="text-center mb-8">
-            <div className="inline-flex items-center justify-center w-16 h-16 bg-gradient-to-br from-blue-600 to-indigo-600 rounded-2xl mb-4 shadow-lg">
+            <div className="inline-flex items-center justify-center w-16 h-16 bg-blue-800 rounded-lg mb-4">
               <Building2 className="w-9 h-9 text-white" strokeWidth={2} />
             </div>
             <h1 className=" text-3xl sm:text-5xl font-bold text-slate-900 mb-3">
@@ -258,14 +258,14 @@ function MembershipForm() {
             <p className="text-xl text-slate-600">Dhaka University IT Society</p>
           </div>
           <div className="flex flex-wrap justify-center gap-3">
-            <span className="px-5 py-2.5 bg-blue-50 text-blue-700 rounded-lg text-sm font-semibold border border-blue-200">
+            <span className="px-4 py-2 bg-blue-50 text-blue-800 rounded-md text-sm font-semibold border border-blue-200">
               Academic Year 2025-2026
             </span>
-            <span className="px-5 py-2.5 bg-emerald-50 text-emerald-700 rounded-lg text-sm font-semibold border border-emerald-200">
+            <span className="px-4 py-2 bg-slate-100 text-slate-700 rounded-md text-sm font-semibold border border-slate-200">
               Fee: ৳100
             </span>
             {paymentCompleted && (
-              <span className="px-5 py-2.5 bg-green-50 text-green-700 rounded-lg text-sm font-semibold border border-green-200 flex items-center gap-2">
+              <span className="px-4 py-2 bg-green-50 text-green-800 rounded-md text-sm font-semibold border border-green-200 flex items-center gap-2">
                 <CheckCircle className="w-4 h-4" />
                 Payment Verified
               </span>
@@ -551,9 +551,9 @@ function MembershipForm() {
 
 function Section({ icon: Icon, title, iconColor, children }) {
   return (
-    <div className="bg-white rounded-2xl shadow-lg p-2 sm:p-8 border border-slate-200">
+    <div className="bg-white rounded-lg p-5 sm:p-8 border border-slate-200 dark:bg-slate-900 dark:border-slate-800">
       <div className="flex items-center gap-4 mb-7 pb-5 border-b border-slate-200">
-        <div className={`w-12 h-12 bg-gradient-to-br ${iconColor} rounded-xl flex items-center justify-center shadow-lg`}>
+        <div className="w-11 h-11 bg-blue-800 rounded-md flex items-center justify-center">
           <Icon className="w-6 h-6 text-white" strokeWidth={2.5} />
         </div>
         <h2 className="text-2xl font-bold text-slate-900">{title}</h2>

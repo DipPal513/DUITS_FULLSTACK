@@ -50,7 +50,7 @@ export default function SocietyIntro() {
   ]
 
   return (
-    <section className="py-20 lg:py-32 relative">
+    <section id="about" className="py-20 lg:py-32 relative">
       <div className="container mx-auto px-4 lg:px-8">
         <div className="max-w-3xl mx-auto text-center mb-16">
           <h2 className="text-4xl md:text-5xl font-bold mb-6 text-balance">Welcome to IT Club</h2>

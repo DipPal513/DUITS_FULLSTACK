@@ -34,17 +34,12 @@ export default async function EventsPage({ searchParams }) {
   const filter = params?.filter || "all";
 
   return (
-    <main className="min-h-screen bg-white dark:bg-slate-950 transition-colors duration-300">
-      <section className="pt-20">
-        <div
-          id="events"
-          className="py-20 lg:py-32 bg-gradient-to-b from-transparent to-slate-50/50 dark:to-slate-900/50"
-        >
-          <div className="container mx-auto px-6 lg:px-8">
-            <Suspense fallback={<GlobalSkeleton />}>
-              <EventsContent page={page} filter={filter} />
-            </Suspense>
-          </div>
+    <main className="min-h-screen bg-slate-50 pt-24 dark:bg-slate-950">
+      <section id="events" className="py-12 lg:py-16">
+        <div className="mx-auto max-w-screen-2xl px-5 sm:px-8 lg:px-12">
+          <Suspense fallback={<GlobalSkeleton />}>
+            <EventsContent page={page} filter={filter} />
+          </Suspense>
         </div>
       </section>
     </main>

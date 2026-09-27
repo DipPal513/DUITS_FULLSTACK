@@ -1,5 +1,5 @@
 import supabaseApi from "@/config/supabaseApi"; 
-import GalleryGrid from "@/components/galleryGrid";
+import GalleryGrid from "@/components/gallery/GalleryGrid";
 import { ImageIcon } from "lucide-react";
 
 // Data Fetching Logic moved here
