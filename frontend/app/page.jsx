@@ -9,7 +9,7 @@ import WhatWeDo from "@/components/whatWeDo/WhatWeDo"
 export default function Home() {
   return (
     <main className="min-h-screen"> 
-      <UnderConstructionModal />
+    
       <Hero />
       <Stat />
       <ScrollText />
