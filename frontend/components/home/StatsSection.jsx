@@ -1,25 +1,20 @@
 "use client"
-// components/home/StatsSection.jsx
+// components/home/StatsSection.jsx — card strip overlapping the hero, count-up on view
 import { useEffect, useRef, useState } from "react"
+import { Users, Layers, CalendarDays, Trophy } from "lucide-react"
+import { STATS } from "@/lib/clubContent"
 
-const STATS = [
-  { value: 450, suffix: "+", label: "Active members" },
-  { value: 60, suffix: "+", label: "Workshops run each year" },
-  { value: 30, suffix: "+", label: "Competitions represented" },
-  { value: 12, suffix: "", label: "Active project teams" },
-]
+const ICONS = [Users, Layers, CalendarDays, Trophy]
 
 function useCountUp(target, start) {
   const [value, setValue] = useState(0)
   useEffect(() => {
     if (!start) return
     let frame
-    const duration = 1100
     const t0 = performance.now()
-    function tick(now) {
-      const p = Math.min((now - t0) / duration, 1)
-      const eased = 1 - Math.pow(1 - p, 3)
-      setValue(Math.round(target * eased))
+    const tick = (now) => {
+      const p = Math.min((now - t0) / 1200, 1)
+      setValue(Math.round(target * (1 - Math.pow(1 - p, 3))))
       if (p < 1) frame = requestAnimationFrame(tick)
     }
     frame = requestAnimationFrame(tick)
@@ -28,15 +23,15 @@ function useCountUp(target, start) {
   return value
 }
 
-function StatItem({ stat, start }) {
+function Stat({ stat, Icon, start }) {
   const value = useCountUp(stat.value, start)
   return (
-    <div className="flex flex-col gap-1.5">
-      <p className="text-4xl font-semibold tracking-tight text-blue-600 dark:text-blue-400 sm:text-5xl">
-        {value}
-        {stat.suffix}
+    <div className="group px-6 py-7 transition-colors hover:bg-blue-50/60 dark:hover:bg-white/[0.03] sm:px-8">
+      <span className="grid h-9 w-9 place-content-center rounded-xl bg-blue-50 text-blue-600 transition-transform group-hover:-translate-y-0.5 dark:bg-blue-500/10 dark:text-blue-300"><Icon size={18} /></span>
+      <p className="mt-4 text-4xl font-semibold tracking-tight text-slate-900 dark:text-white sm:text-5xl">
+        {value}<span className="text-blue-600 dark:text-blue-400">{stat.suffix}</span>
       </p>
-      <p className="text-sm text-slate-500 dark:text-slate-400">{stat.label}</p>
+      <p className="mt-1.5 text-sm text-slate-500 dark:text-slate-400">{stat.label}</p>
     </div>
   )
 }
@@ -44,31 +39,18 @@ function StatItem({ stat, start }) {
 export default function StatsSection() {
   const ref = useRef(null)
   const [inView, setInView] = useState(false)
-
   useEffect(() => {
     const el = ref.current
     if (!el) return
-    const obs = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setInView(true)
-          obs.disconnect()
-        }
-      },
-      { threshold: 0.35 }
-    )
+    const obs = new IntersectionObserver(([e]) => { if (e.isIntersecting) { setInView(true); obs.disconnect() } }, { threshold: 0.4 })
     obs.observe(el)
     return () => obs.disconnect()
   }, [])
 
   return (
-    <section ref={ref} className="bg-white py-16 dark:bg-slate-950 sm:py-20">
-      <div className="mx-auto grid max-w-6xl grid-cols-2 gap-x-8 gap-y-10 divide-slate-200 px-6 dark:divide-slate-800 sm:px-8 lg:grid-cols-4 lg:divide-x">
-        {STATS.map((stat, i) => (
-          <div key={stat.label} className={i > 0 ? "lg:pl-8" : ""}>
-            <StatItem stat={stat} start={inView} />
-          </div>
-        ))}
+    <section ref={ref} aria-label="DUITS in numbers" className="relative z-10 -mt-28 px-6 sm:px-8">
+      <div className="mx-auto grid max-w-6xl grid-cols-2 divide-slate-200 overflow-hidden rounded-3xl border border-slate-200 bg-white/95 shadow-2xl shadow-blue-900/10 backdrop-blur-xl dark:divide-white/10 dark:border-white/10 dark:bg-[#0b1636]/85 dark:shadow-blue-950/60 lg:grid-cols-4 lg:divide-x">
+        {STATS.map((s, i) => <Stat key={s.label} stat={s} Icon={ICONS[i]} start={inView} />)}
       </div>
     </section>
   )
