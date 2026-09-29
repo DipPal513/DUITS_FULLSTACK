@@ -70,7 +70,7 @@ export const PRESIDENT_FALLBACK = { name: "The President", position: "President,
 export const PRESIDENT_MESSAGE = {
   lead: "Technology is not something you watch from the outside. You learn it by touching it, breaking it, and building it again.",
   body: [
-    "When we started thinking about what DUITS should be, the answer was simple: a place where curiosity gets company. Where a first-year who has never written a line of code sits next to a senior preparing for ICPC, and both leave a little better than they arrived.",
+    "When we started thinking about what DUITS should be, the answer was simple: a place where curiosity gets company. Where a first-year who has never written a line of code can share a program idea with a senior, and both leave a little better than they arrived.",
     "Every wing in this society exists so that no interest is left without a home. Whatever you are drawn to, there is a group here that will take it seriously, and take you seriously too.",
     "If you are wondering whether you are ready to join, you are. Come as you are, and we will build the rest together.",
   ],

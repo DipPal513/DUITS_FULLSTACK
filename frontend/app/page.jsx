@@ -41,6 +41,21 @@ function Heading({ eyebrow, title, description, center = false }) {
 
 const initials = (name = "") => name.split(" ").filter(Boolean).slice(0, 2).map((s) => s[0]).join("").toUpperCase() || "DU"
 
+const ADVISORS = [
+  {
+    name: "Dr. Kazi Muheymin-Us-Sakib",
+    title: "Professor, Institute of Information Technology (IIT)",
+    image: "/sakib.jpeg",
+    message: "A strong technology community gives students room to explore ideas, learn together, and turn curiosity into thoughtful programs that benefit others.",
+  },
+  {
+    name: "Dr. Md. Mamun-Or-Rashid",
+    title: "Professor, Computer Science and Engineering (CSE)",
+    image: "/mamun.jpeg",
+    message: "Keep sharing ideas, learning across disciplines, and building with one another. Every meaningful program begins with curiosity and a community willing to take part.",
+  },
+]
+
 export default async function Home() {
   const found = await getPresident()
   const president = found || PRESIDENT_FALLBACK
@@ -77,14 +92,14 @@ export default async function Home() {
           </ScrollReveal>
 
           <ScrollReveal from="right" delay={80}>
-            <div className="rounded-3xl bg-gradient-to-br from-blue-600 to-indigo-800 p-7 text-white shadow-xl shadow-blue-900/20">
+            <div className="rounded-3xl bg-linear-to-br from-blue-600 to-indigo-800 p-7 text-white shadow-xl shadow-blue-900/20">
               <p className="text-xs font-semibold text-blue-200">Where we stand</p>
               <p className="mt-2 text-xl font-semibold leading-snug sm:text-2xl">{POSITION}</p>
             </div>
             <ol className="relative mt-8 space-y-7 border-l border-slate-200 pl-8 dark:border-white/10">
               {TIMELINE.map((t, i) => (
                 <li key={t.label} className="relative">
-                  <span className={`absolute -left-[2.6rem] top-1 grid h-5 w-5 place-content-center rounded-full ring-4 ring-white dark:ring-[#050b1f] ${i === TIMELINE.length - 1 ? "bg-blue-600 dark:bg-blue-400" : "bg-blue-200 dark:bg-blue-500/40"}`} />
+                  <span className={`absolute left-[-2.6rem] top-1 grid h-5 w-5 place-content-center rounded-full ring-4 ring-white dark:ring-[#050b1f] ${i === TIMELINE.length - 1 ? "bg-blue-600 dark:bg-blue-400" : "bg-blue-200 dark:bg-blue-500/40"}`} />
                   <p className="text-xs font-semibold text-blue-600 dark:text-blue-300">{t.label}</p>
                   <p className="mt-1 font-semibold text-slate-900 dark:text-white">{t.title}</p>
                   <p className="mt-1 text-sm leading-6 text-slate-600 dark:text-slate-400">{t.body}</p>
@@ -117,13 +132,13 @@ export default async function Home() {
             {REASONS.map(({ icon: I, title, body }, i) => (
               <ScrollReveal key={title} from={i % 3 === 0 ? "left" : i % 3 === 2 ? "right" : "zoom"} delay={(i % 3) * 70} className={i === 0 ? "lg:col-span-2" : ""}>
                 {i === 0 ? (
-                  <SpotlightCard className="h-full rounded-3xl bg-gradient-to-br from-blue-600 to-indigo-800 p-8 text-white shadow-xl shadow-blue-900/20 sm:p-10">
+                  <SpotlightCard className="h-full rounded-3xl bg-linear-to-br from-blue-600 to-indigo-800 p-8 text-white shadow-xl shadow-blue-900/20 sm:p-10">
                     <span className="grid h-12 w-12 place-content-center rounded-2xl bg-white/15"><I size={22} /></span>
                     <h3 className="mt-6 text-2xl font-semibold sm:text-3xl">{title}</h3>
                     <p className="mt-3 max-w-lg text-base leading-7 text-blue-100">{body}</p>
                   </SpotlightCard>
                 ) : (
-                  <SpotlightCard className="h-full rounded-3xl border border-slate-200 bg-white p-7 shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-900/10 dark:border-white/10 dark:bg-white/[0.03] dark:shadow-none">
+                  <SpotlightCard className="h-full rounded-3xl border border-slate-200 bg-white p-7 shadow-sm transition-all hover:-translate-y-1 hover:shadow-xl hover:shadow-blue-900/10 dark:border-white/10 dark:bg-white/3 dark:shadow-none">
                     <span className="grid h-11 w-11 place-content-center rounded-xl bg-blue-50 text-blue-600 dark:bg-blue-500/10 dark:text-blue-300"><I size={20} /></span>
                     <h3 className="mt-5 text-lg font-semibold text-slate-900 dark:text-white">{title}</h3>
                     <p className="mt-2 text-sm leading-6 text-slate-600 dark:text-slate-400">{body}</p>
@@ -135,15 +150,46 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* 5 · President's message */}
+      {/* 5 · Advisors' messages */}
+      <section id="advisors" className="bg-white py-16 dark:bg-[#050b1f] sm:py-20">
+        <div className="mx-auto max-w-6xl px-6 sm:px-8">
+          <ScrollReveal from="left">
+            <Heading eyebrow="Our advisors" title="A word from our advisors." description="Guidance for a community built on learning, shared ideas, and meaningful programs." />
+          </ScrollReveal>
+          <div className="mt-10 grid gap-5 lg:grid-cols-2">
+            {ADVISORS.map((advisor, index) => (
+              <ScrollReveal key={advisor.name} from={index === 0 ? "left" : "right"} delay={index * 70}>
+                <article className="h-full rounded-3xl border border-slate-200 bg-[#f8faff] p-6 dark:border-white/10 dark:bg-white/3 sm:p-7">
+                  <div className="flex items-start gap-5">
+                    <div className="relative h-24 w-20 shrink-0 overflow-hidden rounded-2xl bg-blue-100 dark:bg-blue-500/10 sm:h-28 sm:w-24">
+                      <Image src={advisor.image} alt={advisor.name} fill sizes="96px" className="object-cover" />
+                    </div>
+                    <div className="min-w-0">
+                      <Quote aria-hidden="true" size={20} className="mb-3 text-blue-600 dark:text-blue-300" />
+                      <p className="text-sm leading-6 text-slate-600 dark:text-slate-300">{advisor.message}</p>
+                    </div>
+                  </div>
+                  <div className="mt-5 border-t border-slate-200 pt-4 dark:border-white/10">
+                    <p className="font-semibold text-slate-900 dark:text-white">{advisor.name}</p>
+                    <p className="mt-1 text-sm leading-5 text-slate-600 dark:text-slate-400">{advisor.title}</p>
+                    <p className="mt-1 text-xs font-medium text-blue-700 dark:text-blue-300">Advisor, Dhaka University IT Society (DUITS)</p>
+                  </div>
+                </article>
+              </ScrollReveal>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 6 · President's message */}
       <section id="president" className="bg-[#eef4ff] py-24 dark:bg-[#071028] sm:py-32">
         <div className="mx-auto max-w-6xl px-6 sm:px-8">
-          <div className="relative overflow-hidden rounded-[2rem] border border-slate-200 bg-white p-8 shadow-xl shadow-blue-900/5 dark:border-white/10 dark:bg-[#0b1636]/60 dark:shadow-none sm:p-12 lg:p-16">
-            <Quote aria-hidden="true" className="absolute right-8 top-8 h-28 w-28 text-blue-600/[0.07] dark:text-blue-400/[0.09]" strokeWidth={1.2} />
+          <div className="relative overflow-hidden rounded-4xl border border-slate-200 bg-white p-8 shadow-xl shadow-blue-900/5 dark:border-white/10 dark:bg-[#0b1636]/60 dark:shadow-none sm:p-12 lg:p-16">
+            <Quote aria-hidden="true" className="absolute right-8 top-8 h-28 w-28 text-blue-600/7 dark:text-blue-400/9" strokeWidth={1.2} />
             <div className="relative grid gap-10 lg:grid-cols-[17rem_1fr] lg:gap-16">
               <ScrollReveal from="left">
                 <div className="flex flex-col items-start gap-5">
-                  <div className="relative h-52 w-44 overflow-hidden rounded-3xl bg-gradient-to-br from-blue-500 to-indigo-700 shadow-lg shadow-blue-900/20 sm:h-64 sm:w-52">
+                  <div className="relative h-52 w-44 overflow-hidden rounded-3xl bg-linear-to-br from-blue-500 to-indigo-700 shadow-lg shadow-blue-900/20 sm:h-64 sm:w-52">
                     {found?.image ? (
                       <Image src={found.image} alt={president.name} fill sizes="208px" className="object-cover" />
                     ) : (
@@ -153,9 +199,7 @@ export default async function Home() {
                   <div>
                     <p className="text-lg font-semibold text-slate-900 dark:text-white">{president.name}</p>
                     <p className="mt-0.5 text-sm text-slate-600 dark:text-slate-400">{president.position}</p>
-                    {(president.year || president.duits_batch) && (
-                      <p className="mt-0.5 text-sm text-blue-600 dark:text-blue-300">{[president.year, president.duits_batch && `Batch ${president.duits_batch}`].filter(Boolean).join(" · ")}</p>
-                    )}
+                    <p className="mt-0.5 text-sm text-blue-600 dark:text-blue-300">12th Executive Committee</p>
                   </div>
                 </div>
               </ScrollReveal>
@@ -173,7 +217,7 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* 6 · FAQ */}
+      {/* 7 · FAQ */}
       <section id="faq" className="bg-white py-24 dark:bg-[#050b1f] sm:py-32">
         <div className="mx-auto grid max-w-6xl gap-12 px-6 sm:px-8 lg:grid-cols-[20rem_1fr] lg:gap-20">
           <ScrollReveal from="left">
@@ -184,7 +228,7 @@ export default async function Home() {
           <ScrollReveal from="right" delay={60}>
             <div className="space-y-3">
               {FAQ.map((f) => (
-                <details key={f.q} className="group rounded-2xl border border-slate-200 bg-white px-6 py-5 transition-colors open:border-blue-300 open:bg-blue-50/50 dark:border-white/10 dark:bg-white/[0.03] dark:open:border-blue-400/40 dark:open:bg-blue-500/[0.06] [&[open]>summary_svg]:rotate-180">
+                <details key={f.q} className="group rounded-2xl border border-slate-200 bg-white px-6 py-5 transition-colors open:border-blue-300 open:bg-blue-50/50 dark:border-white/10 dark:bg-white/3 dark:open:border-blue-400/40 dark:open:bg-blue-500/6 [&[open]>summary_svg]:rotate-180">
                   <summary className="flex cursor-pointer list-none items-center justify-between gap-4 text-base font-semibold text-slate-900 dark:text-white [&::-webkit-details-marker]:hidden">
                     {f.q}
                     <ChevronDown size={18} className="shrink-0 text-blue-600 transition-transform duration-300 dark:text-blue-300" />
@@ -197,10 +241,10 @@ export default async function Home() {
         </div>
       </section>
 
-      {/* 7 · Join banner */}
+      {/* 8 · Join banner */}
       <section className="bg-[#eef4ff] px-6 py-24 dark:bg-[#071028] sm:px-8 sm:py-32">
         <ScrollReveal from="zoom">
-          <div className="relative mx-auto max-w-6xl overflow-hidden rounded-[2rem] bg-gradient-to-br from-blue-600 via-blue-700 to-indigo-900 p-10 text-center text-white shadow-2xl shadow-blue-900/30 sm:p-16">
+          <div className="relative mx-auto max-w-6xl overflow-hidden rounded-4xl bg-linear-to-br from-blue-600 via-blue-700 to-indigo-900 p-10 text-center text-white shadow-2xl shadow-blue-900/30 sm:p-16">
             <div className="pointer-events-none absolute -left-16 -top-16 h-64 w-64 rounded-full bg-cyan-300/25 blur-[80px]" aria-hidden="true" />
             <div className="pointer-events-none absolute -bottom-20 -right-10 h-72 w-72 rounded-full bg-indigo-400/30 blur-[90px]" aria-hidden="true" />
             <div className="relative">
